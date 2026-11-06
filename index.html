@@ -373,6 +373,63 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
   </div>
 </section>
 
+<!-- GPU RENTAL RATES -->
+<section id="gpu" data-section="gpu" class="card span-12">
+  <div class="card-head">
+    <div>
+      <h2>Fundamentals check: what GPUs actually rent for</h2>
+      <p class="muted">The price of an hour of GPU time is the cash-flow reality underneath the AI equity and credit trade. If GPUs were overbuilt, rental rates would be falling. Since late 2025 they've been rising for every chip generation. Main series: Silicon Data's daily neocloud (non-hyperscaler) rental indices, $ per GPU-hour. Price levels vary 2–5× by source and method, so compare trends within a series, not levels across series.</p>
+    </div>
+    <button class="toggle" data-table="t-gpu">Table</button>
+  </div>
+  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+    <div class="tile"><div class="label">H100 rental index (neocloud)</div><div class="value">$2.99/hr</div><div class="delta">+50% from the $2.00 low (9 Dec 2025)</div><div class="muted">Ornn's executed-trade index: $3.13 (5 Nov). SemiAnalysis 1-yr contracts: $1.70 (Oct 2025) → $2.35 (Mar 2026)</div></div>
+    <div class="tile"><div class="label">B200 · B300 rental index</div><div class="value">$6.58 · $7.56</div><div class="delta">B200 +50% YTD · B300 ~+57% since Apr launch</div><div class="muted">Both jumped 12–13% in the past week. Ornn B200: $9.46 (+25% in a month)</div></div>
+    <div class="tile"><div class="label">Hyperscaler H100, on-demand</div><div class="value">~$6.9–7.5/hr</div><div class="muted">AWS p5 is $6.88/GPU after its 44% cut in Jun 2025. Silicon Data's hyperscaler index held $7.40–7.55 Mar–May 2026, ~2.5× neocloud</div></div>
+    <div class="tile"><div class="label">List prices going up, not down</div><div class="value">5 hikes</div><div class="muted">AWS Capacity Blocks +15% (Jan 2026). RunPod H100 $3.29 → $3.99. Lambda twice in 2026 (8× B200 $4.99 → $6.69 → $7.69). Nebius B200 $7.15 → $8.50 (1 Oct)</div></div>
+  </div>
+  <div class="grid" style="gap:24px">
+    <div class="span-8" style="min-width:0">
+      <h2 style="font-size:14px">Neocloud GPU rental indices, May 2025 – Nov 2026 ($/GPU-hr)</h2>
+      <p class="muted" style="margin-bottom:6px">Dated prints from Silicon Data's index page, blog updates and its 6 Nov chart, not the full daily series. Hollow points are read off that chart by eye, come from before Silicon Data's reported Dec 2025 restatement (H100 history moved by about −4–6%), or are secondary. Dashed segments span months with no print.</p>
+      <div class="legend" id="lg-gpu"></div>
+      <div id="c-gpu"></div>
+      <div class="datatable" id="t-gpu"></div>
+    </div>
+    <div class="span-4" style="min-width:0">
+      <h2 style="font-size:14px">Change from each series' base</h2>
+      <table style="margin-top:6px">
+        <thead><tr><th>GPU</th><th class="num">From</th><th class="num">Now</th><th class="num">Change</th></tr></thead>
+        <tbody id="gpu-chg"></tbody>
+      </table>
+      <h2 style="font-size:14px;margin-top:16px">The long view: the 2023–25 slide came first</h2>
+      <p class="muted" style="margin-bottom:6px">SemiAnalysis H100 spot-contract composite (public preview; full series paywalled). It's a different method, so it's flatter through 2026 than Silicon Data. 2023 shortage contracts reportedly topped $8/hr (Latent Space, single-sourced).</p>
+      <div id="c-gpul"></div>
+      <button class="toggle" data-table="t-gpul" style="margin-top:4px">Table</button>
+      <div class="datatable" id="t-gpul"></div>
+    </div>
+  </div>
+  <div class="grid" style="gap:24px;margin-top:8px">
+    <div class="span-7" style="min-width:0">
+      <h2 style="font-size:14px">Same chip, different price: early Nov 2026, $/GPU-hr</h2>
+      <table style="margin-top:6px">
+        <thead><tr><th>Source and method</th><th class="num">H100</th><th class="num">H200</th><th class="num">B200</th></tr></thead>
+        <tbody id="gpu-snap"></tbody>
+      </table>
+      <p class="muted" style="margin-top:6px">Spot runs ~55–65% of on-demand (GetDeploying). Term discounts are modest at neoclouds: Together's 91–180-day H100 is 20% below on-demand. Big interconnected clusters cost more per GPU than single nodes (Lambda's 1-Click Clusters run $5.54–6.16 vs $4.59).</p>
+    </div>
+    <div class="span-5" style="min-width:0">
+      <h2 style="font-size:14px">What it says about the build-out</h2>
+      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+        <li><b>The market is pricing the future, not today.</b> Rental rates rose through the same months that AI equities sold off and CoreWeave's CDS hit distress. As Silicon Data put it on 6 Nov: the fear is about "the odds of what will happen in the next couple years," not current demand.</li>
+        <li><b>Old chips are earning more, not less.</b> A three-year-old H100 rents for ~50% more than a year ago, and SemiAnalysis reports 4-year H100 renewals at close to the original rates. That supports the 5–6-year depreciation the hyperscalers use and cuts against the "GPUs are worthless in 2 years" argument, at least for Hopper.</li>
+        <li><b>Payback is back above the hurdle (our inference).</b> Latent Space's 2024 model (~$50k all-in per H100, 5-year life) loses money below ~$1.65/hr and clears ~10% IRR at ~$2.85. The late-2025 trough of $1.70–2.00 sat near the loss line. Today's ~$3 clears the hurdle.</li>
+        <li><b>What would flip it:</b> Rubin-class price-performance (new chips gain ~49%/yr in performance per dollar, per Epoch) resetting Hopper rates; a wave of capacity landing in 2027; or lab revenue slowing. Early tell: GB200 on-demand medians fell 17% in one week (thin sample). Watch for the indices rolling over.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <!-- CREDIT / CDS -->
 <section id="credit" data-section="credit" class="card span-12">
   <div class="card-head">
@@ -465,6 +522,7 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
     <li><b>Power, not chips, is the binding constraint.</b> Delays at third-party capacity are why Microsoft trimmed its guide. GW of contracted power is now the metric to track.</li>
     <li><b>Lab revenue is the hinge for the whole trade.</b> OpenAI and Anthropic together run at ~$115B a year, against ~$728B of 2026 Big 4 capex and $770B+ of neocloud and Oracle backlog that is mostly owed by these labs. Revenue grows 4× to 13× a year now. If it slows toward 1.5×, the build-out looks over-extended. If it holds at 2–3×, the build-out looks undersized.</li>
     <li><b>Autonomy compounds, and so does token demand.</b> The length of task an AI agent can finish on its own has doubled every ~4 months since 2023 (METR). Hours-long agent runs consume orders of magnitude more tokens than a chat reply. That is why falling token prices coexist with rising compute demand.</li>
+    <li><b>The fundamentals and the market disagree.</b> GPU rental rates are rising for every generation: H100 +50% since Dec 2025, B200 +50% YTD, with list-price hikes at AWS, Lambda, Nebius and RunPod. Equity and credit stress is about whether that demand lasts through the next wave of capacity, not about today's pricing. A rollover in the rental indices would be the first real sign of oversupply.</li>
     <li><b>The credit market is drawing the line at leverage, not at AI.</b> CoreWeave's CDS is above 1,000 bps (distress) and Oracle's prices like junk. Meta, Nvidia and the other hyperscalers sit at records, but only ~100 bps. The stress is in debt-funded capacity with concentrated customers, not in the cash-funded Big 4.</li>
     <li><b>Tokens deflate while capex inflates.</b> Holding capability fixed, the price per token has fallen roughly 10× to 900× a year depending on the task (Epoch AI). Cheaper intelligence widens the use cases. That is the bull case for the spend, but it also squeezes margins for anyone selling commodity tokens.</li>
     <li><b>Compute keeps compounding.</b> Frontier training runs have grown ~4–5×/yr. Sustaining that to 2030 means 1–5 GW training clusters, which is what the campuses above are for.</li>
@@ -512,6 +570,24 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
     <div><a href="https://www.cnbc.com/2026/10/27/ai-debt-hyperscaler-earnings.html">CNBC: AI debt fears ease; Meta and Amazon YTD moves (27 Oct 2026)</a></div>
     <div><a href="https://www.cnbc.com/2026/07/24/bond-market-anxiety-ai-capex-spending.html">CNBC: bond market anxiety over AI capex (Jul 2026)</a></div>
     <div><a href="https://www.techtimes.com/articles/322222/20260730/coreweave-cds-hits-50-default-odds-bond-market-calls-time-gpu-debt-spiral.htm">Tech Times: CoreWeave ~855 bps, Oracle levels (Jul 2026)</a></div>
+    <div><a href="https://www.silicondata.com/products/silicon-index/h100">Silicon Data: GPU rental indices (H100, H200, B200, B300, A100), 6 Nov 2026</a></div>
+    <div><a href="https://x.com/silicondata/status/2118692789848318232">Silicon Data on X: neocloud GPU rental indices, trailing year (6 Nov 2026)</a></div>
+    <div><a href="https://www.silicondata.com/blog/h100-price-spike">Silicon Data: H100 $2.00 → $2.20, Dec 2025 – Jan 2026</a></div>
+    <div><a href="https://www.silicondata.com/blog/b200-rental-price-march-2026-update">Silicon Data: B200 rental prices, Mar 2026</a></div>
+    <div><a href="https://www.silicondata.com/blog/h100-index-may-2026-two-tiers-two-regimes">Silicon Data: H100 neocloud vs hyperscaler, May 2026</a></div>
+    <div><a href="https://www.silicondata.com/blog/h200-vs-h100-rental-prices-may-july-2026">Silicon Data: H200 vs H100, May–Jul 2026</a></div>
+    <div><a href="https://www.silicondata.com/blog/b200-rental-price-august-2026-update">Silicon Data: B200 and term rates, Sep 2026</a></div>
+    <div><a href="https://www.silicondata.com/blog/h100-rental-market-update-september-2025">Silicon Data: H100 market update, Sep 2025</a></div>
+    <div><a href="https://spectrum.ieee.org/gpu-prices">IEEE Spectrum: H100 index at launch, May 2025</a></div>
+    <div><a href="https://data.ornn.com/markets/h100-sxm">Ornn OCPI: executed-trade GPU price indices</a></div>
+    <div><a href="https://gpu-index.semianalysis.com/">SemiAnalysis GPU index (public preview)</a></div>
+    <div><a href="https://newsletter.semianalysis.com/p/the-great-gpu-shortage-rental-capacity">SemiAnalysis: The Great GPU Shortage, H100 1-yr rental index (Apr 2026)</a></div>
+    <div><a href="https://www.latent.space/p/gpu-bubble">Latent Space: $2 H100s, 2023 peak and breakeven model (Oct 2024)</a></div>
+    <div><a href="https://getdeploying.com/gpu-price-trends">GetDeploying: on-demand GPU price trends across 46 providers</a></div>
+    <div><a href="https://aws.amazon.com/blogs/aws/announcing-up-to-45-price-reduction-for-amazon-ec2-nvidia-gpu-accelerated-instances/">AWS: up to 45% GPU instance price cut (Jun 2025)</a></div>
+    <div><a href="https://www.techzine.eu/news/infrastructure/137670/aws-increases-ec2-capacity-block-prices-by-15-percent">Techzine: AWS raises Capacity Block prices 15% (Jan 2026)</a></div>
+    <div><a href="https://www.coreweave.com/pricing">CoreWeave pricing</a> · <a href="https://lambda.com/pricing">Lambda</a> · <a href="https://nebius.com/prices">Nebius</a> · <a href="https://www.together.ai/pricing">Together</a> · <a href="https://www.runpod.io/pricing">RunPod</a></div>
+    <div><a href="https://epoch.ai/data-insights/chip-performance-per-dollar">Epoch AI: GPU performance per dollar trend</a></div>
     <div><a href="https://epoch.ai/data/notable-ai-models">Epoch AI: notable models training compute</a></div>
     <div><a href="https://www.mckinsey.com/featured-insights/charts/data-center-demands">McKinsey: AI vs non-AI capacity 82 → 219 GW by 2030</a></div>
     <div><a href="https://www.datacenterdynamics.com/en/news/iea-data-center-energy-consumption-set-to-double-by-2030-to-945twh">IEA via DCD: 415 TWh (2024) → 945 TWh (2030)</a></div>

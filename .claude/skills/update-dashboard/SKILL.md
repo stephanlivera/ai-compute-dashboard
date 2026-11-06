@@ -1,6 +1,6 @@
 ---
 name: update-dashboard
-description: Refresh the numbers and statistics in the AI build-out dashboard (~/Work/AI-Compute-Dashboard). Use when asked to update, refresh, or check the dashboard's data, or a specific section of it (capex, CDS/credit, lab revenue, METR, token prices, Nvidia, Oracle, neoclouds, GW, power).
+description: Refresh the numbers and statistics in the AI build-out dashboard (~/Work/AI-Compute-Dashboard). Use when asked to update, refresh, or check the dashboard's data, or a specific section of it (capex, GPU rental rates, CDS/credit, lab revenue, METR, token prices, Nvidia, Oracle, neoclouds, GW, power).
 ---
 
 # Refreshing the AI build-out dashboard
@@ -29,6 +29,7 @@ For each section, check the sources listed in `SECTIONS[id].sources` in `data.js
 | `lab-revenue` | New run-rate prints, booked revenue (S-1/10-Q once Anthropic is public), company targets | Epoch revenue insight, CNBC/Bloomberg/The Information/FT, SEC filings |
 | `autonomy` | New METR time horizons (TH1.1 file or a successor benchmark), doubling time; new Anthropic Economic Index report | metr.org/time-horizons, `benchmark_results_1_1.yaml`, anthropic.com/research |
 | `credit` | 5y CDS for CoreWeave, Oracle, Meta, Nvidia, Amazon, Alphabet, Microsoft; CoreWeave bond yields; rating actions | Terminal data if the user provides it; otherwise CNBC, WSJ (Solve), Bloomberg press |
+| `gpu` | Silicon Data index levels (append new dated prints to `GPU`, keep history), Ornn OCPI, neocloud/hyperscaler list prices in `GPU_SNAP`, tile figures and hike list; re-pull Vast.ai medians from `console.vast.ai/api/v0/bundles` | silicondata.com/products/silicon-index/h100 + blog, data.ornn.com, getdeploying.com/gpu-price-trends, provider pricing pages |
 | `gw`, `power` | Revised 2030 forecasts | IEA, McKinsey, JLL, Goldman Sachs |
 | `campuses` | New or resized GW-class campuses | Company announcements |
 

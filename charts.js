@@ -554,6 +554,74 @@ function drawCds() {
     `<span><i class="sw" style="background:transparent;border:2px solid var(--text-muted);border-radius:50%"></i>Derived</span>`;
 }
 
+// ---------- CHART: GPU rental index (Silicon Data neocloud) ----------
+const fmtH = v => "$" + v.toFixed(2);
+function drawGpu() {
+  const host = document.getElementById("c-gpu"); host.innerHTML = "";
+  const VW = 760, VH = 340, m = { t: 16, r: 120, b: 28, l: 44 };
+  const W = VW - m.l - m.r, H = VH - m.t - m.b;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Line chart of Silicon Data neocloud GPU rental price indices, mid-2025 to November 2026: H100, H200, B200 and B300 rising, A100 roughly flat" }, host);
+  const x0 = decYear(GPU_RANGE[0]), x1 = decYear(GPU_RANGE[1]), ymax = 8;
+  const sx = x => m.l + ((x - x0) / (x1 - x0)) * W, sy = v => m.t + H - (v / ymax) * H;
+  yAxis(svg, m, W, H, ymax, 2, v => "$" + v);
+  GPU_TICKS.forEach(([d, l]) => el("text", { x: sx(decYear(d)), y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = l);
+  // restatement marker: points before it used Silicon Data's older methodology
+  const rx = sx(decYear(GPU_RESTATE));
+  el("line", { x1: rx, x2: rx, y1: m.t, y2: m.t + H, stroke: css("--axis"), "stroke-dasharray": "3 3" }, svg);
+  el("text", { x: rx - 4, y: m.t + 10, "text-anchor": "end", class: "tick" }, svg).textContent = "← older method";
+  const S = GPU.map(g => ({ ...g, P: g.pts.map(p => ({ d: p[0], x: decYear(p[0]), v: p[1], h: !!p[2], n: p[3] || "" })) }));
+  S.forEach(g => {
+    g.P.slice(1).forEach((p, i) => { const a = g.P[i], gap = p.x - a.x > 0.17;
+      el("line", { x1: sx(a.x), y1: sy(a.v), x2: sx(p.x), y2: sy(p.v), stroke: css(g.c), "stroke-width": 2, "stroke-linecap": "round", ...(gap ? { "stroke-dasharray": "3 4", opacity: 0.7 } : {}) }, svg); });
+    g.P.forEach(p => {
+      el("circle", { cx: sx(p.x), cy: sy(p.v), r: 3.5, fill: p.h ? css("--surface-1") : css(g.c), stroke: p.h ? css(g.c) : css("--surface-1"), "stroke-width": 1.5 }, svg);
+      const hit = el("circle", { cx: sx(p.x), cy: sy(p.v), r: 9, fill: "transparent" }, svg);
+      hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${g.chip} · ${p.d}</div>` + row("Rental index", `<b>${fmtH(p.v)}</b>/GPU-hr`, g.c) + (p.n ? `<div class="muted" style="max-width:260px;margin-top:4px">${p.n}</div>` : "")));
+      hit.addEventListener("mouseleave", hideTip);
+    });
+  });
+  // end labels, de-collided
+  const ends = S.map(g => ({ g, last: g.P[g.P.length - 1] })).map(o => ({ ...o, y: sy(o.last.v) + 4 })).sort((a, b) => a.y - b.y);
+  for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14;
+  ends.forEach(o => el("text", { x: sx(o.last.x) + 8, y: o.y, class: "dlabel strong" }, svg).textContent = `${o.g.chip} ${fmtH(o.last.v)}`);
+
+  document.getElementById("lg-gpu").innerHTML = S.map(g => `<span><i class="sw" style="background:var(${g.c})"></i>${g.chip}</span>`).join("") +
+    `<span><i class="sw" style="background:transparent;border:2px solid var(--text-muted);border-radius:50%"></i>Read off a chart, older method, or secondary source</span>`;
+  const rows = [];
+  S.forEach(g => g.P.forEach(p => rows.push([g.chip, p.d, fmtH(p.v) + (p.h ? " ○" : ""), p.n])));
+  document.getElementById("t-gpu").innerHTML = table(["GPU", "Date", "$/GPU-hr", "Note"], rows);
+  // change table
+  document.getElementById("gpu-chg").innerHTML = S.map(g => {
+    const f = (g.base && g.P.find(p => p.d === g.base)) || g.P.find(p => !p.h) || g.P[0], l = g.P[g.P.length - 1], ch = (l.v / f.v - 1) * 100;
+    return `<tr><td><i class="sw" style="background:var(${g.c})"></i> ${g.chip}</td><td class="num">${fmtH(f.v)} <span class="muted">(${mon(f.d)})</span></td><td class="num"><b>${fmtH(l.v)}</b></td><td class="num">${ch >= 0 ? "+" : ""}${Math.round(ch)}%</td></tr>`;
+  }).join("");
+}
+
+function drawGpuLong() {
+  const host = document.getElementById("c-gpul"); host.innerHTML = "";
+  const VW = 420, VH = 220, m = { t: 14, r: 16, b: 26, l: 40 };
+  const W = VW - m.l - m.r, H = VH - m.t - m.b;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Line chart of the SemiAnalysis H100 spot-contract composite, falling from $6.62 in the second half of 2023 to about $2.80 from mid-2025, then flat" }, host);
+  const x0 = 2023.6, x1 = 2026.35, ymax = 8;
+  const sx = x => m.l + ((x - x0) / (x1 - x0)) * W, sy = v => m.t + H - (v / ymax) * H;
+  yAxis(svg, m, W, H, ymax, 2, v => "$" + v);
+  [2024, 2025, 2026].forEach(y => el("text", { x: sx(y), y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = y);
+  const P = GPU_LONG.map(([l, x, v]) => ({ l, x, v }));
+  el("path", { d: P.map((p, i) => (i ? "L" : "M") + sx(p.x) + "," + sy(p.v)).join(""), fill: "none", stroke: css("--s1"), "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+  P.forEach(p => {
+    el("circle", { cx: sx(p.x), cy: sy(p.v), r: 3.5, fill: css("--s1"), stroke: css("--surface-1"), "stroke-width": 1.5 }, svg);
+    const hit = el("circle", { cx: sx(p.x), cy: sy(p.v), r: 9, fill: "transparent" }, svg);
+    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">H100 composite · ${p.l}</div>` + row("SemiAnalysis", fmtH(p.v), "--s1")));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+  el("text", { x: sx(P[0].x) + 6, y: sy(P[0].v) - 6, class: "dlabel strong" }, svg).textContent = fmtH(P[0].v);
+  const L = P[P.length - 1];
+  el("text", { x: sx(L.x), y: sy(L.v) - 10, "text-anchor": "end", class: "dlabel strong" }, svg).textContent = fmtH(L.v);
+  document.getElementById("t-gpul").innerHTML = table(["Period", "$/GPU-hr"], GPU_LONG.map(r => [r[0], fmtH(r[2])]));
+  const c = v => v == null ? "—" : typeof v === "string" ? "$" + v : fmtH(v);
+  document.getElementById("gpu-snap").innerHTML = GPU_SNAP.map(r => `<tr><td><b>${r.src}</b><div class="muted" style="font-size:12px">${r.kind}</div></td><td class="num">${c(r.h100)}</td><td class="num">${c(r.h200)}</td><td class="num">${c(r.b200)}</td></tr>`).join("");
+}
+
 function table(head, rows) {
   return `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "num" : ""}">${h}</th>`).join("")}</tr></thead><tbody>` +
     rows.map(r => `<tr>${r.map((c, i) => `<td class="${i ? "num" : ""}">${c}</td>`).join("")}</tr>`).join("") + `</tbody></table>`;
@@ -571,6 +639,8 @@ function drawAll() {
   drawRev();
   drawMetr();
   drawCds();
+  drawGpu();
+  drawGpuLong();
 }
 
 

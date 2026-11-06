@@ -25,6 +25,7 @@ const SECTIONS = {
   autonomy:      { title: "METR + Economic Index",      asOf: "2026-11-06", every: 60,  consts: ["METR", "METR_DOUBLING_DAYS", "AEI"], sources: ["https://metr.org/time-horizons", "https://metr.org/assets/benchmark_results_1_1.yaml", "https://www.anthropic.com/research (Economic Index)"] },
   credit:        { title: "CDS credit monitor",         asOf: "2026-11-01", every: 7,   consts: ["CDS", "CDS_TS", "CDS_ASOF"], sources: ["Bloomberg/ICE terminal if available", "CNBC, WSJ (Solve data), Bloomberg press reports"] },
   power:         { title: "DC power demand",            asOf: "2026-11-06", every: 180, consts: ["PWR"], sources: ["Goldman Sachs Research", "IEA"] },
+  gpu:           { title: "GPU rental rates",           asOf: "2026-11-06", every: 30,  consts: ["GPU", "GPU_RANGE", "GPU_RESTATE", "GPU_SNAP"], sources: ["https://www.silicondata.com/products/silicon-index/h100", "https://www.silicondata.com/blog", "Vast.ai public marketplace API (snapshot)"] },
   campuses:      { title: "GW-class campuses",          asOf: "2026-11-06", every: 90,  consts: ["(table in index.html)"], sources: ["company announcements"] },
 };
 
@@ -173,4 +174,50 @@ const DEFL = [
     ["GPT-3", "2021-11-20", 60], ["GPT-3 (price cut)", "2022-09-01", 20], ["GPT-3.5 Turbo", "2023-03-06", 2],
     ["Llama 2 Chat 13B", "2023-07-18", 0.56], ["Llama 2 7B", "2023-12-01", 0.20], ["Llama 2 7B", "2024-04-14", 0.13],
     ["Llama 3.1 8B Instruct", "2024-07-23", 0.10], ["Llama 3.2 3B Instruct", "2024-09-24", 0.08], ["Gemini 1.5 Flash-8B", "2024-10-03", 0.07]] },
+];
+
+// ---------- GPU rental rates ----------
+// Silicon Data neocloud (non-hyperscaler) daily rental indices, $/GPU-hr (SDH100RT on Bloomberg etc.).
+// Point: [date, $/GPU-hr, hollow?, note]. Hollow = read off Silicon Data's chart by eye, pre-restatement
+// methodology, or a secondary source. Silicon Data reportedly restated H100/A100 history in early Dec 2025
+// (secondary sources: H100 ~-4-6%, A100 ~+35-40%), so points before GPU_RESTATE aren't strictly comparable.
+const GPU_RANGE = ["2025-05-01", "2026-11-20"];
+const GPU_RESTATE = "2025-12-03";
+const GPU_TICKS = [["2025-07-01", "Jul 25"], ["2025-10-01", "Oct"], ["2026-01-01", "Jan 26"], ["2026-04-01", "Apr"], ["2026-07-01", "Jul"], ["2026-10-01", "Oct"]];
+const GPU = [
+  { chip: "B300", c: "--s4", base: "2026-04-23", pts: [
+    ["2026-04-23", 4.83, 1, "Index starts; level read off Silicon Data's chart"], ["2026-06-01", 5.15, 1, "Read off chart"], ["2026-07-10", 5.6, 1, "Read off chart"],
+    ["2026-08-05", 7.1, 1, "Read off chart"], ["2026-10-10", 6.7, 1, "Read off chart (Sep–Oct dip)"], ["2026-11-06", 7.56, 0, "Silicon Data index page; +13% in 7 days"]] },
+  { chip: "B200", c: "--s2", base: "2026-01-01", pts: [
+    ["2025-11-05", 4.85, 1, "Read off Silicon Data's chart"], ["2026-01-01", 4.40, 0, "Opened 2026 (Silicon Data blog)"], ["2026-01-11", 4.29, 0, "Low"],
+    ["2026-03-25", 6.11, 0, "Spike: +$0.96 on 23 Mar"], ["2026-03-30", 5.48, 0, ""], ["2026-07-27", 5.66, 0, ""], ["2026-09-07", 5.69, 0, "Term rates same day: 3-mo $5.73, 6-mo $5.64, 12-mo $5.39"],
+    ["2026-11-06", 6.58, 0, "Index page; +11.9% in 7 days. The 5 Nov chart in Silicon Data's post shows $6.70"]] },
+  { chip: "H200", c: "--s3", base: "2026-05-04", pts: [
+    ["2026-05-04", 2.70, 0, "Index starts"], ["2026-07-18", 3.10, 0, ""], ["2026-09-07", 3.29, 0, ""],
+    ["2026-10-24", 3.48, 1, "Secondary source (explainx.ai)"], ["2026-11-06", 3.51, 0, "Index page; +5.7% in 7 days"]] },
+  { chip: "H100", c: "--s1", base: "2025-12-09", pts: [
+    ["2025-05-27", 2.37, 1, "Older method. IEEE Spectrum, at index launch"], ["2025-08-15", 2.24, 1, "Older method. Aug range $2.22–2.26"], ["2025-09-15", 2.13, 1, "Older method. Mid-Sep low"],
+    ["2025-11-05", 1.98, 1, "Read off Silicon Data's chart (current method)"], ["2025-12-09", 2.00, 0, "Cycle low"], ["2026-01-06", 2.20, 0, "+10% in four weeks"],
+    ["2026-04-01", 2.63, 0, ""], ["2026-04-08", 2.47, 0, ""], ["2026-05-04", 2.57, 0, ""], ["2026-05-31", 2.73, 0, ""], ["2026-06-05", 2.79, 0, "Mid-year high"],
+    ["2026-07-27", 2.75, 0, ""], ["2026-09-07", 2.63, 0, ""], ["2026-10-08", 2.80, 0, ""], ["2026-10-22", 2.88, 0, ""], ["2026-11-06", 2.99, 0, "Index page (SDH100RT)"]] },
+  { chip: "A100", c: "--neutral", base: "2025-11-05", pts: [
+    ["2025-11-05", 1.38, 1, "Read off Silicon Data's chart"], ["2026-07-15", 1.65, 1, "Read off chart (peak)"], ["2026-11-06", 1.59, 0, "Index page (SDA100RT)"]] },
+];
+// The long view: SemiAnalysis "spot-contract composite" (public preview of gpu-index.semianalysis.com; the
+// history table doesn't name the chip, but its H100 headline matches, so very likely H100). Different method
+// from Silicon Data, so it's charted separately. [label, decimal-year midpoint, $/GPU-hr]
+const GPU_LONG = [["2H23", 2023.75, 6.62], ["1Q24", 2024.125, 5.78], ["2Q24", 2024.375, 4.77], ["3Q24", 2024.625, 4.44], ["4Q24", 2024.875, 3.91],
+  ["1Q25", 2025.125, 3.60], ["2Q25", 2025.375, 3.34], ["Jul 25", 2025.54, 2.79], ["Sep 25", 2025.71, 2.90], ["Nov 25", 2025.87, 2.80], ["Jan 26", 2026.04, 2.82], ["Mar 26", 2026.2, 2.80]];
+// Same chip, different price: early Nov 2026 snapshot by source and method. $/GPU-hr; null = not listed.
+const GPU_SNAP = [
+  { src: "Vast.ai marketplace median", kind: "Marketplace, on-demand (own API pull 6 Nov, 8–37 listings per chip)", h100: 2.39, h200: 4.37, b200: 9.69 },
+  { src: "Silicon Data index", kind: "Neocloud rental index (6 Nov)", h100: 2.99, h200: 3.51, b200: 6.58 },
+  { src: "Ornn OCPI", kind: "Executed trades, volume-weighted (5 Nov; moves ±10% a day)", h100: 3.13, h200: 6.45, b200: 9.46 },
+  { src: "GetDeploying median", kind: "On-demand list, 46 providers (wk of 2 Nov)", h100: 3.92, h200: null, b200: null },
+  { src: "Together AI", kind: "On-demand list (91–180-day reserved: H100 $3.19)", h100: 3.99, h200: 5.99, b200: 8.19 },
+  { src: "Nebius", kind: "On-demand list", h100: 4.50, h200: 5.40, b200: 8.50 },
+  { src: "Lambda", kind: "On-demand list, 8× node, effective 16 Nov", h100: 4.59, h200: null, b200: 7.69 },
+  { src: "CoreWeave", kind: "On-demand list (GB200 $10.50)", h100: 6.16, h200: 6.31, b200: 8.60 },
+  { src: "AWS p5", kind: "On-demand (spot $2.64–4.67; 3-yr plan $2.97)", h100: 6.88, h200: null, b200: null },
+  { src: "Google a3-high / Azure ND H100 v5", kind: "On-demand list (aggregators)", h100: "11.06 / 12.29", h200: null, b200: null },
 ];

@@ -1,6 +1,6 @@
 # AI build-out dashboard
 
-A static, single-page dashboard about the AI and compute build-out: hyperscaler capex, data-centre GW, neoclouds, training compute, token deflation, OpenAI/Anthropic revenue, METR time horizons, and CDS credit stress. You open `index.html` directly (`xdg-open index.html`). There is no build step, server or dependencies.
+A static, single-page dashboard about the AI and compute build-out: hyperscaler capex, data-centre GW, neoclouds, training compute, token deflation, OpenAI/Anthropic revenue, METR time horizons, GPU rental rates, and CDS credit stress. You open `index.html` directly (`xdg-open index.html`). There is no build step, server or dependencies.
 
 ## Files
 
