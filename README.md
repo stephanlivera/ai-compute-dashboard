@@ -1,0 +1,22 @@
+# AI compute dashboard
+
+A single-page, static dashboard about the AI and compute build-out. It covers:
+
+- hyperscaler capex
+- data-centre gigawatts
+- Oracle and the neoclouds
+- frontier training compute
+- Nvidia data-centre revenue
+- token deflation
+- OpenAI and Anthropic revenue
+- METR time horizons
+- GPU rental rates
+- CDS credit stress
+
+To view it, open `index.html` in a browser. There's no build step and nothing to install.
+
+- `data.js` holds every number, plus a per-section "as of" date and its sources.
+- `charts.js` draws the SVG charts.
+- `check.sh` reports which sections are stale and takes screenshots (it needs Chromium).
+
+Every card shows when its data was last checked. Estimates, projections, single-source figures and values read off charts are marked as such. This is not investment advice. Check the primary sources before quoting a figure.
