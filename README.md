@@ -13,7 +13,7 @@ A single-page, static dashboard about the AI and compute build-out. It covers:
 - GPU rental rates
 - CDS credit stress
 
-To view it, open `index.html` in a browser. There's no build step and nothing to install.
+Live at https://stephanlivera.github.io/ai-compute-dashboard/ (GitHub Pages, redeploys on every push to `master`). To view it locally, open `index.html` in a browser. There's no build step and nothing to install.
 
 - `data.js` holds every number, plus a per-section "as of" date and its sources.
 - `charts.js` draws the SVG charts.
