@@ -93,6 +93,12 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .sources { font-size: 12px; color: var(--text-secondary); columns: 2; column-gap: 32px; }
 @media (max-width: 900px) { .sources { columns: 1; } }
 .sources a { color: var(--text-secondary); }
+.viz-root { --st-good: #0ca30c; --st-warning: #fab219; --st-serious: #ec835a; --st-critical: #d03b3b; }
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--text-primary); margin: 2px 0; }
+.status i { width: 10px; height: 10px; border-radius: 50%; background: var(--st); display: inline-block; flex: none; }
+code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 4px; }
+.pill.asof { font-weight: 400; }
+.pill.stale { color: var(--text-primary); border-color: var(--st-warning); background: color-mix(in srgb, var(--st-warning) 18%, transparent); }
 .pill { display: inline-block; font-size: 11px; border: 1px solid var(--border); border-radius: 999px; padding: 1px 8px; color: var(--text-muted); margin-left: 6px; vertical-align: middle; }
 </style>
 </head>
@@ -103,13 +109,13 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 <header>
   <div>
     <h1>The AI build-out</h1>
-    <p class="sub">Hyperscaler capex, neocloud capacity, and how fast AI compute is growing. Data as of 6 Nov 2026, after Q3 2026 earnings.</p>
+    <p class="sub">Hyperscaler capex, neocloud capacity, and how fast AI compute is growing. Last full refresh: <span id="updated">6 Nov 2026</span>. Each card shows when its data was last checked.</p>
   </div>
   <button class="toggle" id="theme">Toggle theme</button>
 </header>
 
 <!-- HERO -->
-<section class="card span-12" style="margin-bottom:16px">
+<section id="hero" data-section="hero" class="card span-12" style="margin-bottom:16px">
   <div class="hero">
     <div class="tile big">
       <div class="label">Big 4 hyperscaler capex, 2026 (guided)</div>
@@ -126,7 +132,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 <div class="grid">
 
 <!-- CAPEX STACK -->
-<section class="card span-8">
+<section id="capex" data-section="capex" class="card span-8">
   <div class="card-head">
     <div>
       <h2>Hyperscaler capex by company, 2016–2027E</h2>
@@ -140,7 +146,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 </section>
 
 <!-- SHARE + GUIDANCE -->
-<section class="card span-4">
+<section id="share" data-section="share" class="card span-4">
   <h2>Who's spending, 2026</h2>
   <p class="muted">Share of ~$728B in guided Big 4 capex</p>
   <div class="seg" id="seg26"></div>
@@ -153,7 +159,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 </section>
 
 <!-- GIGAWATTS -->
-<section class="card span-12">
+<section id="gw" data-section="gw" class="card span-12">
   <div class="card-head">
     <div>
       <h2>Gigawatts of data-centre capacity: before AI, now, and next, 2015–2030</h2>
@@ -189,7 +195,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 </section>
 
 <!-- NEOCLOUDS -->
-<section class="card span-7">
+<section id="neoclouds" data-section="neoclouds" class="card span-7">
   <h2>Oracle and the neoclouds</h2>
   <p class="muted" style="margin-bottom:10px">Capacity sold mostly to OpenAI, Microsoft, Meta, Google and Anthropic. Their backlog is the hyperscalers' overflow.</p>
   <table>
@@ -203,7 +209,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   </table>
 </section>
 
-<section class="card span-5">
+<section id="oracle" data-section="oracle" class="card span-5">
   <div class="card-head">
     <div>
       <h2>Oracle capex, FY2021–FY2027E</h2>
@@ -216,7 +222,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 </section>
 
 <!-- COMPUTE GROWTH -->
-<section class="card span-7">
+<section id="flop" data-section="flop" class="card span-7">
   <div class="card-head">
     <div>
       <h2>Frontier training compute, 2016–2030</h2>
@@ -229,7 +235,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   <div class="datatable" id="t-flop"></div>
 </section>
 
-<section class="card span-5">
+<section id="nvda" data-section="nvda" class="card span-5">
   <div class="card-head">
     <div>
       <h2>Nvidia data-centre revenue</h2>
@@ -241,8 +247,186 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   <div class="datatable" id="t-nvda"></div>
 </section>
 
+<!-- TOKEN DEFLATION -->
+<section id="deflation" data-section="deflation" class="card span-12">
+  <div class="card-head">
+    <div>
+      <h2>Token deflation: the price of a fixed level of capability, per task</h2>
+      <p class="muted">Cheapest model that reaches a set benchmark score, in USD per 1M tokens, log scale. Each step down is a cheaper model hitting the same bar. Data is from Epoch AI and runs to Feb 2025.</p>
+    </div>
+    <button class="toggle" data-table="t-defl">Table</button>
+  </div>
+  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+    <div class="tile"><div class="label">GPT-4-level chat (Arena Elo ≥ 1186)</div><div class="value">$37.50 → $0.07</div><div class="delta">▼ ~540× cheaper in 19 months</div></div>
+    <div class="tile"><div class="label">GPT-4-level PhD science (GPQA), Epoch trend</div><div class="value">40× / yr</div><div class="muted">Epoch's headline rate</div></div>
+    <div class="tile"><div class="label">Spread across tasks and thresholds</div><div class="value">9×–900× / yr</div><div class="muted">The fastest drops are recent and may not last</div></div>
+    <div class="tile"><div class="label">GPT-3-level knowledge (MMLU ≥ 43.9)</div><div class="value">$60 → $0.07</div><div class="delta">▼ ~860× from Nov 2021 to Oct 2024</div></div>
+  </div>
+  <div class="grid" style="gap:24px">
+    <div class="span-8" style="min-width:0">
+      <div class="legend" id="lg-defl"></div>
+      <div id="c-defl"></div>
+      <div class="datatable" id="t-defl"></div>
+    </div>
+    <div class="span-4" style="min-width:0">
+      <h2 style="font-size:14px">How fast each task got cheaper</h2>
+      <p class="muted" style="margin-bottom:6px">From the first model at the bar to the cheapest one by Feb 2025. "Per year" is the annualised rate between those two points (our calculation). Epoch fits a trend instead, so its figures differ.</p>
+      <table>
+        <thead><tr><th>Task (threshold)</th><th class="num">Total</th><th class="num">Per year</th></tr></thead>
+        <tbody id="defl-body"></tbody>
+      </table>
+      <h2 style="font-size:14px;margin-top:16px">Why it matters for the build-out</h2>
+      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+        <li>Any given capability gets cheaper by roughly 10× to 100× a year, which is much faster than Moore's law.</li>
+        <li>The cost of frontier capability does not fall this way. Every new top model resets the price bar.</li>
+        <li>Cheaper tokens drive more usage, including agents and long reasoning chains. That demand is what fills the gigawatts above.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- LAB REVENUE -->
+<section id="lab-revenue" data-section="lab-revenue" class="card span-12">
+  <div class="card-head">
+    <div>
+      <h2>The demand side: OpenAI and Anthropic annualised revenue, 2023–2028E</h2>
+      <p class="muted">Reported revenue run-rate (the current month × 12) in $B, log scale. Solid points are reported figures and hollow points are estimates, targets or single-source reports. Shaded fans are illustrative projections from each company's latest confirmed figure: 1.5× to 3×/yr, with a 2×/yr midline. They are not forecasts.</p>
+    </div>
+    <button class="toggle" data-table="t-rev">Table</button>
+  </div>
+  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+    <div class="tile"><div class="label">Anthropic run-rate (Jul 2026)</div><div class="value">$65B</div><div class="delta">▲ ~13× vs Jul 2025 ($5B)</div></div>
+    <div class="tile"><div class="label">OpenAI run-rate (Sep 2026, net)</div><div class="value">~$50B</div><div class="delta">▲ ~3.8× vs Aug 2025 ($13B)</div><div class="muted">~$70B counted the way Anthropic counts</div></div>
+    <div class="tile"><div class="label">Combined run-rate</div><div class="value">~$115B</div><div class="muted">≈ ⅙ of 2026 Big 4 capex (~$728B)</div></div>
+    <div class="tile"><div class="label">Anthropic passes OpenAI</div><div class="value">~Apr 2026</div><div class="muted">On reported run-rates. The two count partner sales differently.</div></div>
+  </div>
+  <div class="grid" style="gap:24px">
+    <div class="span-8" style="min-width:0">
+      <div class="legend" id="lg-rev"></div>
+      <div id="c-rev"></div>
+      <div class="datatable" id="t-rev"></div>
+    </div>
+    <div class="span-4" style="min-width:0">
+      <h2 style="font-size:14px">Booked revenue (calendar year)</h2>
+      <p class="muted" style="margin-bottom:6px">Run-rates are snapshots. The revenue each company actually booked is lower.</p>
+      <table>
+        <thead><tr><th></th><th class="num">2024</th><th class="num">2025</th><th class="num">2026</th></tr></thead>
+        <tbody>
+          <tr><td><i class="sw" style="background:var(--s1);margin-right:6px"></i>OpenAI</td><td class="num">$3.7B</td><td class="num">$13.1B</td><td class="num">~$36B<div class="muted">forecast</div></td></tr>
+          <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td class="num">~$0.4B<div class="muted">implied</div></td><td class="num">$4.6B</td><td class="num">$33.2B<div class="muted">Jan–Sep</div></td></tr>
+        </tbody>
+      </table>
+      <p class="muted" style="margin-top:6px">OpenAI's 2024 figure is from the CFO via Reuters, and 2025 is from leaked audited accounts (Fortune/FT). Its 2026 figure is an internal forecast (FT). Anthropic's numbers are from its S-1 as reported. Its 2024 figure is implied by "~12× growth" in 2025.</p>
+      <h2 style="font-size:14px;margin-top:16px">Company projections on record</h2>
+      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+        <li><b>OpenAI:</b> ≥$70B run-rate by end of 2026 (Bloomberg), and revenue of ~$36B in 2026 rising to ~$350B in 2030 (FT, July 2026 deck). That plan also burns ~$278B of cash over 2026–30.</li>
+        <li><b>Anthropic:</b> in late 2025 it targeted a $20–26B run-rate in 2026 and up to $70B of revenue in 2028 (Reuters, The Information). It passed both run-rate levels by mid-2026.</li>
+        <li><b>Epoch AI trend (Feb 2026):</b> OpenAI growing ~3.4×/yr and Anthropic ~10×/yr (~7× since mid-2025). Epoch calls straight-line extrapolation "aggressive".</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- METR + AUTOMATION -->
+<section id="autonomy" data-section="autonomy" class="card span-12">
+  <div class="card-head">
+    <div>
+      <h2>How long a task can AI handle on its own, and what work it's taking on</h2>
+      <p class="muted">METR's "time horizon" is how long the software, ML and cybersecurity tasks a model can finish 50% of the time take a skilled human. Log scale, by model release date. Then Anthropic's usage data on which work is actually being handed to AI.</p>
+    </div>
+    <button class="toggle" data-table="t-metr">Table</button>
+  </div>
+  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+    <div class="tile"><div class="label">Longest horizon measured (50% success)</div><div class="value">~17 h</div><div class="muted">Claude Mythos Preview (early), Apr 2026. CI 8.5–55 h, above METR's 16 h reliability limit</div></div>
+    <div class="tile"><div class="label">Same model at 80% success</div><div class="value">~3 h</div><div class="muted">Reliability lags raw capability by ~5×</div></div>
+    <div class="tile"><div class="label">Doubling time since 2023</div><div class="value">~4.2 months</div><div class="delta">▲ ≈ 7× per year</div><div class="muted">~6 months over 2019–2026</div></div>
+    <div class="tile"><div class="label">GPT-4 (Mar 2023) → frontier (Apr 2026)</div><div class="value">4 min → 17 h</div><div class="delta">▲ ~260× in 3 years</div></div>
+  </div>
+  <div class="grid" style="gap:24px">
+    <div class="span-8" style="min-width:0">
+      <div class="legend"><span><i class="sw" style="background:var(--s1);border-radius:50%"></i>New frontier model</span><span><i class="sw" style="background:var(--neutral);border-radius:50%"></i>Other model</span><span><i class="sw line" style="background:var(--text-muted)"></i>Trend since 2023, doubling every ~129 days<span id="metr-trend-note"></span></span></div>
+      <div id="c-metr"></div>
+      <div class="datatable" id="t-metr"></div>
+      <ul class="note" style="padding-left:18px;margin:10px 0 0">
+        <li><b>Not the same as "can do any 17-hour job."</b> METR's tasks are well specified and scored automatically. Real work is messier, and METR says a 50% horizon of X hours "does not mean we can delegate tasks under X hours to AIs."</li>
+        <li><b>The benchmark is saturating.</b> METR says frontier agents "essentially saturated" Time Horizon 1.1 (May 2026), and it found at least 16% of successful runs on 8h+ tasks were illegitimate. Its page is no longer actively updated (last update Sep 2026), so newer models aren't shown.</li>
+        <li><b>The skill profile is jagged.</b> Maths, science Q&amp;A and coding show similar horizons that double every 2–6 months. Visual computer use is 40–100× shorter but improving at a similar rate. Self-driving improves much more slowly, at ~0.6 doublings a year (METR, Jul 2025).</li>
+      </ul>
+    </div>
+    <div class="span-4" style="min-width:0">
+      <h2 style="font-size:14px">Who's automating vs. collaborating</h2>
+      <p class="muted" style="margin-bottom:4px">Share of conversations that delegate the task outright (automation) vs. iterate with the AI (augmentation). Anthropic Economic Index.</p>
+      <div class="muted" style="margin-top:8px">Claude.ai, people (Nov 2025)</div>
+      <div class="seg" id="seg-ai-chat"></div>
+      <div class="muted">API, businesses building on Claude (Aug 2025)</div>
+      <div class="seg" id="seg-ai-api"></div>
+      <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>Automation</span><span><i class="sw" style="background:var(--s3)"></i>Augmentation</span><span><i class="sw" style="background:var(--neutral)"></i>Other</span></div>
+      <h2 style="font-size:14px;margin-top:14px">What's being handed off</h2>
+      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+        <li><b>Software comes first.</b> Computer &amp; maths work is ~34% of Claude.ai conversations and ~46% of API traffic. The single most common API task is fixing bugs in code, about 1 in 10 records.</li>
+        <li><b>Back-office work comes next.</b> Office &amp; admin support is 13% of API traffic, up 3 points in three months. Examples: email triage and replies, invoice processing, CRM, scheduling, B2B sales emails.</li>
+        <li><b>The time compression is large.</b> Tasks people estimate at ~3 h without AI take ~15 min with Claude. On the API, ~1.7 h of work runs in ~5 min.</li>
+        <li><b>Users feel it.</b> In a June 2026 survey of ~9,700 users, 86% said they work faster, 82% wider in scope and 69% at higher quality. Only 10% think losing their own job is likely.</li>
+        <li><b>The hard evidence is more modest.</b> In METR's early-2025 trial, experienced developers using AI were 19% <i>slower</i>. Its 2026 follow-up found small gains of ~4–20%, which METR thinks is an underestimate.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CREDIT / CDS -->
+<section id="credit" data-section="credit" class="card span-12">
+  <div class="card-head">
+    <div>
+      <h2>Credit stress monitor: are AI-trade CDS spreads blowing out?</h2>
+      <p class="muted">A credit default swap (CDS) is insurance against a company defaulting on its debt. The spread is the yearly cost, in basis points, of insuring $10,000 of that debt for 5 years (100 bps = $100 a year), so a wider spread means the market sees more default risk. Levels are the latest in the press, as of 1 Nov 2026. There's no free CDS feed, so paste terminal data into <code>CDS</code> in <code>data.js</code> when you have it.</p>
+    </div>
+    <button class="toggle" data-table="t-cds">Table</button>
+  </div>
+  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+    <div class="tile"><div class="label">CoreWeave 5y CDS</div><div class="value">~1,080 bps</div><div class="status" style="--st:var(--st-critical)"><i></i>Distress · above 1,000 bps</div><div class="muted">~2.8× a year ago. Bonds yield ~15–16%</div></div>
+    <div class="tile"><div class="label">Oracle 5y CDS</div><div class="value">~290–315 bps</div><div class="status" style="--st:var(--st-serious)"><i></i>Priced like junk</div><div class="muted">~2× since end-2025. Rated BBB- (S&amp;P), one notch above junk</div></div>
+    <div class="tile"><div class="label">Meta · Nvidia 5y CDS</div><div class="value">108 · 101 bps</div><div class="status" style="--st:var(--st-warning)"><i></i>Record highs, still investment grade</div><div class="muted">Meta +177% YTD. Amazon +129% YTD</div></div>
+    <div class="tile"><div class="label">CDS trading on AI names</div><div class="value">&gt;$9B / week</div><div class="muted">Sep 2026 average, up from &lt;$2B in July. AI-linked debt issued in 2026 YTD: $466B (vs $101B)</div></div>
+  </div>
+  <div class="grid" style="gap:24px">
+    <div class="span-7" style="min-width:0">
+      <h2 style="font-size:14px">Latest reported 5-year CDS, bps</h2>
+      <p class="muted" style="margin-bottom:6px">Bars are coloured by credit state. The 1,000 bps line is the level S&amp;P Global calls a sign of distress. Implied default odds (hover) assume 40% recovery. They are risk-neutral, so they overstate real-world odds.</p>
+      <div id="c-cds"></div>
+      <div class="datatable" id="t-cds"></div>
+    </div>
+    <div class="span-5" style="min-width:0">
+      <h2 style="font-size:14px">How fast they widened, Oct 2025 – Nov 2026</h2>
+      <p class="muted" style="margin-bottom:6px">Sparse reported prints, not daily data. Dashed segments span months with no prints. Hollow points are derived from reported % changes.</p>
+      <div class="legend" id="lg-cdst"></div>
+      <div id="c-cdst"></div>
+    </div>
+  </div>
+  <div class="grid" style="gap:24px;margin-top:8px">
+    <div class="span-7" style="min-width:0">
+      <h2 style="font-size:14px">Verdict by company</h2>
+      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+        <li><b>CoreWeave: yes, blown out.</b> Its spread went from ~855 bps (late Jul) to above 1,000 in mid-October, with an intraday high above 1,140 on 15 Oct. That implies ~60% risk-neutral odds of default within 5 years. It carries more than $51B of debt and obligations, financed against GPU contracts. The ~$104B backlog is the offset, but lenders want operating cash flow, not promises.</li>
+        <li><b>Oracle: widening, not distressed.</b> It is still rated investment grade (BBB- since S&amp;P's July cut), but its CDS now prices like a BB/B credit. It has ~$117B of long-term debt, ~$40B of new financing planned, and roughly half its $664B backlog tied to OpenAI. It is the hinge between the neoclouds and big tech.</li>
+        <li><b>Hyperscalers and Nvidia: records, but from a tiny base.</b> ~100 bps is ~8% risk-neutral 5-year odds, which is still strong investment grade. Much of the move is equity investors buying cheap downside hedges on the AI trade. CreditSights calls it "80% driven by technicals and sentiment." Meta's $95B equity raise pulled its spread back, although S&amp;P moved Meta's outlook to negative.</li>
+        <li><b>Other neoclouds (Nebius, IREN, Applied Digital, Lambda, Crusoe):</b> no liquid single-name CDS shows up in reporting. Watch their bond and convertible yields and share prices instead.</li>
+      </ul>
+    </div>
+    <div class="span-5" style="min-width:0">
+      <h2 style="font-size:14px">Signals that would mean real contagion</h2>
+      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+        <li>Oracle above ~400 bps, or a downgrade to junk. Investment-grade-only funds would be forced to sell.</li>
+        <li>Hyperscaler spreads above ~150–200 bps alongside capex guidance cuts, rather than just hedging volume.</li>
+        <li>CoreWeave failing to refinance, or its customers (Microsoft, OpenAI, Meta) renegotiating contracts.</li>
+        <li>Data-centre ABS and private-credit marks widening together with the public names.</li>
+      </ul>
+      <p class="muted" style="margin-top:8px">What eased things in late October: Meta raised equity instead of debt, and the big bond deal investors expected never came. Equities also rebounded after the US election in early November. No CDS prints after 1 Nov were available.</p>
+    </div>
+  </div>
+</section>
+
 <!-- POWER -->
-<section class="card span-6">
+<section id="power" data-section="power" class="card span-6">
   <div class="card-head">
     <div>
       <h2>Global data-centre power demand</h2>
@@ -254,7 +438,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   <div class="datatable" id="t-pwr"></div>
 </section>
 
-<section class="card span-6">
+<section id="campuses" data-section="campuses" class="card span-6">
   <h2>Gigawatt-class campuses</h2>
   <p class="muted" style="margin-bottom:10px">A single 1 GW AI campus is roughly $35–50B of all-in capex at current GPU prices.</p>
   <table>
@@ -279,6 +463,10 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
     <li><b>The neoclouds and Oracle carry the leverage.</b> Their combined backlog ($770B+) is concentrated in a few AI labs, and they rely more on debt than the cash-funded Big 4. Oracle plans ~$40B of new financing.</li>
     <li><b>AI changed the slope of the gigawatt curve.</b> Global data-centre capacity added only ~7 GW from 2015 to 2021, while efficiency gains absorbed cloud growth. Since 2023 it has added ~15–25 GW <i>per year</i>, almost all of it AI. By 2030, AI is ~70% of a ~220 GW footprint.</li>
     <li><b>Power, not chips, is the binding constraint.</b> Delays at third-party capacity are why Microsoft trimmed its guide. GW of contracted power is now the metric to track.</li>
+    <li><b>Lab revenue is the hinge for the whole trade.</b> OpenAI and Anthropic together run at ~$115B a year, against ~$728B of 2026 Big 4 capex and $770B+ of neocloud and Oracle backlog that is mostly owed by these labs. Revenue grows 4× to 13× a year now. If it slows toward 1.5×, the build-out looks over-extended. If it holds at 2–3×, the build-out looks undersized.</li>
+    <li><b>Autonomy compounds, and so does token demand.</b> The length of task an AI agent can finish on its own has doubled every ~4 months since 2023 (METR). Hours-long agent runs consume orders of magnitude more tokens than a chat reply. That is why falling token prices coexist with rising compute demand.</li>
+    <li><b>The credit market is drawing the line at leverage, not at AI.</b> CoreWeave's CDS is above 1,000 bps (distress) and Oracle's prices like junk. Meta, Nvidia and the other hyperscalers sit at records, but only ~100 bps. The stress is in debt-funded capacity with concentrated customers, not in the cash-funded Big 4.</li>
+    <li><b>Tokens deflate while capex inflates.</b> Holding capability fixed, the price per token has fallen roughly 10× to 900× a year depending on the task (Epoch AI). Cheaper intelligence widens the use cases. That is the bull case for the spend, but it also squeezes margins for anyone selling commodity tokens.</li>
     <li><b>Compute keeps compounding.</b> Frontier training runs have grown ~4–5×/yr. Sustaining that to 2030 means 1–5 GW training clusters, which is what the campuses above are for.</li>
   </ul>
 </section>
@@ -299,6 +487,31 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
     <div><a href="https://fourweekmba.com/ai-oracle-q1-fy2027-backlog-capex-analysis/">FourWeekMBA: Oracle Q1 FY27 capex</a></div>
     <div><a href="https://www.goldmansachs.com/insights/articles/ai-to-drive-165-increase-in-data-center-power-demand-by-2030">Goldman Sachs: data-centre power +165% by 2030</a></div>
     <div><a href="https://epoch.ai/blog/can-ai-scaling-continue-through-2030">Epoch AI: Can AI scaling continue through 2030?</a></div>
+    <div><a href="https://epoch.ai/data-insights/llm-inference-price-trends">Epoch AI: LLM inference prices have fallen rapidly but unequally across tasks (Mar 2025)</a></div>
+    <div><a href="https://epoch.ai/data-insights/anthropic-openai-revenue">Epoch AI: OpenAI &amp; Anthropic revenue run-rates and trends (Feb 2026)</a></div>
+    <div><a href="https://www.cnbc.com/2026/08/17/anthropic-says-annualized-revenue-climbed-to-65-billion-in-july.html">CNBC: Anthropic run-rate $65B at end of July 2026</a></div>
+    <div><a href="https://valueaddvc.com/blog/anthropic-revenue-hits-47b-run-rate-how-it-passed-openai-in-just-five-months">ValueAdd VC: Anthropic run-rate history and S-1 figures</a></div>
+    <div><a href="https://cryptobriefing.com/anthropic-revenue-run-rate-80-billion-ipo/">Crypto Briefing: Anthropic $80B in Oct (unconfirmed)</a></div>
+    <div><a href="https://techcrunch.com/2025/11/04/anthropic-expects-b2b-demand-to-boost-revenue-to-70b-in-2028-report/">TechCrunch: Anthropic 2026 and 2028 targets (Nov 2025)</a></div>
+    <div><a href="https://valueaddvc.com/blog/openai-revenue-2026-20b-arr-4b-month-path-to-profitability">ValueAdd VC: OpenAI ~$50B net vs ~$70B gross run-rate</a></div>
+    <div><a href="https://cryptobriefing.com/openai-revenue-run-rate-nears-50-billion/">Crypto Briefing: OpenAI run-rate nears $50B</a></div>
+    <div><a href="https://explodingtopics.com/blog/openai-revenue">Exploding Topics: OpenAI revenue history and FT 2030 forecast</a></div>
+    <div><a href="https://metr.org/time-horizons">METR: time horizons page and data (TH1.1, updated Sep 2026)</a></div>
+    <div><a href="https://metr.org/blog/2026-1-29-time-horizon-1-1/">METR: Time Horizon 1.1 and doubling times (Jan 2026)</a></div>
+    <div><a href="https://metr.org/blog/2025-07-14-how-does-time-horizon-vary-across-domains/">METR: time horizons across domains (Jul 2025)</a></div>
+    <div><a href="https://metr.org/blog/2026-05-19-frontier-risk-report/">METR: Frontier Risk Report (May 2026)</a></div>
+    <div><a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR: developer productivity RCT (Jul 2025)</a></div>
+    <div><a href="https://metr.org/blog/2026-02-24-uplift-update/">METR: productivity study update (Feb 2026)</a></div>
+    <div><a href="https://www.anthropic.com/research/anthropic-economic-index-january-2026-report">Anthropic Economic Index, Jan 2026 (Nov 2025 data)</a></div>
+    <div><a href="https://www.anthropic.com/research/economic-index-geography">Anthropic Economic Index, Sep 2025 (API automation share)</a></div>
+    <div><a href="https://www.anthropic.com/research/economic-index-june-2026-report">Anthropic Economic Index, Jun 2026 (user survey)</a></div>
+    <div><a href="https://aiweekly.co/alerts/hyperscaler-debt-insurance-hits-highest-cost-since-2021">AI Weekly (WSJ/Solve): hyperscaler CDS at records, Nov 2026</a></div>
+    <div><a href="https://www.bankingnewsai.com/issues/2026-11-02/credit-default-swap-costs-big-ai-borrowers">Banking News AI: CDS costs on big AI borrowers (Nov 2026)</a></div>
+    <div><a href="https://www.cnbc.com/2026/10/15/coreweave-credit-default-swaps-hit-distress-levels-as-investors-sour-on-ai-debt.html">CNBC: CoreWeave CDS hits distress levels (15 Oct 2026)</a></div>
+    <div><a href="https://www.cnbc.com/amp/2026/10/19/coreweave-oracle-ai-credit-stress.html">CNBC: CoreWeave &amp; Oracle credit stress (19 Oct 2026)</a></div>
+    <div><a href="https://www.cnbc.com/2026/10/27/ai-debt-hyperscaler-earnings.html">CNBC: AI debt fears ease; Meta and Amazon YTD moves (27 Oct 2026)</a></div>
+    <div><a href="https://www.cnbc.com/2026/07/24/bond-market-anxiety-ai-capex-spending.html">CNBC: bond market anxiety over AI capex (Jul 2026)</a></div>
+    <div><a href="https://www.techtimes.com/articles/322222/20260730/coreweave-cds-hits-50-default-odds-bond-market-calls-time-gpu-debt-spiral.htm">Tech Times: CoreWeave ~855 bps, Oracle levels (Jul 2026)</a></div>
     <div><a href="https://epoch.ai/data/notable-ai-models">Epoch AI: notable models training compute</a></div>
     <div><a href="https://www.mckinsey.com/featured-insights/charts/data-center-demands">McKinsey: AI vs non-AI capacity 82 → 219 GW by 2030</a></div>
     <div><a href="https://www.datacenterdynamics.com/en/news/iea-data-center-energy-consumption-set-to-double-by-2030-to-945twh">IEA via DCD: 415 TWh (2024) → 945 TWh (2030)</a></div>
@@ -312,322 +525,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 <div id="tip"></div>
 </div>
 
-<script>
-// ---------- DATA ----------
-const COS = [
-  { name: "Microsoft", c: "--s1" },
-  { name: "Alphabet",  c: "--s2" },
-  { name: "Amazon",    c: "--s3" },
-  { name: "Meta",      c: "--s4" },
-];
-const CAPEX_YEARS = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027];
-const CAPEX = [ // $B, approx calendar year; 2026 = guide midpoint; 2027 = illustrative estimate
-  [ 9,  8, 12, 14, 15, 21, 24, 41, 76, 118, 170, 210], // Microsoft (incl. finance leases from 2023)
-  [10, 13, 25, 24, 22, 25, 31, 32, 53,  91, 200, 260], // Alphabet
-  [ 7, 12, 13, 17, 40, 61, 64, 53, 83, 128, 220, 290], // Amazon (cash capex)
-  [4.5, 7, 14, 15, 15, 19, 31, 28, 39,  72, 138, 180], // Meta
-];
-const CAPEX_EST_FROM = 2027;
-const ORCL = { labels: ["FY21","FY22","FY23","FY24","FY25","FY26","FY27E"], vals: [1.8,4.5,8.7,6.9,21.2,50,92.5], est: 6 };
-const NVDA = { labels: ["FY20","FY21","FY22","FY23","FY24","FY25","FY26"], vals: [3.0,6.7,10.6,15.0,47.5,115.2,190] };
-const FLOP = [
-  { m: "GNMT",           x: 2016.7, y: 6.9e21 },
-  { m: "AlphaGo Zero",   x: 2017.8, y: 3.4e23 },
-  { m: "GPT-3",          x: 2020.4, y: 3.1e23 },
-  { m: "PaLM",           x: 2022.3, y: 2.5e24 },
-  { m: "GPT-4",          x: 2023.2, y: 2.1e25 },
-  { m: "Gemini 1.0 Ultra", x: 2023.9, y: 5.0e25 },
-  { m: "Llama 3.1 405B", x: 2024.6, y: 3.8e25 },
-  { m: "Grok 3",         x: 2025.1, y: 4.6e26 },
-];
-const FLOP_PROJ = [{ x: 2025.1, y: 4.6e26 }, { x: 2030, y: 2e29 }];
-// Global DC capacity, GW. 2015–2024 modeled (IEA TWh ÷ 8,760 h ÷ ~75% utilisation; AI share from IEA accelerated-server trend).
-// 2025 & 2030 = McKinsey (AI 44→156, non-AI 38→64). 2026–2029 interpolated.
-const GW_YEARS = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030];
-const GW_AI    = [0.5,0.7,1,1.5,2,3,4,6,12,25,44,66,88,110,133,156];
-const GW_NONAI = [30,31,32,32.5,33,34,35,36,36.5,37,38,42,47,52,58,64];
-const GW_TODAY = 2026, GW_FORECAST_FROM = 2026;
-const FORECASTS_2030 = [
-  { who: "McKinsey (capacity)", gw: 219 },
-  { who: "JLL (capacity)", gw: 200 },
-  { who: "Goldman Sachs (power demand)", gw: 122 },
-];
-const PWR = [{ x: 2023, y: 55 }, { x: 2027, y: 84 }, { x: 2030, y: 122 }];
-
-// ---------- HELPERS ----------
-const NS = "http://www.w3.org/2000/svg";
-const css = v => getComputedStyle(document.querySelector(".viz-root")).getPropertyValue(v).trim();
-function el(tag, attrs = {}, parent) {
-  const e = document.createElementNS(NS, tag);
-  for (const k in attrs) e.setAttribute(k, attrs[k]);
-  if (parent) parent.appendChild(e);
-  return e;
-}
-function niceMax(v, steps = 4) {
-  const raw = v / steps, mag = Math.pow(10, Math.floor(Math.log10(raw)));
-  const n = [1, 2, 2.5, 5, 10].find(s => s * mag >= raw) * mag;
-  return { max: n * steps, step: n };
-}
-const fmt$ = v => "$" + (v >= 100 ? Math.round(v) : v.toFixed(v < 10 ? 1 : 0)) + "B";
-// Column path: square at baseline, 4px rounded data-end
-function colPath(x, y, w, h, r = 4) {
-  if (h <= 0) return "";
-  r = Math.min(r, h, w / 2);
-  return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
-}
-const tip = document.getElementById("tip");
-function showTip(evt, html) {
-  tip.innerHTML = html; tip.style.display = "block";
-  const pad = 14, r = tip.getBoundingClientRect();
-  let x = evt.clientX + pad, y = evt.clientY + pad;
-  if (x + r.width > innerWidth - 8) x = evt.clientX - r.width - pad;
-  if (y + r.height > innerHeight - 8) y = evt.clientY - r.height - pad;
-  tip.style.left = x + "px"; tip.style.top = y + "px";
-}
-const hideTip = () => (tip.style.display = "none");
-const row = (label, val, color, kind = "sw") =>
-  `<div class="r"><span>${color ? `<i class="sw" style="background:var(${color})"></i>` : ""}${label}</span><span>${val}</span></div>`;
-
-function yAxis(svg, m, W, H, max, step, fmt) {
-  for (let v = 0; v <= max + 1e-9; v += step) {
-    const y = m.t + H - (v / max) * H;
-    el("line", { x1: m.l, x2: m.l + W, y1: y, y2: y, stroke: v === 0 ? css("--axis") : css("--grid"), "stroke-width": 1, "shape-rendering": "crispEdges" }, svg);
-    el("text", { x: m.l - 8, y: y + 4, "text-anchor": "end", class: "tick" }, svg).textContent = fmt(v);
-  }
-}
-
-// ---------- CHART: stacked columns ----------
-function drawCapex() {
-  const host = document.getElementById("c-capex"); host.innerHTML = "";
-  const VW = 760, VH = 340, m = { t: 24, r: 8, b: 28, l: 52 };
-  const W = VW - m.l - m.r, H = VH - m.t - m.b;
-  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Stacked column chart of hyperscaler capex by company, 2016 to 2027 estimate" }, host);
-  const totals = CAPEX_YEARS.map((_, i) => CAPEX.reduce((s, r) => s + r[i], 0));
-  const { max, step } = niceMax(Math.max(...totals));
-  yAxis(svg, m, W, H, max, step, v => "$" + v + "B");
-  const band = W / CAPEX_YEARS.length, bw = Math.min(24, band * 0.6), gap = 2;
-  CAPEX_YEARS.forEach((yr, i) => {
-    const cx = m.l + band * i + band / 2, x = cx - bw / 2;
-    const est = yr >= CAPEX_EST_FROM;
-    const g = el("g", { opacity: est ? 0.45 : 1 }, svg);
-    let acc = 0;
-    CAPEX.forEach((r, s) => {
-      const v = r[i], h = (v / max) * H, yTop = m.t + H - ((acc + v) / max) * H;
-      const isTop = s === CAPEX.length - 1;
-      const hh = Math.max(0, h - (s > 0 ? gap : 0));
-      if (isTop) el("path", { d: colPath(x, yTop, bw, hh), fill: css(COS[s].c) }, g);
-      else el("rect", { x, y: yTop, width: bw, height: hh, fill: css(COS[s].c) }, g);
-      acc += v;
-    });
-    // total label on selected columns only
-    if ([0, 7, 9, 10, 11].includes(i)) {
-      el("text", { x: cx, y: m.t + H - (totals[i] / max) * H - 6, "text-anchor": "middle", class: i === 10 ? "dlabel strong" : "dlabel" }, svg)
-        .textContent = (est ? "~" : "") + fmt$(totals[i]) + (est ? " est." : "");
-    }
-    el("text", { x: cx, y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = est ? yr + "E" : yr;
-    // hit target: full band
-    const hit = el("rect", { x: m.l + band * i, y: m.t, width: band, height: H, fill: "transparent" }, svg);
-    hit.addEventListener("mousemove", e => showTip(e,
-      `<div class="t">${yr}${est ? " (estimate)" : ""}</div>` +
-      CAPEX.map((r, s) => row(COS[s].name, fmt$(r[i]), COS[s].c)).reverse().join("") +
-      `<div class="r" style="border-top:1px solid var(--grid);margin-top:4px;padding-top:4px"><span>Total</span><span><b>${fmt$(totals[i])}</b></span></div>`));
-    hit.addEventListener("mouseleave", hideTip);
-  });
-  document.getElementById("lg-capex").innerHTML = COS.map(c => `<span><i class="sw" style="background:var(${c.c})"></i>${c.name}</span>`).join("");
-  document.getElementById("t-capex").innerHTML = table(["Year", ...COS.map(c => c.name), "Total"],
-    CAPEX_YEARS.map((y, i) => [y >= CAPEX_EST_FROM ? y + "E" : y, ...CAPEX.map(r => fmt$(r[i])), fmt$(totals[i])]));
-}
-
-// ---------- CHART: simple columns ----------
-function drawColumns(hostId, data, color, aria, tblId, tblHead) {
-  const host = document.getElementById(hostId); host.innerHTML = "";
-  const VW = 460, VH = 260, m = { t: 22, r: 8, b: 26, l: 46 };
-  const W = VW - m.l - m.r, H = VH - m.t - m.b;
-  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": aria }, host);
-  const { max, step } = niceMax(Math.max(...data.vals));
-  yAxis(svg, m, W, H, max, step, v => "$" + v + "B");
-  const band = W / data.labels.length, bw = Math.min(24, band * 0.55);
-  data.labels.forEach((lab, i) => {
-    const v = data.vals[i], cx = m.l + band * i + band / 2, h = (v / max) * H, y = m.t + H - h;
-    const est = data.est === i;
-    el("path", { d: colPath(cx - bw / 2, y, bw, h), fill: css(color), opacity: est ? 0.45 : 1 }, svg);
-    if (i === data.labels.length - 1 || i === data.labels.length - 2)
-      el("text", { x: cx, y: y - 6, "text-anchor": "middle", class: i === data.labels.length - 1 ? "dlabel strong" : "dlabel" }, svg).textContent = (est ? "~" : "") + fmt$(v);
-    el("text", { x: cx, y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = lab;
-    const hit = el("rect", { x: m.l + band * i, y: m.t, width: band, height: H, fill: "transparent" }, svg);
-    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${lab}${est ? " (guide midpoint)" : ""}</div>` + row(tblHead, fmt$(v), color)));
-    hit.addEventListener("mouseleave", hideTip);
-  });
-  document.getElementById(tblId).innerHTML = table(["Period", tblHead], data.labels.map((l, i) => [l, fmt$(data.vals[i])]));
-}
-
-// ---------- CHART: log-scale training compute ----------
-function drawFlop() {
-  const host = document.getElementById("c-flop"); host.innerHTML = "";
-  const VW = 680, VH = 320, m = { t: 16, r: 16, b: 28, l: 52 };
-  const W = VW - m.l - m.r, H = VH - m.t - m.b;
-  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Log-scale scatter of frontier AI training compute 2016 to 2030" }, host);
-  const x0 = 2016, x1 = 2030.3, lo = 21, hi = 30;
-  const sx = x => m.l + ((x - x0) / (x1 - x0)) * W;
-  const sy = v => m.t + H - ((Math.log10(v) - lo) / (hi - lo)) * H;
-  for (let p = lo; p <= hi; p++) {
-    const y = sy(Math.pow(10, p));
-    el("line", { x1: m.l, x2: m.l + W, y1: y, y2: y, stroke: p === lo ? css("--axis") : css("--grid"), "shape-rendering": "crispEdges" }, svg);
-    if (p % 1 === 0) el("text", { x: m.l - 8, y: y + 4, "text-anchor": "end", class: "tick" }, svg).textContent = "1e" + p;
-  }
-  for (let yr = 2016; yr <= 2030; yr += 2)
-    el("text", { x: sx(yr), y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = yr;
-  // "today" marker
-  const tx = sx(2026.85);
-  el("line", { x1: tx, x2: tx, y1: m.t, y2: m.t + H, stroke: css("--axis") }, svg);
-  el("text", { x: tx + 4, y: m.t + 10, class: "tick" }, svg).textContent = "today";
-  // projection
-  const [a, b] = FLOP_PROJ;
-  el("line", { x1: sx(a.x), y1: sy(a.y), x2: sx(b.x), y2: sy(b.y), stroke: css("--text-muted"), "stroke-width": 2, "stroke-dasharray": "4 4", "stroke-linecap": "round" }, svg);
-  el("text", { x: sx(b.x) - 10, y: sy(b.y) + 26, "text-anchor": "end", class: "dlabel" }, svg).textContent = "~2e29 FLOP by 2030";
-  el("circle", { cx: sx(b.x), cy: sy(b.y), r: 4, fill: css("--surface-1"), stroke: css("--text-muted"), "stroke-width": 2 }, svg);
-  // points
-  const labelled = new Set(["GPT-3", "GPT-4", "Grok 3", "AlphaGo Zero"]);
-  FLOP.forEach(d => {
-    const cx = sx(d.x), cy = sy(d.y);
-    el("circle", { cx, cy, r: 5, fill: css("--s1"), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
-    if (labelled.has(d.m)) el("text", { x: cx + 8, y: cy + 4, class: "dlabel" }, svg).textContent = d.m;
-    const hit = el("circle", { cx, cy, r: 14, fill: "transparent" }, svg);
-    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${d.m}</div>` + row("Year", Math.floor(d.x)) + row("Training compute", d.y.toExponential(1) + " FLOP")));
-    hit.addEventListener("mouseleave", hideTip);
-  });
-  document.getElementById("t-flop").innerHTML = table(["Model", "Year", "Training FLOP"],
-    [...FLOP.map(d => [d.m, Math.floor(d.x), d.y.toExponential(1)]), ["Projection (Epoch feasibility)", 2030, "2e+29"]]);
-}
-
-// ---------- CHART: power line ----------
-function drawPower() {
-  const host = document.getElementById("c-pwr"); host.innerHTML = "";
-  const VW = 560, VH = 240, m = { t: 20, r: 40, b: 26, l: 44 };
-  const W = VW - m.l - m.r, H = VH - m.t - m.b;
-  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Line chart of global data centre power demand, 55 GW in 2023 to 122 GW in 2030" }, host);
-  const { max, step } = niceMax(140);
-  yAxis(svg, m, W, H, max, step, v => v + " GW");
-  const x0 = 2023, x1 = 2030, sx = x => m.l + ((x - x0) / (x1 - x0)) * W, sy = v => m.t + H - (v / max) * H;
-  for (let yr = x0; yr <= x1; yr++) el("text", { x: sx(yr), y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = yr;
-  const d = PWR.map((p, i) => (i ? "L" : "M") + sx(p.x) + "," + sy(p.y)).join("");
-  const area = d + `L${sx(x1)},${sy(0)}L${sx(x0)},${sy(0)}Z`;
-  el("path", { d: area, fill: css("--s1"), opacity: 0.1 }, svg);
-  el("path", { d, fill: "none", stroke: css("--s1"), "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
-  PWR.forEach((p, i) => {
-    el("circle", { cx: sx(p.x), cy: sy(p.y), r: 5, fill: css("--s1"), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
-    el("text", { x: sx(p.x), y: sy(p.y) - 10, "text-anchor": "middle", class: i === PWR.length - 1 ? "dlabel strong" : "dlabel" }, svg).textContent = p.y + " GW";
-    const hit = el("circle", { cx: sx(p.x), cy: sy(p.y), r: 16, fill: "transparent" }, svg);
-    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${p.x}${p.x > 2026 ? " (forecast)" : ""}</div>` + row("Power demand", p.y + " GW", "--s1")));
-    hit.addEventListener("mouseleave", hideTip);
-  });
-  document.getElementById("t-pwr").innerHTML = table(["Year", "GW (Goldman Sachs)"], PWR.map(p => [p.x, p.y]));
-}
-
-// ---------- SEGMENTED BAR + GUIDE TABLE ----------
-function drawShare() {
-  const i26 = CAPEX_YEARS.indexOf(2026), i25 = i26 - 1;
-  const tot = CAPEX.reduce((s, r) => s + r[i26], 0);
-  const seg = document.getElementById("seg26");
-  seg.innerHTML = ""; seg.setAttribute("role", "img");
-  seg.setAttribute("aria-label", COS.map((c, s) => `${c.name} ${Math.round(CAPEX[s][i26] / tot * 100)}%`).join(", "));
-  COS.forEach((c, s) => {
-    const v = CAPEX[s][i26], pct = Math.round(v / tot * 100);
-    const d = document.createElement("div");
-    d.style.flex = v; d.style.background = `var(${c.c})`;
-    if (c.c === "--s4") d.className = "dark-ink";
-    d.textContent = pct + "%";
-    d.addEventListener("mousemove", e => showTip(e, `<div class="t">${c.name}</div>` + row("2026 capex", fmt$(v), c.c) + row("Share", pct + "%")));
-    d.addEventListener("mouseleave", hideTip);
-    seg.appendChild(d);
-  });
-  document.getElementById("lg-seg").innerHTML = COS.map(c => `<span><i class="sw" style="background:var(${c.c})"></i>${c.name}</span>`).join("");
-  const guides = ["~$170B", "$195–205B", "~$220B", "$130–145B"];
-  document.getElementById("guide-body").innerHTML = COS.map((c, s) =>
-    `<tr><td><i class="sw" style="background:var(${c.c});margin-right:6px"></i>${c.name}</td><td class="num">${guides[s]}</td><td class="num">+${Math.round((CAPEX[s][i26] / CAPEX[s][i25] - 1) * 100)}%</td></tr>`).join("");
-}
-
-// ---------- CHART: GW stacked (AI vs non-AI) ----------
-function drawGW() {
-  const host = document.getElementById("c-gw"); host.innerHTML = "";
-  const VW = 760, VH = 320, m = { t: 26, r: 8, b: 28, l: 52 };
-  const W = VW - m.l - m.r, H = VH - m.t - m.b;
-  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Stacked column chart of global data-centre capacity in GW, AI vs non-AI, 2015 to 2030" }, host);
-  const tot = GW_YEARS.map((_, i) => GW_AI[i] + GW_NONAI[i]);
-  const { max, step } = niceMax(Math.max(...tot), 5);
-  yAxis(svg, m, W, H, max, step, v => v + " GW");
-  const band = W / GW_YEARS.length, bw = Math.min(24, band * 0.6);
-  // era divider: ChatGPT launch (end-2022)
-  const divX = m.l + band * GW_YEARS.indexOf(2023);
-  el("line", { x1: divX, x2: divX, y1: m.t - 10, y2: m.t + H, stroke: css("--axis") }, svg);
-  el("text", { x: divX - 6, y: m.t - 2, "text-anchor": "end", class: "tick" }, svg).textContent = "← pre-AI era";
-  el("text", { x: divX + 6, y: m.t - 2, class: "tick" }, svg).textContent = "ChatGPT (Nov 2022) → AI era";
-  GW_YEARS.forEach((yr, i) => {
-    const cx = m.l + band * i + band / 2, x = cx - bw / 2;
-    const fc = yr > GW_FORECAST_FROM, interp = yr > 2025 && yr < 2030;
-    const g = el("g", { opacity: interp ? 0.5 : (fc ? 0.75 : 1) }, svg);
-    const hN = (GW_NONAI[i] / max) * H, hA = (GW_AI[i] / max) * H;
-    const yN = m.t + H - hN;
-    el("rect", { x, y: yN, width: bw, height: hN, fill: css("--neutral") }, g);
-    const hAg = Math.max(0, hA - 2);
-    if (hAg > 0.5) el("path", { d: colPath(x, yN - hA, bw, hAg), fill: css("--s1") }, g);
-    if ([0, 9, 11, 15].includes(i))
-      el("text", { x: cx, y: m.t + H - (tot[i] / max) * H - 6, "text-anchor": "middle", class: yr === GW_TODAY ? "dlabel strong" : "dlabel" }, svg)
-        .textContent = "~" + Math.round(tot[i]) + " GW";
-    el("text", { x: cx, y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = (i % 2 === 1 || yr === 2030) ? yr : "";
-    const hit = el("rect", { x: m.l + band * i, y: m.t, width: band, height: H, fill: "transparent" }, svg);
-    const tag = yr <= 2024 ? "modeled estimate" : yr === 2025 || yr === 2030 ? "McKinsey" : "interpolated";
-    hit.addEventListener("mousemove", e => showTip(e,
-      `<div class="t">${yr} <span class="muted">(${tag})</span></div>` +
-      row("AI", GW_AI[i] + " GW", "--s1") + row("Non-AI", GW_NONAI[i] + " GW", "--neutral") +
-      `<div class="r" style="border-top:1px solid var(--grid);margin-top:4px;padding-top:4px"><span>Total · AI share</span><span><b>${Math.round(tot[i])} GW</b> · ${Math.round(GW_AI[i] / tot[i] * 100)}%</span></div>`));
-    hit.addEventListener("mouseleave", hideTip);
-  });
-  document.getElementById("t-gw").innerHTML = table(["Year", "AI GW", "Non-AI GW", "Total GW", "AI share"],
-    GW_YEARS.map((y, i) => [y, GW_AI[i], GW_NONAI[i], Math.round(tot[i]), Math.round(GW_AI[i] / tot[i] * 100) + "%"]));
-
-  // forecast comparison: horizontal bars
-  const fh = document.getElementById("c-fc"); fh.innerHTML = "";
-  const FW = 360, rowH = 34, FH = FORECASTS_2030.length * rowH + 4, lw = 0;
-  const fs = el("svg", { viewBox: `0 0 ${FW} ${FH}`, role: "img", "aria-label": "2030 data-centre GW forecasts by forecaster" }, fh);
-  const fmax = 250;
-  FORECASTS_2030.forEach((f, i) => {
-    const y = i * rowH;
-    el("text", { x: 0, y: y + 11, class: "tick" }, fs).textContent = f.who;
-    const w = (f.gw / fmax) * (FW - 60);
-    // horizontal bar: square at baseline (left), rounded at data end (right)
-    const r = 4, h = 12, by = y + 16;
-    el("path", { d: `M0,${by}H${w - r}Q${w},${by} ${w},${by + r}V${by + h - r}Q${w},${by + h} ${w - r},${by + h}H0Z`, fill: css("--neutral") }, fs);
-    el("text", { x: w + 6, y: by + 10, class: "dlabel" }, fs).textContent = f.gw + " GW";
-  });
-}
-
-function table(head, rows) {
-  return `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "num" : ""}">${h}</th>`).join("")}</tr></thead><tbody>` +
-    rows.map(r => `<tr>${r.map((c, i) => `<td class="${i ? "num" : ""}">${c}</td>`).join("")}</tr>`).join("") + `</tbody></table>`;
-}
-
-function drawAll() {
-  drawCapex();
-  drawShare();
-  drawColumns("c-orcl", ORCL, "--neutral", "Column chart of Oracle capex by fiscal year", "t-orcl", "Oracle capex");
-  drawColumns("c-nvda", NVDA, "--neutral", "Column chart of Nvidia data centre revenue by fiscal year", "t-nvda", "DC revenue");
-  drawFlop();
-  drawPower();
-  drawGW();
-}
-
-// ---------- WIRING ----------
-document.querySelectorAll("[data-table]").forEach(b =>
-  b.addEventListener("click", () => document.getElementById(b.dataset.table).classList.toggle("show")));
-document.getElementById("theme").addEventListener("click", () => {
-  const root = document.documentElement;
-  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-  root.dataset.theme = dark ? "light" : "dark";
-  drawAll();
-});
-matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
-drawAll();
-</script>
+<script src="data.js"></script>
+<script src="charts.js"></script>
 </body>
 </html>
