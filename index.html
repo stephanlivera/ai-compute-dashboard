@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The AI Build-Out — Hyperscalers, Neoclouds &amp; Compute</title>
+<style>
+.viz-root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --good: #006300;
+  --neutral: #6b6a65; --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) .viz-root {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --good: #0ca30c;
+    --neutral: #a3a29b; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  }
+}
+:root[data-theme="dark"] .viz-root {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface-1: #1a1a19;
+  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --good: #0ca30c;
+  --neutral: #a3a29b; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+.viz-root {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--page); color: var(--text-primary);
+  min-height: 100vh; padding: 32px 24px 64px; line-height: 1.45;
+}
+.wrap { max-width: 1180px; margin: 0 auto; }
+header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+h1 { font-size: 26px; font-weight: 650; margin: 0 0 4px; letter-spacing: -0.01em; }
+h2 { font-size: 16px; font-weight: 600; margin: 0 0 2px; }
+.sub { color: var(--text-secondary); font-size: 14px; margin: 0; }
+.muted { color: var(--text-muted); font-size: 12px; }
+button.toggle {
+  font: inherit; font-size: 13px; color: var(--text-secondary); background: var(--surface-1);
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer;
+}
+button.toggle:hover { color: var(--text-primary); }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; min-width: 0; }
+.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; }
+.span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
+@media (max-width: 900px) { .span-8,.span-7,.span-6,.span-5,.span-4 { grid-column: span 12; } }
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.hero { display: grid; grid-template-columns: 1.3fr repeat(4, 1fr); gap: 16px; }
+@media (max-width: 900px) { .hero { grid-template-columns: 1fr 1fr; } }
+.tile .label { font-size: 13px; color: var(--text-secondary); }
+.tile .value { font-size: 28px; font-weight: 600; margin: 4px 0 2px; }
+.tile.big .value { font-size: 52px; line-height: 1.05; }
+.tile .delta { font-size: 13px; color: var(--good); font-weight: 500; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--text-secondary); margin: 4px 0 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.sw.line { width: 14px; height: 2px; border-radius: 1px; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { font-family: inherit; }
+.tick { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.dlabel { fill: var(--text-secondary); font-size: 11px; font-weight: 500; }
+.dlabel.strong { fill: var(--text-primary); font-weight: 600; font-size: 12px; }
+.seg { display: flex; gap: 2px; height: 28px; margin: 8px 0 10px; }
+.seg div { border-radius: 4px; color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; padding-left: 8px; white-space: nowrap; overflow: visible; cursor: default; }
+.seg div.dark-ink { color: #0b0b0b; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--text-muted); font-weight: 500; font-size: 12px; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.datatable { display: none; margin-top: 12px; overflow-x: auto; }
+.datatable.show { display: block; }
+#tip {
+  position: fixed; pointer-events: none; z-index: 10; display: none;
+  background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; min-width: 140px;
+}
+#tip .t { font-weight: 600; margin-bottom: 4px; }
+#tip .r { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+#tip .r span:first-child { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); }
+#tip .r span:last-child { font-variant-numeric: tabular-nums; }
+.note { font-size: 13px; color: var(--text-secondary); }
+.note li { margin-bottom: 6px; }
+.sources { font-size: 12px; color: var(--text-secondary); columns: 2; column-gap: 32px; }
+@media (max-width: 900px) { .sources { columns: 1; } }
+.sources a { color: var(--text-secondary); }
+.pill { display: inline-block; font-size: 11px; border: 1px solid var(--border); border-radius: 999px; padding: 1px 8px; color: var(--text-muted); margin-left: 6px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>The AI build-out</h1>
+    <p class="sub">Hyperscaler capex, neocloud capacity, and how fast AI compute is growing. Data as of 6 Nov 2026, after Q3 2026 earnings.</p>
+  </div>
+  <button class="toggle" id="theme">Toggle theme</button>
+</header>
+
+<!-- HERO -->
+<section class="card span-12" style="margin-bottom:16px">
+  <div class="hero">
+    <div class="tile big">
+      <div class="label">Big 4 hyperscaler capex, 2026 (guided)</div>
+      <div class="value">~$728B</div>
+      <div class="delta">▲ ~78% vs 2025 · ~24× 2016</div>
+    </div>
+    <div class="tile"><div class="label">2027 outlook</div><div class="value">~$940B</div><div class="muted">Illustrative estimate. All four say "significantly more"</div></div>
+    <div class="tile"><div class="label">Oracle contracted backlog (RPO)</div><div class="value">$664B</div><div class="delta">▲ $209B YoY</div></div>
+    <div class="tile"><div class="label">CoreWeave contracted power</div><div class="value">~4.2 GW</div><div class="muted">1.5 GW active (Jun 2026)</div></div>
+    <div class="tile"><div class="label">Nvidia data-centre revenue, FY26</div><div class="value">~$190B</div><div class="delta">▲ ~28× FY21</div></div>
+  </div>
+</section>
+
+<div class="grid">
+
+<!-- CAPEX STACK -->
+<section class="card span-8">
+  <div class="card-head">
+    <div>
+      <h2>Hyperscaler capex by company, 2016–2027E</h2>
+      <p class="muted">$B, calendar year. 2027 is an illustrative estimate (lighter bar); no company has guided yet.</p>
+    </div>
+    <button class="toggle" data-table="t-capex">Table</button>
+  </div>
+  <div class="legend" id="lg-capex"></div>
+  <div id="c-capex"></div>
+  <div class="datatable" id="t-capex"></div>
+</section>
+
+<!-- SHARE + GUIDANCE -->
+<section class="card span-4">
+  <h2>Who's spending, 2026</h2>
+  <p class="muted">Share of ~$728B in guided Big 4 capex</p>
+  <div class="seg" id="seg26"></div>
+  <div class="legend" id="lg-seg"></div>
+  <table>
+    <thead><tr><th>Company</th><th class="num">2026 guide</th><th class="num">vs 2025</th></tr></thead>
+    <tbody id="guide-body"></tbody>
+  </table>
+  <p class="muted" style="margin-top:10px">Microsoft trimmed its guide from ~$175B to ~$170B because third-party capacity arrived late. Its figure includes finance leases; Amazon's is cash capex.</p>
+</section>
+
+<!-- GIGAWATTS -->
+<section class="card span-12">
+  <div class="card-head">
+    <div>
+      <h2>Gigawatts of data-centre capacity: before AI, now, and next, 2015–2030</h2>
+      <p class="muted">Global installed capacity in GW, split into AI and non-AI workloads. 2015–2024 is modeled from IEA electricity data. 2025 and 2030 anchor to McKinsey; the years between are interpolated (lighter bars).</p>
+    </div>
+    <button class="toggle" data-table="t-gw">Table</button>
+  </div>
+  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+    <div class="tile"><div class="label">2015, pre-AI</div><div class="value">~30 GW</div><div class="muted">~2% AI · roughly flat for a decade</div></div>
+    <div class="tile"><div class="label">2026, today</div><div class="value">~108 GW</div><div class="delta">▲ ~3.5× 2015 · ~60% AI</div></div>
+    <div class="tile"><div class="label">2030, forecast</div><div class="value">~220 GW</div><div class="delta">▲ ~2× today · ~70% AI</div></div>
+    <div class="tile"><div class="label">AI capacity added 2015→2030</div><div class="value">~155 GW</div><div class="muted">vs ~34 GW added for non-AI</div></div>
+  </div>
+  <div class="grid" style="gap:24px">
+    <div class="span-8" style="min-width:0">
+      <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>AI workloads</span><span><i class="sw" style="background:var(--neutral)"></i>Non-AI (traditional cloud, enterprise, storage)</span></div>
+      <div id="c-gw"></div>
+      <div class="datatable" id="t-gw"></div>
+    </div>
+    <div class="span-4" style="min-width:0">
+      <h2 style="font-size:14px">2030 forecasts disagree</h2>
+      <p class="muted" style="margin-bottom:6px">Global data-centre GW in 2030, by forecaster. They measure different things (installed capacity vs power drawn).</p>
+      <div id="c-fc"></div>
+      <h2 style="font-size:14px;margin-top:16px">What a gigawatt means</h2>
+      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+        <li>1 GW of power runs roughly 750k–850k US homes.</li>
+        <li>1 GW of AI capacity is about 500k–600k Blackwell-class GPUs, all-in.</li>
+        <li>All-in capex is roughly $35–50B per GW (chips, building, power).</li>
+        <li>~110 GW of new AI capacity by 2030 implies ~$4–5T of build-out.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- NEOCLOUDS -->
+<section class="card span-7">
+  <h2>Oracle and the neoclouds</h2>
+  <p class="muted" style="margin-bottom:10px">Capacity sold mostly to OpenAI, Microsoft, Meta, Google and Anthropic. Their backlog is the hyperscalers' overflow.</p>
+  <table>
+    <thead><tr><th>Provider</th><th>Backlog / contracts</th><th>Power / capacity</th><th>Latest signal</th></tr></thead>
+    <tbody>
+      <tr><td><b>Oracle (OCI)</b></td><td>$664B RPO (Q1 FY27, Aug 2026). Roughly half is tied to OpenAI</td><td>Core Stargate partner; Abilene ~1.2 GW</td><td>OCI revenue $7.4B/qtr, +121%; FY27 capex guide $90–95B gross</td></tr>
+      <tr><td><b>CoreWeave</b></td><td>~$104B backlog (Jun 2026), plus $25B+ signed early Q3</td><td>~4.2 GW contracted · 1.5 GW active</td><td>Re-contracting at higher prices; Q3 results due mid-Nov</td></tr>
+      <tr><td><b>Nebius</b></td><td>Anchor deals with Microsoft (~$17–19B) and Meta</td><td>Target 2.5 GW contracted by end of 2026</td><td>Revenue growing several hundred % YoY</td></tr>
+      <tr><td><b>Others</b></td><td colspan="3">Crusoe, Lambda, Nscale and IREN, plus xAI and OpenAI building their own campuses</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="card span-5">
+  <div class="card-head">
+    <div>
+      <h2>Oracle capex, FY2021–FY2027E</h2>
+      <p class="muted">$B, fiscal year ending May. FY27 is the guide midpoint, including ~$20–25B to be repaid by customers.</p>
+    </div>
+    <button class="toggle" data-table="t-orcl">Table</button>
+  </div>
+  <div id="c-orcl"></div>
+  <div class="datatable" id="t-orcl"></div>
+</section>
+
+<!-- COMPUTE GROWTH -->
+<section class="card span-7">
+  <div class="card-head">
+    <div>
+      <h2>Frontier training compute, 2016–2030</h2>
+      <p class="muted">FLOP per training run, log scale. Notable models (Epoch AI estimates), then the trend projected to Epoch's ~2e29 "feasible by 2030" figure.</p>
+    </div>
+    <button class="toggle" data-table="t-flop">Table</button>
+  </div>
+  <div class="legend"><span><i class="sw" style="background:var(--s1);border-radius:50%"></i>Notable model</span><span><i class="sw line" style="background:var(--text-muted)"></i>Projection (~3–4×/yr)</span></div>
+  <div id="c-flop"></div>
+  <div class="datatable" id="t-flop"></div>
+</section>
+
+<section class="card span-5">
+  <div class="card-head">
+    <div>
+      <h2>Nvidia data-centre revenue</h2>
+      <p class="muted">$B, fiscal year ending January. The best single proxy for accelerator shipments.</p>
+    </div>
+    <button class="toggle" data-table="t-nvda">Table</button>
+  </div>
+  <div id="c-nvda"></div>
+  <div class="datatable" id="t-nvda"></div>
+</section>
+
+<!-- POWER -->
+<section class="card span-6">
+  <div class="card-head">
+    <div>
+      <h2>Global data-centre power demand</h2>
+      <p class="muted">GW. Goldman Sachs Research path: +165% from 2023 to 2030.</p>
+    </div>
+    <button class="toggle" data-table="t-pwr">Table</button>
+  </div>
+  <div id="c-pwr"></div>
+  <div class="datatable" id="t-pwr"></div>
+</section>
+
+<section class="card span-6">
+  <h2>Gigawatt-class campuses</h2>
+  <p class="muted" style="margin-bottom:10px">A single 1 GW AI campus is roughly $35–50B of all-in capex at current GPU prices.</p>
+  <table>
+    <thead><tr><th>Campus</th><th>Owner / tenant</th><th class="num">Scale</th></tr></thead>
+    <tbody>
+      <tr><td>Stargate (Abilene, TX + sites)</td><td>OpenAI · Oracle · SoftBank</td><td class="num">~10 GW target</td></tr>
+      <tr><td>Hyperion (Louisiana)</td><td>Meta</td><td class="num">2 GW → 5 GW</td></tr>
+      <tr><td>Prometheus (Ohio)</td><td>Meta</td><td class="num">~1 GW</td></tr>
+      <tr><td>Project Rainier (Indiana)</td><td>Amazon · Anthropic</td><td class="num">~2.2 GW</td></tr>
+      <tr><td>Fairwater (Wisconsin, Atlanta)</td><td>Microsoft · OpenAI</td><td class="num">multi-GW</td></tr>
+      <tr><td>Colossus 1 &amp; 2 (Memphis)</td><td>xAI</td><td class="num">~1 GW+</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- TAKEAWAYS -->
+<section class="card span-12">
+  <h2>How to read the AI trade</h2>
+  <ul class="note">
+    <li><b>Hyperscaler capex growth sped up.</b> Big 4 capex roughly doubled from 2016 to 2021, an ordinary cloud cycle. Then it went ~$155B (2023) → ~$410B (2025) → ~$728B (2026). That is about 5× in three years.</li>
+    <li><b>Spending is now a meaningful slice of the economy.</b> At ~$0.7–0.8T/yr, it is roughly 2.5% of US GDP, comparable to peak railroad or telecom build-outs.</li>
+    <li><b>The neoclouds and Oracle carry the leverage.</b> Their combined backlog ($770B+) is concentrated in a few AI labs, and they rely more on debt than the cash-funded Big 4. Oracle plans ~$40B of new financing.</li>
+    <li><b>AI changed the slope of the gigawatt curve.</b> Global data-centre capacity added only ~7 GW from 2015 to 2021, while efficiency gains absorbed cloud growth. Since 2023 it has added ~15–25 GW <i>per year</i>, almost all of it AI. By 2030, AI is ~70% of a ~220 GW footprint.</li>
+    <li><b>Power, not chips, is the binding constraint.</b> Delays at third-party capacity are why Microsoft trimmed its guide. GW of contracted power is now the metric to track.</li>
+    <li><b>Compute keeps compounding.</b> Frontier training runs have grown ~4–5×/yr. Sustaining that to 2030 means 1–5 GW training clusters, which is what the campuses above are for.</li>
+  </ul>
+</section>
+
+<section class="card span-12">
+  <h2>Sources &amp; caveats</h2>
+  <p class="muted" style="margin-bottom:10px">Historical capex figures are approximate calendar-year totals from company filings. Microsoft's include finance leases from 2023 on. Estimates (2027E, FY27E, projections) are illustrative, not consensus. Verify against filings before you publish any figure.</p>
+  <div class="sources">
+    <div><a href="https://www.hl.co.uk/news/ai-hyperscalers-are-expected-to-finish-the-year-spending-a-whopping-828-billion-on-capex">HL: hyperscalers' 2026 capex $803–828B (incl. SpaceX)</a></div>
+    <div><a href="https://finance.yahoo.com/markets/article/magnificent-7-earnings-rush-reveals-ai-spending-surge-with-hyperscaler-capex-set-to-reach-725-billion-in-2026-224901707.html">Yahoo Finance: hyperscaler capex ~$725B in 2026</a></div>
+    <div><a href="https://www.useluminix.com/reports/industry-analysis/hyperscaler-capex-q3-2026">Luminix: Q3 2026 hyperscaler capex guidance</a></div>
+    <div><a href="https://www.fool.com/investing/2026/08/03/microsoft-and-amazon-won-the-ai-spending-week/">Motley Fool: Microsoft & Amazon AI spending</a></div>
+    <div><a href="https://pulse2.com/coreweave-revenue-backlog-reaches-104-billion-before-another-25-billion-of-new-commitments/">Pulse 2.0: CoreWeave $104B backlog</a></div>
+    <div><a href="https://investors.coreweave.com/news/news-details/2026/CoreWeave-Continues-to-Contract-New-Compute-Capacity-at-Higher-Prices/default.aspx">CoreWeave IR: contracted power ~4.2 GW</a></div>
+    <div><a href="https://www.fool.com/investing/2025/11/29/artificial-intelligence-ai-stock-coreweave-nebius">Motley Fool: Nebius capacity targets</a></div>
+    <div><a href="https://erp.today/oracle-q1-fy27-results-664b-backlog-ai-contracts/">ERP Today: Oracle $664B RPO</a></div>
+    <div><a href="https://www.outlookbusiness.com/corporate/oracle-forecasts-95-bn-in-capex-for-fy27-plans-to-raise-40-bn-in-debt-and-equity">Outlook Business: Oracle FY27 capex $95B, $40B financing</a></div>
+    <div><a href="https://fourweekmba.com/ai-oracle-q1-fy2027-backlog-capex-analysis/">FourWeekMBA: Oracle Q1 FY27 capex</a></div>
+    <div><a href="https://www.goldmansachs.com/insights/articles/ai-to-drive-165-increase-in-data-center-power-demand-by-2030">Goldman Sachs: data-centre power +165% by 2030</a></div>
+    <div><a href="https://epoch.ai/blog/can-ai-scaling-continue-through-2030">Epoch AI: Can AI scaling continue through 2030?</a></div>
+    <div><a href="https://epoch.ai/data/notable-ai-models">Epoch AI: notable models training compute</a></div>
+    <div><a href="https://www.mckinsey.com/featured-insights/charts/data-center-demands">McKinsey: AI vs non-AI capacity 82 → 219 GW by 2030</a></div>
+    <div><a href="https://www.datacenterdynamics.com/en/news/iea-data-center-energy-consumption-set-to-double-by-2030-to-945twh">IEA via DCD: 415 TWh (2024) → 945 TWh (2030)</a></div>
+    <div><a href="https://scientificamerican.com/article/ai-will-drive-doubling-of-data-center-energy-demand-by-2030">Scientific American: IEA on AI share of DC energy</a></div>
+    <div><a href="https://abiresearch.com/blog/data-center-capacity-growth-forecast">ABI Research: data-centre capacity forecast</a></div>
+  </div>
+</section>
+
+</div>
+</div>
+<div id="tip"></div>
+</div>
+
+<script>
+// ---------- DATA ----------
+const COS = [
+  { name: "Microsoft", c: "--s1" },
+  { name: "Alphabet",  c: "--s2" },
+  { name: "Amazon",    c: "--s3" },
+  { name: "Meta",      c: "--s4" },
+];
+const CAPEX_YEARS = [2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027];
+const CAPEX = [ // $B, approx calendar year; 2026 = guide midpoint; 2027 = illustrative estimate
+  [ 9,  8, 12, 14, 15, 21, 24, 41, 76, 118, 170, 210], // Microsoft (incl. finance leases from 2023)
+  [10, 13, 25, 24, 22, 25, 31, 32, 53,  91, 200, 260], // Alphabet
+  [ 7, 12, 13, 17, 40, 61, 64, 53, 83, 128, 220, 290], // Amazon (cash capex)
+  [4.5, 7, 14, 15, 15, 19, 31, 28, 39,  72, 138, 180], // Meta
+];
+const CAPEX_EST_FROM = 2027;
+const ORCL = { labels: ["FY21","FY22","FY23","FY24","FY25","FY26","FY27E"], vals: [1.8,4.5,8.7,6.9,21.2,50,92.5], est: 6 };
+const NVDA = { labels: ["FY20","FY21","FY22","FY23","FY24","FY25","FY26"], vals: [3.0,6.7,10.6,15.0,47.5,115.2,190] };
+const FLOP = [
+  { m: "GNMT",           x: 2016.7, y: 6.9e21 },
+  { m: "AlphaGo Zero",   x: 2017.8, y: 3.4e23 },
+  { m: "GPT-3",          x: 2020.4, y: 3.1e23 },
+  { m: "PaLM",           x: 2022.3, y: 2.5e24 },
+  { m: "GPT-4",          x: 2023.2, y: 2.1e25 },
+  { m: "Gemini 1.0 Ultra", x: 2023.9, y: 5.0e25 },
+  { m: "Llama 3.1 405B", x: 2024.6, y: 3.8e25 },
+  { m: "Grok 3",         x: 2025.1, y: 4.6e26 },
+];
+const FLOP_PROJ = [{ x: 2025.1, y: 4.6e26 }, { x: 2030, y: 2e29 }];
+// Global DC capacity, GW. 2015–2024 modeled (IEA TWh ÷ 8,760 h ÷ ~75% utilisation; AI share from IEA accelerated-server trend).
+// 2025 & 2030 = McKinsey (AI 44→156, non-AI 38→64). 2026–2029 interpolated.
+const GW_YEARS = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030];
+const GW_AI    = [0.5,0.7,1,1.5,2,3,4,6,12,25,44,66,88,110,133,156];
+const GW_NONAI = [30,31,32,32.5,33,34,35,36,36.5,37,38,42,47,52,58,64];
+const GW_TODAY = 2026, GW_FORECAST_FROM = 2026;
+const FORECASTS_2030 = [
+  { who: "McKinsey (capacity)", gw: 219 },
+  { who: "JLL (capacity)", gw: 200 },
+  { who: "Goldman Sachs (power demand)", gw: 122 },
+];
+const PWR = [{ x: 2023, y: 55 }, { x: 2027, y: 84 }, { x: 2030, y: 122 }];
+
+// ---------- HELPERS ----------
+const NS = "http://www.w3.org/2000/svg";
+const css = v => getComputedStyle(document.querySelector(".viz-root")).getPropertyValue(v).trim();
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function niceMax(v, steps = 4) {
+  const raw = v / steps, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const n = [1, 2, 2.5, 5, 10].find(s => s * mag >= raw) * mag;
+  return { max: n * steps, step: n };
+}
+const fmt$ = v => "$" + (v >= 100 ? Math.round(v) : v.toFixed(v < 10 ? 1 : 0)) + "B";
+// Column path: square at baseline, 4px rounded data-end
+function colPath(x, y, w, h, r = 4) {
+  if (h <= 0) return "";
+  r = Math.min(r, h, w / 2);
+  return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`;
+}
+const tip = document.getElementById("tip");
+function showTip(evt, html) {
+  tip.innerHTML = html; tip.style.display = "block";
+  const pad = 14, r = tip.getBoundingClientRect();
+  let x = evt.clientX + pad, y = evt.clientY + pad;
+  if (x + r.width > innerWidth - 8) x = evt.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = evt.clientY - r.height - pad;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+const hideTip = () => (tip.style.display = "none");
+const row = (label, val, color, kind = "sw") =>
+  `<div class="r"><span>${color ? `<i class="sw" style="background:var(${color})"></i>` : ""}${label}</span><span>${val}</span></div>`;
+
+function yAxis(svg, m, W, H, max, step, fmt) {
+  for (let v = 0; v <= max + 1e-9; v += step) {
+    const y = m.t + H - (v / max) * H;
+    el("line", { x1: m.l, x2: m.l + W, y1: y, y2: y, stroke: v === 0 ? css("--axis") : css("--grid"), "stroke-width": 1, "shape-rendering": "crispEdges" }, svg);
+    el("text", { x: m.l - 8, y: y + 4, "text-anchor": "end", class: "tick" }, svg).textContent = fmt(v);
+  }
+}
+
+// ---------- CHART: stacked columns ----------
+function drawCapex() {
+  const host = document.getElementById("c-capex"); host.innerHTML = "";
+  const VW = 760, VH = 340, m = { t: 24, r: 8, b: 28, l: 52 };
+  const W = VW - m.l - m.r, H = VH - m.t - m.b;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Stacked column chart of hyperscaler capex by company, 2016 to 2027 estimate" }, host);
+  const totals = CAPEX_YEARS.map((_, i) => CAPEX.reduce((s, r) => s + r[i], 0));
+  const { max, step } = niceMax(Math.max(...totals));
+  yAxis(svg, m, W, H, max, step, v => "$" + v + "B");
+  const band = W / CAPEX_YEARS.length, bw = Math.min(24, band * 0.6), gap = 2;
+  CAPEX_YEARS.forEach((yr, i) => {
+    const cx = m.l + band * i + band / 2, x = cx - bw / 2;
+    const est = yr >= CAPEX_EST_FROM;
+    const g = el("g", { opacity: est ? 0.45 : 1 }, svg);
+    let acc = 0;
+    CAPEX.forEach((r, s) => {
+      const v = r[i], h = (v / max) * H, yTop = m.t + H - ((acc + v) / max) * H;
+      const isTop = s === CAPEX.length - 1;
+      const hh = Math.max(0, h - (s > 0 ? gap : 0));
+      if (isTop) el("path", { d: colPath(x, yTop, bw, hh), fill: css(COS[s].c) }, g);
+      else el("rect", { x, y: yTop, width: bw, height: hh, fill: css(COS[s].c) }, g);
+      acc += v;
+    });
+    // total label on selected columns only
+    if ([0, 7, 9, 10, 11].includes(i)) {
+      el("text", { x: cx, y: m.t + H - (totals[i] / max) * H - 6, "text-anchor": "middle", class: i === 10 ? "dlabel strong" : "dlabel" }, svg)
+        .textContent = (est ? "~" : "") + fmt$(totals[i]) + (est ? " est." : "");
+    }
+    el("text", { x: cx, y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = est ? yr + "E" : yr;
+    // hit target: full band
+    const hit = el("rect", { x: m.l + band * i, y: m.t, width: band, height: H, fill: "transparent" }, svg);
+    hit.addEventListener("mousemove", e => showTip(e,
+      `<div class="t">${yr}${est ? " (estimate)" : ""}</div>` +
+      CAPEX.map((r, s) => row(COS[s].name, fmt$(r[i]), COS[s].c)).reverse().join("") +
+      `<div class="r" style="border-top:1px solid var(--grid);margin-top:4px;padding-top:4px"><span>Total</span><span><b>${fmt$(totals[i])}</b></span></div>`));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+  document.getElementById("lg-capex").innerHTML = COS.map(c => `<span><i class="sw" style="background:var(${c.c})"></i>${c.name}</span>`).join("");
+  document.getElementById("t-capex").innerHTML = table(["Year", ...COS.map(c => c.name), "Total"],
+    CAPEX_YEARS.map((y, i) => [y >= CAPEX_EST_FROM ? y + "E" : y, ...CAPEX.map(r => fmt$(r[i])), fmt$(totals[i])]));
+}
+
+// ---------- CHART: simple columns ----------
+function drawColumns(hostId, data, color, aria, tblId, tblHead) {
+  const host = document.getElementById(hostId); host.innerHTML = "";
+  const VW = 460, VH = 260, m = { t: 22, r: 8, b: 26, l: 46 };
+  const W = VW - m.l - m.r, H = VH - m.t - m.b;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": aria }, host);
+  const { max, step } = niceMax(Math.max(...data.vals));
+  yAxis(svg, m, W, H, max, step, v => "$" + v + "B");
+  const band = W / data.labels.length, bw = Math.min(24, band * 0.55);
+  data.labels.forEach((lab, i) => {
+    const v = data.vals[i], cx = m.l + band * i + band / 2, h = (v / max) * H, y = m.t + H - h;
+    const est = data.est === i;
+    el("path", { d: colPath(cx - bw / 2, y, bw, h), fill: css(color), opacity: est ? 0.45 : 1 }, svg);
+    if (i === data.labels.length - 1 || i === data.labels.length - 2)
+      el("text", { x: cx, y: y - 6, "text-anchor": "middle", class: i === data.labels.length - 1 ? "dlabel strong" : "dlabel" }, svg).textContent = (est ? "~" : "") + fmt$(v);
+    el("text", { x: cx, y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = lab;
+    const hit = el("rect", { x: m.l + band * i, y: m.t, width: band, height: H, fill: "transparent" }, svg);
+    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${lab}${est ? " (guide midpoint)" : ""}</div>` + row(tblHead, fmt$(v), color)));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+  document.getElementById(tblId).innerHTML = table(["Period", tblHead], data.labels.map((l, i) => [l, fmt$(data.vals[i])]));
+}
+
+// ---------- CHART: log-scale training compute ----------
+function drawFlop() {
+  const host = document.getElementById("c-flop"); host.innerHTML = "";
+  const VW = 680, VH = 320, m = { t: 16, r: 16, b: 28, l: 52 };
+  const W = VW - m.l - m.r, H = VH - m.t - m.b;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Log-scale scatter of frontier AI training compute 2016 to 2030" }, host);
+  const x0 = 2016, x1 = 2030.3, lo = 21, hi = 30;
+  const sx = x => m.l + ((x - x0) / (x1 - x0)) * W;
+  const sy = v => m.t + H - ((Math.log10(v) - lo) / (hi - lo)) * H;
+  for (let p = lo; p <= hi; p++) {
+    const y = sy(Math.pow(10, p));
+    el("line", { x1: m.l, x2: m.l + W, y1: y, y2: y, stroke: p === lo ? css("--axis") : css("--grid"), "shape-rendering": "crispEdges" }, svg);
+    if (p % 1 === 0) el("text", { x: m.l - 8, y: y + 4, "text-anchor": "end", class: "tick" }, svg).textContent = "1e" + p;
+  }
+  for (let yr = 2016; yr <= 2030; yr += 2)
+    el("text", { x: sx(yr), y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = yr;
+  // "today" marker
+  const tx = sx(2026.85);
+  el("line", { x1: tx, x2: tx, y1: m.t, y2: m.t + H, stroke: css("--axis") }, svg);
+  el("text", { x: tx + 4, y: m.t + 10, class: "tick" }, svg).textContent = "today";
+  // projection
+  const [a, b] = FLOP_PROJ;
+  el("line", { x1: sx(a.x), y1: sy(a.y), x2: sx(b.x), y2: sy(b.y), stroke: css("--text-muted"), "stroke-width": 2, "stroke-dasharray": "4 4", "stroke-linecap": "round" }, svg);
+  el("text", { x: sx(b.x) - 10, y: sy(b.y) + 26, "text-anchor": "end", class: "dlabel" }, svg).textContent = "~2e29 FLOP by 2030";
+  el("circle", { cx: sx(b.x), cy: sy(b.y), r: 4, fill: css("--surface-1"), stroke: css("--text-muted"), "stroke-width": 2 }, svg);
+  // points
+  const labelled = new Set(["GPT-3", "GPT-4", "Grok 3", "AlphaGo Zero"]);
+  FLOP.forEach(d => {
+    const cx = sx(d.x), cy = sy(d.y);
+    el("circle", { cx, cy, r: 5, fill: css("--s1"), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
+    if (labelled.has(d.m)) el("text", { x: cx + 8, y: cy + 4, class: "dlabel" }, svg).textContent = d.m;
+    const hit = el("circle", { cx, cy, r: 14, fill: "transparent" }, svg);
+    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${d.m}</div>` + row("Year", Math.floor(d.x)) + row("Training compute", d.y.toExponential(1) + " FLOP")));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+  document.getElementById("t-flop").innerHTML = table(["Model", "Year", "Training FLOP"],
+    [...FLOP.map(d => [d.m, Math.floor(d.x), d.y.toExponential(1)]), ["Projection (Epoch feasibility)", 2030, "2e+29"]]);
+}
+
+// ---------- CHART: power line ----------
+function drawPower() {
+  const host = document.getElementById("c-pwr"); host.innerHTML = "";
+  const VW = 560, VH = 240, m = { t: 20, r: 40, b: 26, l: 44 };
+  const W = VW - m.l - m.r, H = VH - m.t - m.b;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Line chart of global data centre power demand, 55 GW in 2023 to 122 GW in 2030" }, host);
+  const { max, step } = niceMax(140);
+  yAxis(svg, m, W, H, max, step, v => v + " GW");
+  const x0 = 2023, x1 = 2030, sx = x => m.l + ((x - x0) / (x1 - x0)) * W, sy = v => m.t + H - (v / max) * H;
+  for (let yr = x0; yr <= x1; yr++) el("text", { x: sx(yr), y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = yr;
+  const d = PWR.map((p, i) => (i ? "L" : "M") + sx(p.x) + "," + sy(p.y)).join("");
+  const area = d + `L${sx(x1)},${sy(0)}L${sx(x0)},${sy(0)}Z`;
+  el("path", { d: area, fill: css("--s1"), opacity: 0.1 }, svg);
+  el("path", { d, fill: "none", stroke: css("--s1"), "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+  PWR.forEach((p, i) => {
+    el("circle", { cx: sx(p.x), cy: sy(p.y), r: 5, fill: css("--s1"), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
+    el("text", { x: sx(p.x), y: sy(p.y) - 10, "text-anchor": "middle", class: i === PWR.length - 1 ? "dlabel strong" : "dlabel" }, svg).textContent = p.y + " GW";
+    const hit = el("circle", { cx: sx(p.x), cy: sy(p.y), r: 16, fill: "transparent" }, svg);
+    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${p.x}${p.x > 2026 ? " (forecast)" : ""}</div>` + row("Power demand", p.y + " GW", "--s1")));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+  document.getElementById("t-pwr").innerHTML = table(["Year", "GW (Goldman Sachs)"], PWR.map(p => [p.x, p.y]));
+}
+
+// ---------- SEGMENTED BAR + GUIDE TABLE ----------
+function drawShare() {
+  const i26 = CAPEX_YEARS.indexOf(2026), i25 = i26 - 1;
+  const tot = CAPEX.reduce((s, r) => s + r[i26], 0);
+  const seg = document.getElementById("seg26");
+  seg.innerHTML = ""; seg.setAttribute("role", "img");
+  seg.setAttribute("aria-label", COS.map((c, s) => `${c.name} ${Math.round(CAPEX[s][i26] / tot * 100)}%`).join(", "));
+  COS.forEach((c, s) => {
+    const v = CAPEX[s][i26], pct = Math.round(v / tot * 100);
+    const d = document.createElement("div");
+    d.style.flex = v; d.style.background = `var(${c.c})`;
+    if (c.c === "--s4") d.className = "dark-ink";
+    d.textContent = pct + "%";
+    d.addEventListener("mousemove", e => showTip(e, `<div class="t">${c.name}</div>` + row("2026 capex", fmt$(v), c.c) + row("Share", pct + "%")));
+    d.addEventListener("mouseleave", hideTip);
+    seg.appendChild(d);
+  });
+  document.getElementById("lg-seg").innerHTML = COS.map(c => `<span><i class="sw" style="background:var(${c.c})"></i>${c.name}</span>`).join("");
+  const guides = ["~$170B", "$195–205B", "~$220B", "$130–145B"];
+  document.getElementById("guide-body").innerHTML = COS.map((c, s) =>
+    `<tr><td><i class="sw" style="background:var(${c.c});margin-right:6px"></i>${c.name}</td><td class="num">${guides[s]}</td><td class="num">+${Math.round((CAPEX[s][i26] / CAPEX[s][i25] - 1) * 100)}%</td></tr>`).join("");
+}
+
+// ---------- CHART: GW stacked (AI vs non-AI) ----------
+function drawGW() {
+  const host = document.getElementById("c-gw"); host.innerHTML = "";
+  const VW = 760, VH = 320, m = { t: 26, r: 8, b: 28, l: 52 };
+  const W = VW - m.l - m.r, H = VH - m.t - m.b;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Stacked column chart of global data-centre capacity in GW, AI vs non-AI, 2015 to 2030" }, host);
+  const tot = GW_YEARS.map((_, i) => GW_AI[i] + GW_NONAI[i]);
+  const { max, step } = niceMax(Math.max(...tot), 5);
+  yAxis(svg, m, W, H, max, step, v => v + " GW");
+  const band = W / GW_YEARS.length, bw = Math.min(24, band * 0.6);
+  // era divider: ChatGPT launch (end-2022)
+  const divX = m.l + band * GW_YEARS.indexOf(2023);
+  el("line", { x1: divX, x2: divX, y1: m.t - 10, y2: m.t + H, stroke: css("--axis") }, svg);
+  el("text", { x: divX - 6, y: m.t - 2, "text-anchor": "end", class: "tick" }, svg).textContent = "← pre-AI era";
+  el("text", { x: divX + 6, y: m.t - 2, class: "tick" }, svg).textContent = "ChatGPT (Nov 2022) → AI era";
+  GW_YEARS.forEach((yr, i) => {
+    const cx = m.l + band * i + band / 2, x = cx - bw / 2;
+    const fc = yr > GW_FORECAST_FROM, interp = yr > 2025 && yr < 2030;
+    const g = el("g", { opacity: interp ? 0.5 : (fc ? 0.75 : 1) }, svg);
+    const hN = (GW_NONAI[i] / max) * H, hA = (GW_AI[i] / max) * H;
+    const yN = m.t + H - hN;
+    el("rect", { x, y: yN, width: bw, height: hN, fill: css("--neutral") }, g);
+    const hAg = Math.max(0, hA - 2);
+    if (hAg > 0.5) el("path", { d: colPath(x, yN - hA, bw, hAg), fill: css("--s1") }, g);
+    if ([0, 9, 11, 15].includes(i))
+      el("text", { x: cx, y: m.t + H - (tot[i] / max) * H - 6, "text-anchor": "middle", class: yr === GW_TODAY ? "dlabel strong" : "dlabel" }, svg)
+        .textContent = "~" + Math.round(tot[i]) + " GW";
+    el("text", { x: cx, y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = (i % 2 === 1 || yr === 2030) ? yr : "";
+    const hit = el("rect", { x: m.l + band * i, y: m.t, width: band, height: H, fill: "transparent" }, svg);
+    const tag = yr <= 2024 ? "modeled estimate" : yr === 2025 || yr === 2030 ? "McKinsey" : "interpolated";
+    hit.addEventListener("mousemove", e => showTip(e,
+      `<div class="t">${yr} <span class="muted">(${tag})</span></div>` +
+      row("AI", GW_AI[i] + " GW", "--s1") + row("Non-AI", GW_NONAI[i] + " GW", "--neutral") +
+      `<div class="r" style="border-top:1px solid var(--grid);margin-top:4px;padding-top:4px"><span>Total · AI share</span><span><b>${Math.round(tot[i])} GW</b> · ${Math.round(GW_AI[i] / tot[i] * 100)}%</span></div>`));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+  document.getElementById("t-gw").innerHTML = table(["Year", "AI GW", "Non-AI GW", "Total GW", "AI share"],
+    GW_YEARS.map((y, i) => [y, GW_AI[i], GW_NONAI[i], Math.round(tot[i]), Math.round(GW_AI[i] / tot[i] * 100) + "%"]));
+
+  // forecast comparison: horizontal bars
+  const fh = document.getElementById("c-fc"); fh.innerHTML = "";
+  const FW = 360, rowH = 34, FH = FORECASTS_2030.length * rowH + 4, lw = 0;
+  const fs = el("svg", { viewBox: `0 0 ${FW} ${FH}`, role: "img", "aria-label": "2030 data-centre GW forecasts by forecaster" }, fh);
+  const fmax = 250;
+  FORECASTS_2030.forEach((f, i) => {
+    const y = i * rowH;
+    el("text", { x: 0, y: y + 11, class: "tick" }, fs).textContent = f.who;
+    const w = (f.gw / fmax) * (FW - 60);
+    // horizontal bar: square at baseline (left), rounded at data end (right)
+    const r = 4, h = 12, by = y + 16;
+    el("path", { d: `M0,${by}H${w - r}Q${w},${by} ${w},${by + r}V${by + h - r}Q${w},${by + h} ${w - r},${by + h}H0Z`, fill: css("--neutral") }, fs);
+    el("text", { x: w + 6, y: by + 10, class: "dlabel" }, fs).textContent = f.gw + " GW";
+  });
+}
+
+function table(head, rows) {
+  return `<table><thead><tr>${head.map((h, i) => `<th class="${i ? "num" : ""}">${h}</th>`).join("")}</tr></thead><tbody>` +
+    rows.map(r => `<tr>${r.map((c, i) => `<td class="${i ? "num" : ""}">${c}</td>`).join("")}</tr>`).join("") + `</tbody></table>`;
+}
+
+function drawAll() {
+  drawCapex();
+  drawShare();
+  drawColumns("c-orcl", ORCL, "--neutral", "Column chart of Oracle capex by fiscal year", "t-orcl", "Oracle capex");
+  drawColumns("c-nvda", NVDA, "--neutral", "Column chart of Nvidia data centre revenue by fiscal year", "t-nvda", "DC revenue");
+  drawFlop();
+  drawPower();
+  drawGW();
+}
+
+// ---------- WIRING ----------
+document.querySelectorAll("[data-table]").forEach(b =>
+  b.addEventListener("click", () => document.getElementById(b.dataset.table).classList.toggle("show")));
+document.getElementById("theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  drawAll();
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
+drawAll();
+</script>
+</body>
+</html>
