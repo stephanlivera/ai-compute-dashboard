@@ -204,6 +204,7 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
       <tr><td><b>Oracle (OCI)</b></td><td>$664B RPO (Q1 FY27, Aug 2026). Roughly half is tied to OpenAI</td><td>Core Stargate partner; Abilene ~1.2 GW</td><td>OCI revenue $7.4B/qtr, +121%; FY27 capex guide $90–95B gross</td></tr>
       <tr><td><b>CoreWeave</b></td><td>~$104B backlog (Jun 2026), plus $25B+ signed early Q3</td><td>~4.2 GW contracted · 1.5 GW active</td><td>Re-contracting at higher prices; Q3 results due mid-Nov</td></tr>
       <tr><td><b>Nebius</b></td><td>Anchor deals with Microsoft (~$17–19B) and Meta</td><td>Target 2.5 GW contracted by end of 2026</td><td>Revenue growing several hundred % YoY</td></tr>
+      <tr><td><b>OpenAI</b> <span class="muted">(the buyer)</span></td><td>&gt;$665B of chip and data-centre commitments (The Information, Jul 2026, reported secondhand)</td><td>Stargate ~10 GW target, plus Microsoft, Oracle, AWS and CoreWeave capacity</td><td>Commitments exceed 13× its ~$50B net run-rate. Its Nov round was cut to ~$20B from a $30B target</td></tr>
       <tr><td><b>Others</b></td><td colspan="3">Crusoe, Lambda, Nscale and IREN, plus xAI and OpenAI building their own campuses</td></tr>
     </tbody>
   </table>
@@ -325,6 +326,21 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
       </ul>
     </div>
   </div>
+  <h2 style="font-size:14px;margin-top:20px">Funding and valuation: what investors pay per dollar of run-rate</h2>
+  <p class="muted" style="margin-bottom:6px">Post-money valuation divided by the nearest reported run-rate at the time of the round. The multiple has compressed as revenue outgrew valuations. Italic rows are press reports, not company announcements.</p>
+  <table>
+    <thead><tr><th>Lab</th><th>Round</th><th class="num">Raised</th><th class="num">Valuation</th><th class="num">Run-rate then</th><th class="num">Valuation ÷ run-rate</th></tr></thead>
+    <tbody>
+      <tr><td><i class="sw" style="background:var(--s1);margin-right:6px"></i>OpenAI</td><td>Employee share sale, Oct 2025</td><td class="num">$6.6B<div class="muted">secondary</div></td><td class="num">$500B</td><td class="num">~$13B<div class="muted">Aug 2025</div></td><td class="num">~38×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s1);margin-right:6px"></i>OpenAI</td><td>Primary round, Mar 2026 (SoftBank, a16z and others)</td><td class="num">$122B</td><td class="num">$852B</td><td class="num">~$24B<div class="muted">"$2B/month"</div></td><td class="num">~35×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s1);margin-right:6px"></i>OpenAI</td><td><i>First close, Nov 2026 (SoftBank, MGX). Cut from a $30B target at $1.4–1.5T</i></td><td class="num"><i>$11B</i><div class="muted">~$20B expected</div></td><td class="num"><i>$1.25T</i><div class="muted">pre/post not stated</div></td><td class="num">~$50B<div class="muted">net, Sep 2026</div></td><td class="num">~25×<div class="muted">~18× on gross</div></td></tr>
+      <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td>Series F, Sep 2025</td><td class="num">$13B</td><td class="num">$183B</td><td class="num">~$5B<div class="muted">Aug 2025</div></td><td class="num">~37×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td>Series G, Feb 2026</td><td class="num">$30B</td><td class="num">$380B</td><td class="num">$14B</td><td class="num">~27×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td>Series H, May 2026 (Altimeter, Dragoneer, Greenoaks, Sequoia)</td><td class="num">$65B</td><td class="num">$965B</td><td class="num">$47B</td><td class="num">~21×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td><i>IPO talk, Nov 2026. Down from ~$2T a month earlier</i></td><td class="num">–</td><td class="num"><i>$1.0–1.5T</i></td><td class="num">$65B<div class="muted">Jul 2026</div></td><td class="num">~15–23×</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="margin-top:6px">The Nov 2026 OpenAI figures come from Bloomberg and Reuters (anonymous sources). OpenAI hasn't announced them. Anthropic's IPO range combines Reuters investors (~$1.5T), a Bloomberg low-end buyer view ($1.1T) and a WSJ shareholder (~$1T). OpenAI's multiple is on net revenue, so it reads high next to Anthropic's gross figure.</p>
 </section>
 
 <!-- METR + AUTOMATION -->
@@ -478,6 +494,7 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
         <li>Data-centre ABS and private-credit marks widening together with the public names.</li>
       </ul>
       <p class="muted" style="margin-top:8px">What eased things in late October: Meta raised equity instead of debt, and the big bond deal investors expected never came. Equities also rebounded after the US election in early November. No CDS prints after 1 Nov were available.</p>
+      <p class="muted" style="margin-top:8px">Equity-side warning, 6 Nov: OpenAI's new round came in smaller and cheaper than planned (~$20B at $1.25T, against a $30B target at $1.4–1.5T). Anthropic's IPO talk fell from ~$2T to $1.0–1.5T. The labs owe most of the neocloud and Oracle backlog, so if equity gets harder to raise, those counterparties look weaker.</p>
     </div>
   </div>
 </section>
@@ -521,6 +538,7 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
     <li><b>AI changed the slope of the gigawatt curve.</b> Global data-centre capacity added only ~7 GW from 2015 to 2021, while efficiency gains absorbed cloud growth. Since 2023 it has added ~15–25 GW <i>per year</i>, almost all of it AI. By 2030, AI is ~70% of a ~220 GW footprint.</li>
     <li><b>Power, not chips, is the binding constraint.</b> Delays at third-party capacity are why Microsoft trimmed its guide. GW of contracted power is now the metric to track.</li>
     <li><b>Lab revenue is the hinge for the whole trade.</b> OpenAI and Anthropic together run at ~$115B a year, against ~$728B of 2026 Big 4 capex and $770B+ of neocloud and Oracle backlog that is mostly owed by these labs. Revenue grows 4× to 13× a year now. If it slows toward 1.5×, the build-out looks over-extended. If it holds at 2–3×, the build-out looks undersized.</li>
+    <li><b>Private investors are getting pickier, but not leaving.</b> OpenAI's Nov 2026 round was cut to ~$20B at $1.25T, from a $30B target at $1.4–1.5T. Anthropic's IPO talk fell from ~$2T to $1.0–1.5T. The valuation-to-run-rate multiple has fallen from ~35–38× in late 2025 to ~20–25×, mostly because revenue grew faster than valuations, not because valuations fell. The risk is the funding gap: OpenAI's &gt;$665B of compute commitments are many times what any single round now raises.</li>
     <li><b>Autonomy compounds, and so does token demand.</b> The length of task an AI agent can finish on its own has doubled every ~4 months since 2023 (METR). Hours-long agent runs consume orders of magnitude more tokens than a chat reply. That is why falling token prices coexist with rising compute demand.</li>
     <li><b>The fundamentals and the market disagree.</b> GPU rental rates are rising for every generation: H100 +50% since Dec 2025, B200 +50% YTD, with list-price hikes at AWS, Lambda, Nebius and RunPod. Equity and credit stress is about whether that demand lasts through the next wave of capacity, not about today's pricing. A rollover in the rental indices would be the first real sign of oversupply.</li>
     <li><b>The credit market is drawing the line at leverage, not at AI.</b> CoreWeave's CDS is above 1,000 bps (distress) and Oracle's prices like junk. Meta, Nvidia and the other hyperscalers sit at records, but only ~100 bps. The stress is in debt-funded capacity with concentrated customers, not in the cash-funded Big 4.</li>
@@ -554,6 +572,13 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
     <div><a href="https://valueaddvc.com/blog/openai-revenue-2026-20b-arr-4b-month-path-to-profitability">ValueAdd VC: OpenAI ~$50B net vs ~$70B gross run-rate</a></div>
     <div><a href="https://cryptobriefing.com/openai-revenue-run-rate-nears-50-billion/">Crypto Briefing: OpenAI run-rate nears $50B</a></div>
     <div><a href="https://explodingtopics.com/blog/openai-revenue">Exploding Topics: OpenAI revenue history and FT 2030 forecast</a></div>
+    <div><a href="https://www.bloomberg.com/news/articles/2026-11-06/openai-completes-11-billion-portion-of-funding-at-1-25-trillion-value">Bloomberg: OpenAI completes $11B portion of funding at $1.25T (Nov 2026)</a></div>
+    <div><a href="https://www.thestar.com.my/tech/tech-news/2026/11/07/openai-secures-11-billion-funding-at-125-trillion-valuation-bloomberg-news-reports">Reuters (via The Star): $11B close, SoftBank and MGX, down from $1.5T sought</a></div>
+    <div><a href="https://techcrunch.com/2026/11/06/openai-reportedly-raises-an-additional-11-billion-at-a-1-25-trillion-valuation/">TechCrunch: OpenAI round and Anthropic IPO valuation talk (Nov 2026)</a></div>
+    <div><a href="https://siliconangle.com/2026/11/06/openai-reportedly-raises-11b-in-new-funding-at-1-25t-valuation/">SiliconANGLE: round context, &gt;$665B commitments (citing The Information)</a></div>
+    <div><a href="https://thenextweb.com/news/openai-122-billion-round-852-billion-valuation-retail-investors">The Next Web: OpenAI $122B at $852B post-money (Mar 2026)</a></div>
+    <div><a href="https://finance.yahoo.com/markets/stocks/articles/anthropic-raises-65bn-series-h-110356689.html">Yahoo Finance: Anthropic Series H, $65B at $965B (May 2026)</a></div>
+    <div><a href="https://www.revenuememo.com/p/anthropic-funding">Revenue Memo: Anthropic funding rounds and valuations</a></div>
     <div><a href="https://metr.org/time-horizons">METR: time horizons page and data (TH1.1, updated Sep 2026)</a></div>
     <div><a href="https://metr.org/blog/2026-1-29-time-horizon-1-1/">METR: Time Horizon 1.1 and doubling times (Jan 2026)</a></div>
     <div><a href="https://metr.org/blog/2025-07-14-how-does-time-horizon-vary-across-domains/">METR: time horizons across domains (Jul 2025)</a></div>

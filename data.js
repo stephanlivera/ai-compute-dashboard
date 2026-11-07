@@ -16,12 +16,12 @@ const SECTIONS = {
   capex:         { title: "Hyperscaler capex",          asOf: "2026-11-06", every: 90,  consts: ["CAPEX", "CAPEX_YEARS", "CAPEX_EST_FROM"], sources: ["10-Q/10-K cash flow statements", "earnings-call capex guidance"] },
   share:         { title: "2026 capex share + guides",  asOf: "2026-11-06", every: 90,  consts: ["CAPEX_GUIDES"], sources: ["earnings-call capex guidance"] },
   gw:            { title: "Data-centre GW",             asOf: "2026-11-06", every: 180, consts: ["GW_YEARS", "GW_AI", "GW_NONAI", "FORECASTS_2030"], sources: ["IEA Energy & AI", "McKinsey", "JLL", "Goldman Sachs Research"] },
-  neoclouds:     { title: "Oracle & neoclouds table",   asOf: "2026-11-06", every: 30,  consts: ["(table in index.html)"], sources: ["Oracle, CoreWeave, Nebius IR / earnings"] },
+  neoclouds:     { title: "Oracle & neoclouds table",   asOf: "2026-11-07", every: 30,  consts: ["(table in index.html)"], sources: ["Oracle, CoreWeave, Nebius IR / earnings", "OpenAI commitments: The Information (via SiliconANGLE)"] },
   oracle:        { title: "Oracle capex",               asOf: "2026-11-06", every: 90,  consts: ["ORCL"], sources: ["Oracle 10-Q/10-K, FY guide"] },
   flop:          { title: "Frontier training compute",  asOf: "2026-11-06", every: 90,  consts: ["FLOP", "FLOP_PROJ"], sources: ["https://epoch.ai/data/notable-ai-models"] },
   nvda:          { title: "Nvidia DC revenue",          asOf: "2026-11-06", every: 90,  consts: ["NVDA"], sources: ["Nvidia quarterly results (FY ends late Jan)"] },
   deflation:     { title: "Token deflation",            asOf: "2026-11-06", every: 180, consts: ["DEFL", "DEFL_END"], sources: ["https://epoch.ai/data-insights/llm-inference-price-trends"] },
-  "lab-revenue": { title: "OpenAI / Anthropic revenue", asOf: "2026-11-06", every: 30,  consts: ["LABS", "REV_PROJ"], sources: ["https://epoch.ai/data-insights/anthropic-openai-revenue", "CNBC / Bloomberg / The Information / FT run-rate reports", "Anthropic S-1"] },
+  "lab-revenue": { title: "OpenAI / Anthropic revenue", asOf: "2026-11-07", every: 30,  consts: ["LABS", "REV_PROJ", "(funding table in index.html)"], sources: ["https://epoch.ai/data-insights/anthropic-openai-revenue", "CNBC / Bloomberg / The Information / FT run-rate reports", "Anthropic S-1", "Bloomberg / Reuters funding-round reports"] },
   autonomy:      { title: "METR + Economic Index",      asOf: "2026-11-06", every: 60,  consts: ["METR", "METR_DOUBLING_DAYS", "AEI"], sources: ["https://metr.org/time-horizons", "https://metr.org/assets/benchmark_results_1_1.yaml", "https://www.anthropic.com/research (Economic Index)"] },
   credit:        { title: "CDS credit monitor",         asOf: "2026-11-01", every: 7,   consts: ["CDS", "CDS_TS", "CDS_ASOF"], sources: ["Bloomberg/ICE terminal if available", "CNBC, WSJ (Solve data), Bloomberg press reports"] },
   power:         { title: "DC power demand",            asOf: "2026-11-06", every: 180, consts: ["PWR"], sources: ["Goldman Sachs Research", "IEA"] },
@@ -33,6 +33,8 @@ const SECTIONS = {
 const EVENTS = [
   { when: "mid-Nov 2026",  what: "CoreWeave Q3 results (backlog, contracted GW)", sections: ["neoclouds", "credit", "hero"] },
   { when: "late Nov 2026", what: "Nvidia Q3 FY27 results", sections: ["nvda", "hero"] },
+  { when: "late Nov 2026", what: "Anthropic IPO pricing (reported 'before Thanksgiving'): valuation, booked revenue", sections: ["lab-revenue", "credit"] },
+  { when: "late Nov–Dec 2026", what: "OpenAI round final close (~$20B expected at $1.25T)", sections: ["lab-revenue", "neoclouds"] },
   { when: "mid-Dec 2026",  what: "Oracle Q2 FY27 results (RPO, capex guide)", sections: ["neoclouds", "oracle", "hero", "credit"] },
   { when: "late Jan–early Feb 2027", what: "Big 4 Q4 results + first 2027 capex guides", sections: ["capex", "share", "hero"] },
 ];
