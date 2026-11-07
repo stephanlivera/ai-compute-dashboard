@@ -6,41 +6,43 @@
 // Convention: estimates/projections are flagged in-data, never silently.
 // =====================================================================
 
-const UPDATED = "2026-11-06"; // date of the last full refresh (drives "today" markers + header)
+const UPDATED = "2026-11-07"; // date of the last full refresh (drives "today" markers + header)
 
 // Section registry: when each section's data was last verified, how often it
 // should be refreshed (days), and where the numbers come from. Rendered as a
 // stamp on every card; `./check.sh` lists anything overdue.
 const SECTIONS = {
-  hero:          { title: "Headline tiles",             asOf: "2026-11-06", every: 90,  consts: ["(tiles in index.html)"], sources: ["Big 4 + Oracle + CoreWeave + Nvidia latest earnings/IR"] },
-  capex:         { title: "Hyperscaler capex",          asOf: "2026-11-06", every: 90,  consts: ["CAPEX", "CAPEX_YEARS", "CAPEX_EST_FROM"], sources: ["10-Q/10-K cash flow statements", "earnings-call capex guidance"] },
-  share:         { title: "2026 capex share + guides",  asOf: "2026-11-06", every: 90,  consts: ["CAPEX_GUIDES"], sources: ["earnings-call capex guidance"] },
+  hero:          { title: "Headline tiles",             asOf: "2026-11-07", every: 90,  consts: ["(tiles in index.html)"], sources: ["Big 4 + Oracle + CoreWeave + Nvidia latest earnings/IR"] },
+  capex:         { title: "Hyperscaler capex",          asOf: "2026-11-07", every: 90,  consts: ["CAPEX", "CAPEX_YEARS", "CAPEX_EST_FROM"], sources: ["10-Q/10-K cash flow statements", "earnings-call capex guidance"] },
+  share:         { title: "2026 capex share + guides",  asOf: "2026-11-07", every: 90,  consts: ["CAPEX_GUIDES"], sources: ["earnings-call capex guidance"] },
   gw:            { title: "Data-centre GW",             asOf: "2026-11-06", every: 180, consts: ["GW_YEARS", "GW_AI", "GW_NONAI", "FORECASTS_2030"], sources: ["IEA Energy & AI", "McKinsey", "JLL", "Goldman Sachs Research"] },
   neoclouds:     { title: "Oracle & neoclouds table",   asOf: "2026-11-07", every: 30,  consts: ["(table in index.html)"], sources: ["Oracle, CoreWeave, Nebius IR / earnings", "OpenAI commitments: The Information (via SiliconANGLE)"] },
   oracle:        { title: "Oracle capex",               asOf: "2026-11-06", every: 90,  consts: ["ORCL"], sources: ["Oracle 10-Q/10-K, FY guide"] },
-  flop:          { title: "Frontier training compute",  asOf: "2026-11-06", every: 90,  consts: ["FLOP", "FLOP_PROJ"], sources: ["https://epoch.ai/data/notable-ai-models"] },
-  nvda:          { title: "Nvidia DC revenue",          asOf: "2026-11-06", every: 90,  consts: ["NVDA"], sources: ["Nvidia quarterly results (FY ends late Jan)"] },
+  flop:          { title: "Frontier training compute",  asOf: "2026-11-07", every: 90,  consts: ["FLOP", "FLOP_PROJ"], sources: ["https://epoch.ai/data/notable-ai-models"] },
+  nvda:          { title: "Nvidia DC revenue",          asOf: "2026-11-07", every: 90,  consts: ["NVDA"], sources: ["Nvidia quarterly results (FY ends late Jan)"] },
   deflation:     { title: "Token deflation",            asOf: "2026-11-06", every: 180, consts: ["DEFL", "DEFL_END"], sources: ["https://epoch.ai/data-insights/llm-inference-price-trends"] },
   "lab-revenue": { title: "OpenAI / Anthropic revenue", asOf: "2026-11-07", every: 30,  consts: ["LABS", "REV_PROJ", "(funding table in index.html)"], sources: ["https://epoch.ai/data-insights/anthropic-openai-revenue", "CNBC / Bloomberg / The Information / FT run-rate reports", "Anthropic S-1", "Bloomberg / Reuters funding-round reports"] },
   autonomy:      { title: "METR + Economic Index",      asOf: "2026-11-06", every: 60,  consts: ["METR", "METR_DOUBLING_DAYS", "AEI"], sources: ["https://metr.org/time-horizons", "https://metr.org/assets/benchmark_results_1_1.yaml", "https://www.anthropic.com/research (Economic Index)"] },
-  credit:        { title: "CDS credit monitor",         asOf: "2026-11-01", every: 7,   consts: ["CDS", "CDS_TS", "CDS_ASOF"], sources: ["Bloomberg/ICE terminal if available", "CNBC, WSJ (Solve data), Bloomberg press reports"] },
+  credit:        { title: "CDS credit monitor",         asOf: "2026-11-07", every: 7,   consts: ["CDS", "CDS_TS", "CDS_ASOF"], sources: ["Bloomberg/ICE terminal if available", "CNBC, WSJ (Solve data), Bloomberg press reports"] },
   power:         { title: "DC power demand",            asOf: "2026-11-06", every: 180, consts: ["PWR"], sources: ["Goldman Sachs Research", "IEA"] },
   gpu:           { title: "GPU rental rates",           asOf: "2026-11-06", every: 30,  consts: ["GPU", "GPU_RANGE", "GPU_RESTATE", "GPU_SNAP"], sources: ["https://www.silicondata.com/products/silicon-index/h100", "https://www.silicondata.com/blog", "Vast.ai public marketplace API (snapshot)"] },
-  campuses:      { title: "GW-class campuses",          asOf: "2026-11-06", every: 90,  consts: ["(table in index.html)"], sources: ["company announcements"] },
+  cloud:         { title: "Cloud backlog + demand",     asOf: "2026-11-07", every: 90,  consts: ["(tiles in index.html)"], sources: ["MSFT 10-Q, GOOGL / AMZN 8-K releases + Q3 calls"] },
+  campuses:      { title: "GW-class campuses",          asOf: "2026-11-07", every: 90,  consts: ["(table in index.html)"], sources: ["company announcements"] },
 };
 
 // Known upcoming events that should trigger a refresh (approximate; confirm dates).
 const EVENTS = [
-  { when: "mid-Nov 2026",  what: "CoreWeave Q3 results (backlog, contracted GW)", sections: ["neoclouds", "credit", "hero"] },
-  { when: "late Nov 2026", what: "Nvidia Q3 FY27 results", sections: ["nvda", "hero"] },
-  { when: "late Nov 2026", what: "Anthropic IPO pricing (reported 'before Thanksgiving'): valuation, booked revenue", sections: ["lab-revenue", "credit"] },
+  { when: "10 Nov 2026",  what: "CoreWeave Q3 results (backlog, contracted GW)", sections: ["neoclouds", "credit", "hero"] },
+  { when: "12 Nov 2026",  what: "Nebius Q3 results (contracted power vs 5 GW target, ARR)", sections: ["neoclouds"] },
+  { when: "17 Nov 2026",  what: "Nvidia Q3 FY27 results (guide $108B ±2%)", sections: ["nvda", "hero"] },
+  { when: "~19–20 Nov 2026", what: "Anthropic IPO pricing (Nasdaq: ANT; reported): valuation, Oct run-rate", sections: ["lab-revenue", "credit"] },
   { when: "late Nov–Dec 2026", what: "OpenAI round final close (~$20B expected at $1.25T)", sections: ["lab-revenue", "neoclouds"] },
   { when: "mid-Dec 2026",  what: "Oracle Q2 FY27 results (RPO, capex guide)", sections: ["neoclouds", "oracle", "hero", "credit"] },
   { when: "late Jan–early Feb 2027", what: "Big 4 Q4 results + first 2027 capex guides", sections: ["capex", "share", "hero"] },
 ];
 
 // Capex guidance strings shown in the "Who's spending" table (same order as COS).
-const CAPEX_GUIDES = ["~$170B", "$195–205B", "~$220B", "$130–145B"];
+const CAPEX_GUIDES = ["~$170B", "$195–205B", "~$220B", "$135–145B"];
 
 const COS = [
   { name: "Microsoft", c: "--s1" },
@@ -53,7 +55,7 @@ const CAPEX = [ // $B, approx calendar year; 2026 = guide midpoint; 2027 = illus
   [ 9,  8, 12, 14, 15, 21, 24, 41, 76, 118, 170, 210], // Microsoft (incl. finance leases from 2023)
   [10, 13, 25, 24, 22, 25, 31, 32, 53,  91, 200, 260], // Alphabet
   [ 7, 12, 13, 17, 40, 61, 64, 53, 83, 128, 220, 290], // Amazon (cash capex)
-  [4.5, 7, 14, 15, 15, 19, 31, 28, 39,  72, 138, 180], // Meta
+  [4.5, 7, 14, 15, 15, 19, 31, 28, 39,  72, 140, 180], // Meta
 ];
 const CAPEX_EST_FROM = 2027;
 const ORCL = { labels: ["FY21","FY22","FY23","FY24","FY25","FY26","FY27E"], vals: [1.8,4.5,8.7,6.9,21.2,50,92.5], est: 6 };
@@ -66,9 +68,13 @@ const FLOP = [
   { m: "GPT-4",          x: 2023.2, y: 2.1e25 },
   { m: "Gemini 1.0 Ultra", x: 2023.9, y: 5.0e25 },
   { m: "Llama 3.1 405B", x: 2024.6, y: 3.8e25 },
-  { m: "Grok 3",         x: 2025.1, y: 4.6e26 },
+  { m: "Grok 3",         x: 2025.13, y: 3.5e26 },
+  { m: "GPT-4.5",        x: 2025.16, y: 3.8e26 },
+  { m: "Grok 4",         x: 2025.52, y: 5.0e26, spec: 1 }, // Epoch confidence "Speculative"
+  { m: "GPT-6 Astra",    x: 2026.67, y: 9.4e26 },          // Epoch "Likely", CI ~5e26–2e27
 ];
-const FLOP_PROJ = [{ x: 2025.1, y: 4.6e26 }, { x: 2030, y: 2e29 }];
+// spec: 1 = Epoch rates the estimate "Speculative" (hollow marker). Values from Epoch's notable-models CSV, 7 Nov 2026.
+const FLOP_PROJ = [{ x: 2025.13, y: 3.5e26 }, { x: 2030, y: 2e29 }];
 // Global DC capacity, GW. 2015–2024 modeled (IEA TWh ÷ 8,760 h ÷ ~75% utilisation; AI share from IEA accelerated-server trend).
 // 2025 & 2030 = McKinsey (AI 44→156, non-AI 38→64). 2026–2029 interpolated.
 const GW_YEARS = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030];
@@ -119,22 +125,23 @@ const AEI = { // Anthropic Economic Index: automation / augmentation / other, % 
 
 // ---------- CDS: update this block with terminal data ----------
 // Latest 5y CDS, bps. bps: null = level not published. st = credit state (critical/serious/warning/good/none).
-const CDS_ASOF = "2026-11-01";
+const CDS_ASOF = "2026-11-06";
 const CDS = [
-  { co: "CoreWeave", bps: 1082, d: "2026-10-19", src: "CNBC", st: "critical", stLab: "Distress", chg: "~2.8× YoY (from ~393)", note: "Intraday >1,140 on 15 Oct. 2031 bonds yielded up to 15.78%" },
-  { co: "Oracle", bps: 288, d: "2026-11-01", src: "Solve via WSJ (record)", st: "serious", stLab: "Priced like junk", chg: "~2× vs end-2025 (~145)", note: "CNBC printed 315 on 19 Oct, so providers differ. S&P BBB-" },
-  { co: "Meta", bps: 108, d: "2026-11-01", src: "Solve via WSJ (record)", st: "warning", stLab: "Record, still IG", chg: "+177% YTD", note: "S&P outlook moved to negative. $95B equity raise eased spreads" },
-  { co: "Nvidia", bps: 101, d: "2026-11-01", src: "Solve via WSJ (record)", st: "warning", stLab: "Record, still IG", chg: "n/a", note: "Hedging of the AI trade; little Nvidia debt outstanding" },
-  { co: "Amazon", bps: null, d: "2026-11-01", src: "Solve via WSJ", st: "warning", stLab: "Record, level not published", chg: "+129% YTD", note: "\"All-time peak\"" },
-  { co: "Alphabet", bps: null, d: "2026-11-01", src: "Solve via WSJ", st: "warning", stLab: "Record, level not published", chg: "n/a", note: "\"All-time peak\"" },
-  { co: "Microsoft", bps: null, d: "2026-11-01", src: "Solve via WSJ", st: "good", stLab: "Rising, level not published", chg: "n/a", note: "Has not issued bonds for AI spend" },
-  { co: "Nebius, IREN, others", bps: null, d: null, src: "", st: "none", stLab: "No liquid CDS reported", chg: "", note: "Watch bond / convertible yields" },
+  { co: "CoreWeave", bps: 1155, d: "2026-11-06", src: "CNBC (Deutsche Bank)", st: "critical", stLab: "Distress", chg: "~2.9× YoY (from ~393)", note: "Record above 1,289 on 5 Nov, the day of the post-midterm selloff. 9.625% 2032 bond yielded >16% (6 Nov); 2031 notes traded as low as 79.5c (4 Nov)" },
+  { co: "Oracle", bps: 305, d: "2026-11-05", src: "S&P Global MI (via Benzinga)", st: "serious", stLab: "Priced like junk", chg: "~2.1× vs end-2025 (~145)", note: "Solve/WSJ had 288 on 1 Nov; Bloomberg 274 on 28 Oct after Oracle capped outside funding at $20B. Raised the full $20B on 2–4 Nov. Fitch BBB and Moody's Baa2 affirmed 2 Nov; S&P BBB-" },
+  { co: "Nvidia", bps: 139, d: "2026-11-06", src: "CNBC (vendor not named)", st: "warning", stLab: "Record, still IG", chg: "+76% in a month", note: "Solve/WSJ had 101 on 1 Nov and S&P GMI 127 in late Oct: vendors differ. Mostly hedging of the AI trade; little Nvidia debt" },
+  { co: "Meta", bps: 125, d: "2026-11-03", src: "Yahoo Finance (vendor not named)", st: "warning", stLab: "Record, still IG", chg: "~3× vs end-2025 (~39)", note: "Markit record 114.5 on 22 Oct; Solve/WSJ 108 on 1 Nov. Sold $15B of dollar bonds (3 Nov) and a record €9B euro debut (4 Nov). S&P outlook negative" },
+  { co: "Amazon", bps: 100, d: "2026-11-05", src: "S&P Global MI (via Benzinga)", st: "warning", stLab: "Record, still IG", chg: "~2× vs mid-April", note: "Barclays had 81 on 28 Oct" },
+  { co: "Alphabet", bps: 92, d: "2026-11-05", src: "S&P Global MI (via Benzinga)", st: "warning", stLab: "Record, still IG", chg: "~2× vs mid-April (47)", note: "€6B euro bond on 2 Nov. Barclays had 80 on 28 Oct" },
+  { co: "Microsoft", bps: 53, d: "2026-10-28", src: "Barclays (via Crypto Briefing)", st: "good", stLab: "Rising, strong IG", chg: "~2× over the year", note: "\"Under 60\" per Yahoo Finance on 3 Nov. First bond in nine years: $25B on 29 Oct, ~$115B of orders" },
+  { co: "Nebius, IREN, others", bps: null, d: null, src: "", st: "none", stLab: "No liquid CDS reported", chg: "", note: "Watch bond / convertible yields. Shares fell 15–17% on 5 Nov" },
 ];
 // Sparse time series of reported prints. der = derived from a reported % change (hollow marker).
+// Prints come from different vendors (CNBC, Solve/WSJ, Bloomberg, Markit, S&P GMI), which differ by 10–30 bps.
 const CDS_TS = [
-  { co: "CoreWeave", c: "--s1", pts: [["2025-10-15", 393, 1], ["2026-07-29", 855], ["2026-10-08", 895, 1], ["2026-10-15", 1038], ["2026-10-16", 1104, 1], ["2026-10-19", 1082]] },
-  { co: "Oracle", c: "--s2", pts: [["2025-10-19", 77, 1], ["2025-12-31", 145], ["2026-07-24", 215], ["2026-10-08", 256, 1], ["2026-10-15", 282], ["2026-10-19", 315], ["2026-11-01", 288]] },
-  { co: "Meta", c: "--s3", pts: [["2025-12-31", 39, 1], ["2026-11-01", 108]] },
+  { co: "CoreWeave", c: "--s1", pts: [["2025-10-15", 393, 1], ["2026-07-29", 855], ["2026-10-08", 895, 1], ["2026-10-15", 1038], ["2026-10-16", 1104, 1], ["2026-10-19", 1082], ["2026-11-05", 1289], ["2026-11-06", 1155]] },
+  { co: "Oracle", c: "--s2", pts: [["2025-10-19", 77, 1], ["2025-12-31", 145], ["2026-07-24", 215], ["2026-10-08", 256, 1], ["2026-10-15", 282], ["2026-10-19", 315], ["2026-10-28", 274], ["2026-11-01", 288], ["2026-11-05", 305]] },
+  { co: "Meta", c: "--s3", pts: [["2025-12-31", 39, 1], ["2026-10-22", 114.5], ["2026-11-01", 108], ["2026-11-03", 125]] },
 ];
 
 // Lab revenue run-rates, $B. [date, $B, source]. Through 2025 mostly Epoch AI's compiled dataset; 2026 from press reports.
@@ -153,7 +160,7 @@ const LABS = [
     ["2025-05-30", 3, "CNBC"], ["2025-07-01", 4, "The Information"], ["2025-07-29", 5, "Company (Bloomberg)"],
     ["2025-10-21", 7, "Company statement"], ["2025-12-31", 9, "Bloomberg"], ["2026-02-12", 14, "Company (Series G)"],
     ["2026-04-30", 30, "Press reports"], ["2026-05-29", 47, "Company statement"], ["2026-07-31", 65, "Bloomberg / CNBC (investor update)"]],
-    extra: [["2026-10-31", 80, "Crypto Briefing: \"topped $80B in October\" (single, unattributed)"]] },
+    extra: [["2026-10-31", 80, "Crypto Briefing citing a WSJ source: \"topped $80B in October\". The S-1/A leaves the 31 Oct run-rate blank"]] },
 ];
 
 // Token deflation: Epoch AI "LLM inference prices have fallen rapidly but unequally across tasks" (12 Mar 2025).

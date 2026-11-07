@@ -131,13 +131,15 @@ function drawFlop() {
   el("text", { x: sx(b.x) - 10, y: sy(b.y) + 26, "text-anchor": "end", class: "dlabel" }, svg).textContent = "~2e29 FLOP by 2030";
   el("circle", { cx: sx(b.x), cy: sy(b.y), r: 4, fill: css("--surface-1"), stroke: css("--text-muted"), "stroke-width": 2 }, svg);
   // points
-  const labelled = new Set(["GPT-3", "GPT-4", "Grok 3", "AlphaGo Zero"]);
+  const labelled = new Set(["GPT-3", "GPT-4", "Grok 3", "AlphaGo Zero", "GPT-6 Astra"]);
   FLOP.forEach(d => {
     const cx = sx(d.x), cy = sy(d.y);
-    el("circle", { cx, cy, r: 5, fill: css("--s1"), stroke: css("--surface-1"), "stroke-width": 2 }, svg);
-    if (labelled.has(d.m)) el("text", { x: cx + 8, y: cy + 4, class: "dlabel" }, svg).textContent = d.m;
+    el("circle", { cx, cy, r: 5, fill: d.spec ? css("--surface-1") : css("--s1"), stroke: d.spec ? css("--s1") : css("--surface-1"), "stroke-width": 2 }, svg);
+    // label placement: left of the point for the crowded 2025–26 cluster, right otherwise
+    const LP = { "Grok 3": [-8, 4, "end"], "GPT-6 Astra": [-6, -10, "end"] }, [dx, dy, anc] = LP[d.m] || [8, 4, "start"];
+    if (labelled.has(d.m)) el("text", { x: cx + dx, y: cy + dy, "text-anchor": anc, class: "dlabel" }, svg).textContent = d.m;
     const hit = el("circle", { cx, cy, r: 14, fill: "transparent" }, svg);
-    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${d.m}</div>` + row("Year", Math.floor(d.x)) + row("Training compute", d.y.toExponential(1) + " FLOP")));
+    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${d.m}</div>` + row("Year", Math.floor(d.x)) + row("Training compute", d.y.toExponential(1) + " FLOP") + (d.spec ? `<div class="muted">Epoch rates this estimate "speculative"</div>` : "")));
     hit.addEventListener("mouseleave", hideTip);
   });
   document.getElementById("t-flop").innerHTML = table(["Model", "Year", "Training FLOP"],
@@ -491,8 +493,8 @@ function drawCds() {
   const host = document.getElementById("c-cds"); host.innerHTML = "";
   const rowH = 34, VW = 700, m = { t: 22, r: 190, b: 22, l: 150 };
   const VH = m.t + m.b + CDS.length * rowH, W = VW - m.l - m.r;
-  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Bar chart of latest 5-year CDS spreads: CoreWeave about 1,082 bps, Oracle 288, Meta 108, Nvidia 101; Amazon, Alphabet and Microsoft at records with levels not published" }, host);
-  const max = 1200, sx = v => m.l + (v / max) * W;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Bar chart of latest 5-year CDS spreads: CoreWeave about 1,155 bps, Oracle 305, Nvidia 139, Meta 125, Amazon 100, Alphabet 92, Microsoft 53" }, host);
+  const max = 1400, sx = v => m.l + (v / max) * W;
   [0, 250, 500, 750, 1000].forEach(v => {
     el("line", { x1: sx(v), x2: sx(v), y1: m.t - 4, y2: VH - m.b, stroke: v === 0 ? css("--axis") : css("--grid"), "shape-rendering": "crispEdges" }, svg);
     el("text", { x: sx(v), y: VH - 6, "text-anchor": "middle", class: "tick" }, svg).textContent = v;
@@ -527,7 +529,7 @@ function drawCds() {
   const tW = TW - tm.l - tm.r, tH = TH - tm.t - tm.b;
   const ts = el("svg", { viewBox: `0 0 ${TW} ${TH}`, role: "img", "aria-label": "Line chart of CoreWeave, Oracle and Meta 5-year CDS from October 2025 to November 2026" }, th);
   const x0 = decYear("2025-10-01"), x1 = decYear("2026-11-10");
-  const tx = x => tm.l + ((x - x0) / (x1 - x0)) * tW, ty = v => tm.t + tH - (v / 1200) * tH;
+  const tx = x => tm.l + ((x - x0) / (x1 - x0)) * tW, ty = v => tm.t + tH - (v / 1400) * tH;
   [0, 400, 800, 1200].forEach(v => {
     el("line", { x1: tm.l, x2: tm.l + tW, y1: ty(v), y2: ty(v), stroke: v === 0 ? css("--axis") : css("--grid"), "shape-rendering": "crispEdges" }, ts);
     el("text", { x: tm.l - 6, y: ty(v) + 4, "text-anchor": "end", class: "tick" }, ts).textContent = v;
