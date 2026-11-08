@@ -23,14 +23,18 @@ For each section, check the sources listed in `SECTIONS[id].sources` in `data.js
 |---|---|---|
 | `capex`, `share`, `hero` | Latest quarter's capex for MSFT/GOOGL/AMZN/META, full-year guides, first next-year guides (these replace the "E" estimate) | 10-Q, earnings releases and calls |
 | `neoclouds`, `oracle` | Oracle RPO, OCI revenue, capex guide. CoreWeave backlog and contracted/active GW. Nebius contracted capacity | IR pages, earnings |
-| `nvda` | Data-centre revenue for the latest quarter or fiscal year | Nvidia results (FY ends late Jan) |
+| `nvda` | Append the latest quarter to `NVDA_Q` (and the fiscal year to `NVDA` once complete); AMD, Broadcom AI, TSMC and memory lines in the notes | Nvidia CFO commentary each quarter (FY ends late Jan), AMD/Broadcom 8-Ks, TSMC monthly revenue, SK hynix/Micron results |
 | `flop` | New frontier training runs | Epoch "notable AI models" data |
-| `deflation` | Newer Epoch per-task inference price data (the current data ends Feb 2025) | epoch.ai data insights |
+| `deflation` | Epoch's 2025 per-token dataset ends Feb 2025 and isn't updated; refresh the tiles from Epoch's cost-per-question work, Artificial Analysis cost per task, and new flagship launches in `FRONTIER_PX` (3:1 blend of list prices) | epoch.ai/publications/the-plunging-price-of-thought, artificialanalysis.ai, provider pricing pages |
 | `lab-revenue` | New run-rate prints, booked revenue (S-1/10-Q once Anthropic is public), company targets | Epoch revenue insight, CNBC/Bloomberg/The Information/FT, SEC filings |
-| `autonomy` | New METR time horizons (TH1.1 file or a successor benchmark), doubling time; new Anthropic Economic Index report | metr.org/time-horizons, `benchmark_results_1_1.yaml`, anthropic.com/research |
+| `autonomy` | METR's TH1.1 page stopped updating in Sep 2026; check for a successor. Append new best results to `BENCH` (GDPval wins + ties, Remote Labor Index); update the ECI table and any new Anthropic Economic Index report | metr.org/blog, epoch.ai/benchmarks/eci, labs.scale.com/leaderboard/rli, OpenAI launch pages, anthropic.com/research |
 | `credit` | 5y CDS for CoreWeave, Oracle, Meta, Nvidia, Amazon, Alphabet, Microsoft; CoreWeave bond yields; rating actions | Terminal data if the user provides it; otherwise CNBC, WSJ (Solve), Bloomberg press |
 | `gpu` | Silicon Data index levels (append new dated prints to `GPU`, keep history), Ornn OCPI, neocloud/hyperscaler list prices in `GPU_SNAP`, tile figures and hike list; re-pull Vast.ai medians from `console.vast.ai/api/v0/bundles` | silicondata.com/products/silicon-index/h100 + blog, data.ornn.com, getdeploying.com/gpu-price-trends, provider pricing pages |
-| `gw`, `power` | Revised 2030 forecasts | IEA, McKinsey, JLL, Goldman Sachs |
+| `gw` | Revised 2030 global forecasts | IEA, McKinsey, JLL, Goldman Sachs |
+| `power` | Each new PJM auction (append to `PJM`; next: 2029/30, Dec 2026), IMM data-centre cost share, GE Vernova / Siemens turbine backlog, LBNL/EPRI US share, ERCOT large-load queue, EIA retail prices, ballot measures and moratoria | pjm.com BRA reports, monitoringanalytics.com, GE Vernova and Siemens Energy results, eta-publications.lbl.gov, EIA Electric Power Monthly |
+| `cashflow` | Append each quarter: update the trailing-12-month row in `CF_CO` (OCF and capex from the cash-flow statement, the companies' own FCF in `fcfTTM`, net cash), the tiles, lease-not-commenced totals, depreciation growth, buybacks and debt raised | SEC XBRL `data.sec.gov/api/xbrl/companyfacts/CIK…json`, 10-Q cash-flow statements and lease/guarantee notes |
+| `demand` | Append new Google token figures and OpenRouter volumes to `TOKENS`, Census BTOS (biweekly) and Ramp (monthly) points to `ADOPT`, user milestones in the table | Alphabet releases and calls, census.gov/hfp/btos, ramp.com/data/ai-index, FRED `RPSGENAIUSAGESHAREWORK`, company announcements |
+| `circular` | New or revised vendor-lab deals in `FLOWS` (equity in, compute commitments out, status), Nvidia's equity purchases and guarantees from its 10-Q | Anthropic/OpenAI filings, Amazon/Microsoft/Nvidia/AMD/Broadcom 10-Qs and 8-Ks |
 | `campuses` | New or resized GW-class campuses | Company announcements |
 
 Hard rules:

@@ -35,9 +35,9 @@ ERRS=$("$BROWSER" --headless=new --disable-gpu --enable-logging=stderr --v=0 --v
 if [[ -n "$ERRS" ]]; then echo "$ERRS"; echo "FAIL: fix the errors above."; else echo "none"; fi
 
 echo; echo "== Screenshots =="
-"$BROWSER" --headless=new --disable-gpu --hide-scrollbars --window-size=1280,9800 \
+"$BROWSER" --headless=new --disable-gpu --hide-scrollbars --window-size=1280,${SHOT_H:-20000} \
   --screenshot="$PWD/.check/light.png" "$URL" >/dev/null 2>&1
-"$BROWSER" --headless=new --disable-gpu --hide-scrollbars --window-size=1280,9800 \
+"$BROWSER" --headless=new --disable-gpu --hide-scrollbars --window-size=1280,${SHOT_H:-20000} \
   --force-dark-mode --blink-settings=preferredColorScheme=0 \
   --screenshot="$PWD/.check/dark.png" "$URL" >/dev/null 2>&1
 echo "$PWD/.check/light.png"
