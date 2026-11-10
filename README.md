@@ -21,6 +21,7 @@ Live at https://stephanlivera.github.io/ai-compute-dashboard/ (GitHub Pages, red
 
 - `data.js` holds every number, plus a per-section "as of" date and its sources.
 - `charts.js` draws the SVG charts.
-- `check.sh` reports which sections are stale and takes screenshots (it needs Chromium).
+- `styles.css` holds the styling, and `fonts/` the three open-licence typefaces it uses (Newsreader, Inter, JetBrains Mono).
+- `check.sh` reports which sections are stale, checks the chart labels and takes screenshots (it needs Chromium).
 
 Every card shows when its data was last checked. Estimates, projections, single-source figures and values read off charts are marked as such. This is not investment advice. Check the primary sources before quoting a figure.

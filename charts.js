@@ -111,7 +111,7 @@ function drawFlop() {
   const VW = 680, VH = 320, m = { t: 16, r: 16, b: 28, l: 52 };
   const W = VW - m.l - m.r, H = VH - m.t - m.b;
   const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Log-scale scatter of frontier AI training compute 2016 to 2030" }, host);
-  const x0 = 2016, x1 = 2030.3, lo = 21, hi = 30;
+  const x0 = 2016, x1 = 2030.3, lo = 20, hi = 30;
   const sx = x => m.l + ((x - x0) / (x1 - x0)) * W;
   const sy = v => m.t + H - ((Math.log10(v) - lo) / (hi - lo)) * H;
   for (let p = lo; p <= hi; p++) {
@@ -124,11 +124,11 @@ function drawFlop() {
   // "today" marker
   const tx = sx(TODAY);
   el("line", { x1: tx, x2: tx, y1: m.t, y2: m.t + H, stroke: css("--axis") }, svg);
-  el("text", { x: tx + 4, y: m.t + 10, class: "tick" }, svg).textContent = "today";
+  el("text", { x: tx - 4, y: m.t + 10, "text-anchor": "end", class: "tick" }, svg).textContent = "today";
   // projection
   const [a, b] = FLOP_PROJ;
   el("line", { x1: sx(a.x), y1: sy(a.y), x2: sx(b.x), y2: sy(b.y), stroke: css("--text-muted"), "stroke-width": 2, "stroke-dasharray": "4 4", "stroke-linecap": "round" }, svg);
-  el("text", { x: sx(b.x) - 10, y: sy(b.y) + 26, "text-anchor": "end", class: "dlabel" }, svg).textContent = "~2e29 FLOP by 2030";
+  el("text", { x: sx(b.x) - 10, y: sy(b.y) - 7, "text-anchor": "end", class: "dlabel" }, svg).textContent = "~2e29 FLOP by 2030";
   el("circle", { cx: sx(b.x), cy: sy(b.y), r: 4, fill: css("--surface-1"), stroke: css("--text-muted"), "stroke-width": 2 }, svg);
   // points
   const labelled = new Set(["GPT-3", "GPT-4", "Grok 3", "AlphaGo Zero", "GPT-6 Astra"]);
@@ -229,9 +229,9 @@ function drawGW() {
 
   // forecast comparison: horizontal bars
   const fh = document.getElementById("c-fc"); fh.innerHTML = "";
-  const FW = 360, rowH = 34, FH = FORECASTS_2030.length * rowH + 4, lw = 0;
+  const FW = 360, rowH = 34, FH = FORECASTS_2030.length * rowH + 4;
   const fs = el("svg", { viewBox: `0 0 ${FW} ${FH}`, role: "img", "aria-label": "2030 data-centre GW forecasts by forecaster" }, fh);
-  const fmax = 250;
+  const fmax = Math.max(250, ...FORECASTS_2030.map(f => f.gw * 1.1));
   FORECASTS_2030.forEach((f, i) => {
     const y = i * rowH;
     el("text", { x: 0, y: y + 11, class: "tick" }, fs).textContent = f.who;
@@ -323,7 +323,7 @@ function drawDefl() {
 const fmtB = v => v >= 1000 ? "$" + (v / 1000).toFixed(1) + "T" : v >= 10 ? "$" + Math.round(v) + "B" : "$" + v.toFixed(1) + "B";
 function drawRev() {
   const host = document.getElementById("c-rev"); host.innerHTML = "";
-  const VW = 760, VH = 360, m = { t: 18, r: 150, b: 28, l: 52 };
+  const VW = 760, VH = 360, m = { t: 18, r: 164, b: 28, l: 52 };
   const W = VW - m.l - m.r, H = VH - m.t - m.b;
   const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Log-scale line chart of OpenAI and Anthropic annualised revenue run-rate, 2023 to 2026, with illustrative projection ranges to 2028" }, host);
   const x0 = 2023.5, x1 = REV_PROJ.end, lo = Math.log10(0.6), hi = Math.log10(1500);
@@ -361,7 +361,7 @@ function drawRev() {
   });
   // end labels for midlines, de-collided
   const ends = labs.map(L => ({ L, y: sy(L.end.mid) })).sort((a, b) => a.y - b.y);
-  if (ends[1].y - ends[0].y < 28) ends[1].y = ends[0].y + 28;
+  if (ends[1].y - ends[0].y < 32) ends[1].y = ends[0].y + 32;
   ends.forEach(e => {
     el("text", { x: sx(x1) + 8, y: e.y, class: "dlabel strong" }, svg).textContent = `${e.L.name} ~${fmtB(e.L.end.mid)}`;
     el("text", { x: sx(x1) + 8, y: e.y + 13, class: "tick" }, svg).textContent = `${fmtB(e.L.end.lo)}–${fmtB(e.L.end.hi)} by end-2028`;
@@ -411,7 +411,7 @@ const fmtDur = mins => {
 };
 function drawMetr() {
   const host = document.getElementById("c-metr"); host.innerHTML = "";
-  const VW = 760, VH = 360, m = { t: 18, r: 20, b: 28, l: 64 };
+  const VW = 760, VH = 360, m = { t: 18, r: 20, b: 28, l: 86 };
   const W = VW - m.l - m.r, H = VH - m.t - m.b;
   const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Log-scale scatter of METR 50% time horizon by model release date, 2019 to 2026, rising from seconds to about 17 hours" }, host);
   const x0 = 2019, x1 = 2027.1, lo = Math.log10(0.02), hi = Math.log10(4800);
@@ -520,7 +520,7 @@ function drawCds() {
 
   // timeline
   const th = document.getElementById("c-cdst"); th.innerHTML = "";
-  const TW = 460, TH = 280, tm = { t: 14, r: 64, b: 26, l: 40 };
+  const TW = 460, TH = 280, tm = { t: 14, r: 72, b: 26, l: 40 };
   const tW = TW - tm.l - tm.r, tH = TH - tm.t - tm.b;
   const ts = el("svg", { viewBox: `0 0 ${TW} ${TH}`, role: "img", "aria-label": "Line chart of CoreWeave, Oracle and Meta 5-year CDS from October 2025 to November 2026" }, th);
   const x0 = decYear("2025-10-01"), x1 = decYear("2026-11-10");
@@ -534,21 +534,21 @@ function drawCds() {
   [["2026-01-01", "Jan 26"], ["2026-04-01", "Apr"], ["2026-07-01", "Jul"], ["2026-10-01", "Oct"]].forEach(([d, l]) =>
     el("text", { x: tx(decYear(d)), y: TH - 8, "text-anchor": "middle", class: "tick" }, ts).textContent = l);
   CDS_TS.forEach(s => {
-    const P = s.pts.map(p => ({ d: p[0], x: decYear(p[0]), v: p[1], der: !!p[2] }));
+    const P = s.pts.map(p => ({ d: p[0], x: decYear(p[0]), v: p[1], der: !!p[2], n: p[3] }));
     // segments spanning > ~2 months between prints are dashed: no data in between
     P.slice(1).forEach((p, i) => { const a = P[i]; const gap = p.x - a.x > 0.17;
       el("line", { x1: tx(a.x), y1: ty(a.v), x2: tx(p.x), y2: ty(p.v), stroke: css(s.c), "stroke-width": 2, "stroke-linecap": "round", ...(gap ? { "stroke-dasharray": "3 4", opacity: 0.7 } : {}) }, ts); });
     P.forEach(p => {
       el("circle", { cx: tx(p.x), cy: ty(p.v), r: 4, fill: p.der ? css("--surface-1") : css(s.c), stroke: p.der ? css(s.c) : css("--surface-1"), "stroke-width": 2 }, ts);
       const hit = el("circle", { cx: tx(p.x), cy: ty(p.v), r: 10, fill: "transparent" }, ts);
-      hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${s.co} · ${p.d}</div>` + row("5y CDS", p.v.toLocaleString() + " bps", s.c) + (p.der ? `<div class="muted">Derived from a reported % change</div>` : "")));
+      hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${s.co} · ${p.d}</div>` + row("5y CDS", p.v.toLocaleString() + " bps", s.c) + (p.der ? `<div class="muted" style="max-width:260px">${p.n || "Derived from a reported % change"}</div>` : "")));
       hit.addEventListener("mouseleave", hideTip);
     });
     const last = P[P.length - 1];
     el("text", { x: tx(last.x) + 8, y: ty(last.v) + 4, class: "dlabel" }, ts).textContent = s.co;
   });
   document.getElementById("lg-cdst").innerHTML = CDS_TS.map(s => `<span><i class="sw" style="background:var(${s.c})"></i>${s.co}</span>`).join("") +
-    `<span><i class="sw" style="background:transparent;border:2px solid var(--text-muted);border-radius:50%"></i>Derived</span>`;
+    `<span><i class="sw" style="background:transparent;border:2px solid var(--text-muted);border-radius:50%"></i>Derived or undated</span>`;
 }
 
 // ---------- CHART: GPU rental index (Silicon Data neocloud) ----------
@@ -813,7 +813,7 @@ function drawFrontierPx() {
     series: S, fmt: v => "$" + (v < 10 ? v.toFixed(2) : v.toFixed(v % 1 ? 2 : 0)) + " / 1M tokens", valLabel: "List price (3:1 blend)", hollowNote: "Gated / restricted access", endLabel: () => "" });
   // selective labels, placed by hand around the crowded Sep–Oct 2026 cluster
   const LAB = { "GPT-4": [8, 4, "start", "GPT-4 $37.50"], "GPT-5": [0, 17, "middle", "GPT-5 $3.44"], "Claude Opus 4.5": [6, 15, "start", "Opus 4.5 $10"],
-    "Claude Mythos Preview": [-8, 4, "end", "Mythos Preview $50 (gated)"], "GPT-6 Astra": [8, 4, "start", "GPT-6 Astra $20"], "Claude Opus 5.5": [8, 4, "start", "Opus 5.5 $8"],
+    "Claude Mythos Preview": [-8, 4, "end", "Mythos Preview $50 (gated)"], "GPT-6 Astra": [6, -9, "start", "GPT-6 Astra $20"], "Claude Opus 5.5": [8, 4, "start", "Opus 5.5 $8"], "Claude Fable 5.2 / Mythos 5.2": [8, 4, "start", "Fable 5.2 $16"],
     "GPT-6.1 Sol": [-2, 18, "end", "GPT-6.1 Sol $4"], "Gemini 4 Argon, introductory": [8, 4, "start", "Gemini 4 Argon $4"] };
   S.forEach(s => s.pts.forEach(p => {
     const L = LAB[p.n.split(" (")[0]]; if (!L) return;
@@ -829,7 +829,7 @@ function drawFrontierPx() {
 function drawBench() {
   if (!document.getElementById("c-bench")) return;
   const S = BENCH.map(s => ({ ...s, pts: toPts(s.pts) }));
-  lineChart({ host: "c-bench", aria: "Line chart of AI task success: GDPval wins or ties against experts rose from 48% to 85%; Remote Labor Index projects automated rose from 2.5% to 21%",
+  lineChart({ host: "c-bench", aria: "Line chart of AI task success: GDPval wins or ties against experts rose from 48% to 85%; Remote Labor Index projects completed rose from 2.5% to 41%",
     VW: 680, VH: 280, m: { t: 14, r: 150, b: 28, l: 44 }, x0: 2025.6, x1: 2026.95,
     xticks: [[2025.75, "Oct 25"], [2026, "Jan 26"], [2026.25, "Apr"], [2026.5, "Jul"], [2026.75, "Oct"]],
     y: { lo: 0, hi: 100, ticks: [[0, "0%"], [25, "25%"], [50, "50%"], [75, "75%"], [100, "100%"]] },
@@ -845,7 +845,7 @@ function drawTokens() {
   if (!document.getElementById("c-tok")) return;
   const S = TOKENS.map(s => ({ ...s, pts: toPts(s.pts) }));
   lineChart({ host: "c-tok", aria: "Log-scale line chart of AI tokens processed per month: Google rising from 9.7 trillion in April 2024 to over 3.2 quadrillion in May 2026; Google's model APIs and OpenRouter also rising steeply",
-    VW: 560, VH: 300, m: { t: 14, r: 128, b: 28, l: 52 }, x0: 2024.2, x1: 2026.95,
+    VW: 560, VH: 300, m: { t: 14, r: 150, b: 28, l: 52 }, x0: 2024.2, x1: 2026.95,
     xticks: [[2024.5, "Jul 24"], [2025, "Jan 25"], [2025.5, "Jul"], [2026, "Jan 26"], [2026.5, "Jul"]],
     y: { log: 1, lo: 3, hi: 6000, ticks: [[10, "10T"], [100, "100T"], [1000, "1,000T"]] },
     series: S, fmt: fmtT, valLabel: "Tokens", gap: 0.3, hollowNote: "Secondary or single-source",
@@ -887,8 +887,8 @@ function drawCashflow() {
   document.getElementById("t-cf").innerHTML = table(["Company", "Period", "Operating cash", "Capex", "Free cash", "Capex ÷ OCF"],
     CF_CO.flatMap(c => c.rows.map(([lab, , ocf, cap]) => [c.name, lab, usd(ocf), usd(cap), usd(ocf - cap), Math.round(cap / ocf * 100) + "%"])));
   document.getElementById("cf-ttm").innerHTML = CF_CO.map(c => { const r = c.rows[c.rows.length - 1];
-    return '<tr><td><i class="sw" style="background:var(' + c.c + ');margin-right:6px"></i>' + c.name + '</td><td class="num">' + usd(r[2]) + '</td><td class="num">' + usd(r[3]) +
-      '</td><td class="num"><b>' + usd(c.fcfTTM) + '</b></td><td class="num">' + usd(c.netCash) + '</td></tr>'; }).join("");
+    return '<tr><td><i class="sw" style="background:var(' + c.c + ')"></i>' + c.name + '</td><td class="num nw">' + usd(r[2]) + '</td><td class="num nw">' + usd(r[3]) +
+      '</td><td class="num nw"><b>' + usd(c.fcfTTM) + '</b></td><td class="num nw">' + usd(c.netCash) + '</td></tr>'; }).join("");
 }
 
 // ---------- CHART: Nvidia data-centre revenue by quarter ----------
@@ -909,7 +909,34 @@ function table(head, rows) {
     rows.map(r => `<tr>${r.map((c, i) => `<td class="${i ? "num" : ""}">${c}</td>`).join("")}</tr>`).join("") + `</tbody></table>`;
 }
 
+// ---------- HEADLINE SPARK: Big 4 capex by year, behind the lead figure ----------
+function drawHeroSpark() {
+  const host = document.getElementById("hero-spark"); if (!host) return; host.innerHTML = "";
+  const totals = CAPEX_YEARS.map((_, i) => CAPEX.reduce((s, r) => s + r[i], 0));
+  const n = totals.length, VW = 300, VH = 74, base = 56, band = VW / n, bw = Math.min(14, band - 6), max = Math.max(...totals);
+  const cur = new Date(UPDATED + "T00:00:00Z").getUTCFullYear();
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": `Big 4 capex by year, ${CAPEX_YEARS[0]} to ${CAPEX_YEARS[n - 1]}: ${fmt$(totals[0])} rising to about ${fmt$(totals[n - 1])} (estimate)` }, host);
+  el("line", { x1: 0, x2: VW, y1: base + 0.5, y2: base + 0.5, stroke: css("--axis"), "shape-rendering": "crispEdges" }, svg);
+  totals.forEach((v, i) => {
+    const yr = CAPEX_YEARS[i], est = yr >= CAPEX_EST_FROM, h = Math.max(2, (v / max) * (base - 4)), x = band * i + (band - bw) / 2;
+    el("path", { d: colPath(x, base - h, bw, h, 3), fill: css(yr === cur ? "--text-primary" : "--neutral"), opacity: est ? 0.4 : yr === cur ? 1 : 0.55 }, svg);
+    if (i === 0 || yr === cur)
+      el("text", { x: i === 0 ? x : x + bw / 2, y: VH - 4, "text-anchor": i === 0 ? "start" : "middle", class: "tick" }, svg).textContent = yr;
+    const hit = el("rect", { x: band * i, y: 0, width: band, height: base, fill: "transparent" }, svg);
+    hit.addEventListener("mousemove", e => showTip(e, `<div class="t">${yr}${est ? " (estimate)" : ""}</div>` + row("Big 4 capex", (est ? "~" : "") + fmt$(v))));
+    hit.addEventListener("mouseleave", hideTip);
+  });
+}
+
+// ---------- COMING UP: the EVENTS list from data.js ----------
+function drawEvents() {
+  const ol = document.getElementById("upnext"); if (!ol || typeof EVENTS === "undefined") return;
+  const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  ol.innerHTML = EVENTS.map(e => `<li><a href="#${e.sections[0]}" title="${esc(e.what)}"><span class="when">${esc(e.when)}</span><span class="what">${esc(e.what)}</span></a></li>`).join("");
+}
+
 function drawAll() {
+  drawHeroSpark();
   drawCapex();
   drawShare();
   drawColumns("c-orcl", ORCL, "--neutral", "Column chart of Oracle capex by fiscal year", "t-orcl", "Oracle capex");
@@ -929,6 +956,31 @@ function drawAll() {
   drawAdopt();
   drawCashflow();
   drawFlows();
+  // each chart records its drawn width, so styles.css can keep it legible on phones (it scrolls sideways instead of shrinking)
+  document.querySelectorAll('[id^="c-"] > svg').forEach(s => s.style.setProperty("--vw", s.viewBox.baseVal.width));
+  fitCharts();
+  pinColumns();
+}
+
+// On phones a wide chart scrolls sideways. Time series start at the right-hand end, where the latest data is.
+const START_LEFT = new Set(["c-cds", "c-flows", "c-fc"]);
+function fitCharts() {
+  document.querySelectorAll('[id^="c-"]').forEach(h => {
+    const scrolls = h.scrollWidth > h.clientWidth + 4;
+    h.classList.toggle("scrolls", scrolls);
+    if (scrolls && !START_LEFT.has(h.id)) h.scrollLeft = h.scrollWidth;
+  });
+}
+
+// In a two-column row inside a card, the shorter column follows the scroll (as long as it fits on screen),
+// so a chart stays in view while the notes beside it are read.
+function pinColumns() {
+  document.querySelectorAll(".cols").forEach(rowEl => {
+    const kids = [...rowEl.children]; kids.forEach(k => k.classList.remove("pin"));
+    if (kids.length !== 2 || kids[0].offsetTop !== kids[1].offsetTop) return; // stacked on narrow screens
+    const [a, b] = kids, short = a.offsetHeight < b.offsetHeight ? a : b, tall = short === a ? b : a;
+    if (tall.offsetHeight - short.offsetHeight > 120 && short.offsetHeight < innerHeight - 110) short.classList.add("pin");
+  });
 }
 
 
@@ -939,28 +991,51 @@ function stampSections() {
   const now = Date.now();
   document.querySelectorAll("[data-section]").forEach(sec => {
     const meta = SECTIONS[sec.dataset.section]; if (!meta) return;
-    const h = sec.querySelector("h2"); if (!h || h.querySelector(".asof")) return;
+    // the stamp sits above the card title as a small label
+    const h = sec.querySelector(".card-title"); if (!h || sec.querySelector(".stamp")) return;
     const age = Math.floor((now - Date.parse(meta.asOf + "T00:00:00Z")) / 864e5);
     const stale = age > meta.every;
-    const p = document.createElement("span");
-    p.className = "pill asof" + (stale ? " stale" : "");
+    const p = document.createElement("div");
+    p.className = "stamp asof" + (stale ? " stale" : "");
     p.title = `Refresh every ~${meta.every} days. Sources: ${meta.sources.join("; ")}`;
-    const fmtD = d => new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
-    p.textContent = (stale ? "⚠ stale · " : "") + "data as of " + fmtD(meta.asOf);
-    h.appendChild(p);
+    p.textContent = (stale ? "⚠ stale · " : "") + "data as of " + fmtDate(meta.asOf);
+    h.parentNode.insertBefore(p, h);
   });
-  const u = document.getElementById("updated"); if (u) u.textContent = new Date(UPDATED + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+  document.querySelectorAll("#updated, [data-updated]").forEach(u => (u.textContent = fmtDate(UPDATED)));
 }
+function fmtDate(d) { return new Date(d + "T00:00:00Z").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }); }
 
 // ---------- WIRING ----------
-document.querySelectorAll("[data-table]").forEach(b =>
-  b.addEventListener("click", () => document.getElementById(b.dataset.table).classList.toggle("show")));
+document.querySelectorAll("[data-table]").forEach(b => {
+  b.setAttribute("aria-controls", b.dataset.table); b.setAttribute("aria-expanded", "false");
+  b.addEventListener("click", () => { b.setAttribute("aria-expanded", document.getElementById(b.dataset.table).classList.toggle("show")); pinColumns(); });
+});
+let resizeTimer; addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { fitCharts(); pinColumns(); }, 150); });
 document.getElementById("theme").addEventListener("click", () => {
   const root = document.documentElement;
   const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
   root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("theme", root.dataset.theme); } catch (e) { /* private window: the choice just isn't remembered */ }
   drawAll();
 });
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
+// chapter nav: mark the chapter being read
+(function chapterSpy() {
+  const links = [...document.querySelectorAll("#chapnav a")];
+  const heads = links.map(a => document.getElementById(a.getAttribute("href").slice(1)));
+  if (!links.length || heads.some(h => !h)) return;
+  let queued = false, last = null;
+  const update = () => {
+    queued = false;
+    let cur = -1; heads.forEach((h, i) => { if (h.getBoundingClientRect().top <= 140) cur = i; });
+    if (cur === last) return; last = cur;
+    links.forEach((a, i) => a.setAttribute("aria-current", i === cur ? "true" : "false"));
+    const nav = links[0].parentNode;
+    if (cur >= 0 && nav.scrollWidth > nav.clientWidth) nav.scrollTo({ left: links[cur].offsetLeft - nav.clientWidth / 2 + links[cur].offsetWidth / 2, behavior: "smooth" });
+  };
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();
 stampSections();
+drawEvents();
 drawAll();

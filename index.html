@@ -4,130 +4,78 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The AI Build-Out — Hyperscalers, Neoclouds &amp; Compute</title>
-<style>
-.viz-root {
-  color-scheme: light;
-  --page: #f9f9f7; --surface-1: #fcfcfb;
-  --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #898781;
-  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
-  --good: #006300;
-  --neutral: #6b6a65; --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
-}
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) .viz-root {
-    color-scheme: dark;
-    --page: #0d0d0d; --surface-1: #1a1a19;
-    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
-    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
-    --good: #0ca30c;
-    --neutral: #a3a29b; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
-  }
-}
-:root[data-theme="dark"] .viz-root {
-  color-scheme: dark;
-  --page: #0d0d0d; --surface-1: #1a1a19;
-  --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
-  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
-  --good: #0ca30c;
-  --neutral: #a3a29b; --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
-}
-* { box-sizing: border-box; }
-body { margin: 0; }
-.viz-root {
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  background: var(--page); color: var(--text-primary);
-  min-height: 100vh; padding: 32px 24px 64px; line-height: 1.45;
-}
-.wrap { max-width: 1180px; margin: 0 auto; }
-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
-h1 { font-size: 26px; font-weight: 650; margin: 0 0 4px; letter-spacing: -0.01em; }
-h2 { font-size: 16px; font-weight: 600; margin: 0 0 2px; }
-.sub { color: var(--text-secondary); font-size: 14px; margin: 0; }
-.muted { color: var(--text-muted); font-size: 12px; }
-button.toggle {
-  font: inherit; font-size: 13px; color: var(--text-secondary); background: var(--surface-1);
-  border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer;
-}
-button.toggle:hover { color: var(--text-primary); }
-.grid { display: grid; gap: 16px; grid-template-columns: repeat(12, 1fr); }
-.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 20px; min-width: 0; }
-.span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-7 { grid-column: span 7; }
-.span-6 { grid-column: span 6; } .span-5 { grid-column: span 5; } .span-4 { grid-column: span 4; }
-@media (max-width: 900px) { .span-8,.span-7,.span-6,.span-5,.span-4 { grid-column: span 12; } }
-.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
-.hero { display: grid; grid-template-columns: 1.3fr repeat(4, 1fr); gap: 16px; }
-@media (max-width: 900px) { .hero { grid-template-columns: 1fr 1fr; } }
-.tile .label { font-size: 13px; color: var(--text-secondary); }
-.tile .value { font-size: 28px; font-weight: 600; margin: 4px 0 2px; }
-.tile.big .value { font-size: 52px; line-height: 1.05; }
-.tile .delta { font-size: 13px; color: var(--good); font-weight: 500; }
-.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--text-secondary); margin: 4px 0 8px; }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
-.sw { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
-.sw.line { width: 14px; height: 2px; border-radius: 1px; }
-svg { display: block; width: 100%; height: auto; overflow: visible; }
-svg text { font-family: inherit; }
-.tick { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
-.dlabel { fill: var(--text-secondary); font-size: 11px; font-weight: 500; }
-.dlabel.strong { fill: var(--text-primary); font-weight: 600; font-size: 12px; }
-.seg { display: flex; gap: 2px; height: 28px; margin: 8px 0 10px; }
-.seg div { border-radius: 4px; color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; padding-left: 8px; white-space: nowrap; overflow: visible; cursor: default; }
-.seg div.dark-ink { color: #0b0b0b; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th, td { text-align: left; padding: 8px 10px 8px 0; border-bottom: 1px solid var(--grid); vertical-align: top; }
-th { color: var(--text-muted); font-weight: 500; font-size: 12px; }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-.datatable { display: none; margin-top: 12px; overflow-x: auto; }
-.datatable.show { display: block; }
-#tip {
-  position: fixed; pointer-events: none; z-index: 10; display: none;
-  background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12); border-radius: 8px; padding: 8px 10px; font-size: 12px; min-width: 140px;
-}
-#tip .t { font-weight: 600; margin-bottom: 4px; }
-#tip .r { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
-#tip .r span:first-child { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); }
-#tip .r span:last-child { font-variant-numeric: tabular-nums; }
-.note { font-size: 13px; color: var(--text-secondary); }
-.note li { margin-bottom: 6px; }
-.sources { font-size: 12px; color: var(--text-secondary); columns: 2; column-gap: 32px; }
-@media (max-width: 900px) { .sources { columns: 1; } }
-.sources a { color: var(--text-secondary); }
-.viz-root { --st-good: #0ca30c; --st-warning: #fab219; --st-serious: #ec835a; --st-critical: #d03b3b; }
-.status { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--text-primary); margin: 2px 0; }
-.status i { width: 10px; height: 10px; border-radius: 50%; background: var(--st); display: inline-block; flex: none; }
-code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 4px; }
-.pill.asof { font-weight: 400; }
-.pill.stale { color: var(--text-primary); border-color: var(--st-warning); background: color-mix(in srgb, var(--st-warning) 18%, transparent); }
-.pill { display: inline-block; font-size: 11px; border: 1px solid var(--border); border-radius: 999px; padding: 1px 8px; color: var(--text-muted); margin-left: 6px; vertical-align: middle; }
-</style>
+<meta name="description" content="A dated, sourced tracker of the AI build-out: hyperscaler capex, cloud backlog, data-centre gigawatts, GPU rental rates, lab revenue, credit stress and the power constraint.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The AI build-out">
+<meta property="og:description" content="Hyperscaler capex, neocloud capacity, and how fast AI compute is growing. Every figure dated, every estimate flagged.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0b0b'/%3E%3Cpath fill='%23fcfcfb' d='M7 19h4v6H7zM14 13h4v12h-4zM21 7h4v18h-4z'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 </head>
 <body>
-<div class="viz-root">
+<div class="viz-root" id="top">
+
+<nav class="topbar" aria-label="Chapters">
+  <div class="wrap">
+    <a class="brand" href="#top">The AI build-out</a>
+    <div class="chapnav" id="chapnav">
+      <a href="#ch-money"><span>01</span>Money</a>
+      <a href="#ch-capacity"><span>02</span>Capacity</a>
+      <a href="#ch-compute"><span>03</span>Compute</a>
+      <a href="#ch-demand"><span>04</span>Demand</a>
+      <a href="#ch-markets"><span>05</span>Market tests</a>
+      <a href="#ch-limits"><span>06</span>Limits</a>
+      <a href="#ch-read"><span>07</span>The read</a>
+    </div>
+    <button class="iconbtn" id="theme" type="button" aria-label="Switch between light and dark theme" title="Light / dark"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+  </div>
+</nav>
+
 <div class="wrap">
 
-<header>
+<header class="masthead">
   <div>
+    <p class="eyebrow">Tracker · hyperscalers, neoclouds &amp; compute</p>
     <h1>The AI build-out</h1>
-    <p class="sub">Hyperscaler capex, neocloud capacity, and how fast AI compute is growing. Last full refresh: <span id="updated">6 Nov 2026</span>. Each card shows when its data was last checked.</p>
+    <p class="standfirst">Hyperscaler capex, neocloud capacity, and how fast AI compute is growing.</p>
+    <p class="meta">Last full refresh: <b id="updated">6 Nov 2026</b>. Each card shows when its data was last checked.</p>
   </div>
-  <button class="toggle" id="theme">Toggle theme</button>
+  <aside class="key" aria-label="How to read the charts">
+    <div class="key-h">Reading the charts</div>
+    <ul>
+      <li><svg viewBox="0 0 30 14" aria-hidden="true"><line class="k-rule" x1="1" y1="7" x2="29" y2="7"/><circle class="k-dot" cx="15" cy="7" r="4"/></svg><span>Solid point: a reported or measured figure</span></li>
+      <li><svg viewBox="0 0 30 14" aria-hidden="true"><line class="k-rule" x1="1" y1="7" x2="29" y2="7"/><circle class="k-ring" cx="15" cy="7" r="4"/></svg><span>Hollow point: an estimate, a target or a single source. Each chart says which</span></li>
+      <li><svg viewBox="0 0 30 14" aria-hidden="true"><rect class="k-bar" x="5" y="4" width="8" height="10" rx="1.5"/><rect class="k-bar k-light" x="17" y="0" width="8" height="14" rx="1.5"/></svg><span>Lighter bar: guidance, an interpolation or a forecast</span></li>
+      <li><svg viewBox="0 0 30 14" aria-hidden="true"><line class="k-dash" x1="1" y1="7" x2="29" y2="7"/></svg><span>Dashed: a projection, a threshold, a conditional deal or a gap between prints</span></li>
+    </ul>
+  </aside>
 </header>
 
 <!-- HERO -->
-<section id="hero" data-section="hero" class="card span-12" style="margin-bottom:16px">
-  <div class="hero">
-    <div class="tile big">
+<section id="hero" data-section="hero" class="card hero" aria-label="Headline numbers">
+  <div class="tile big">
       <div class="label">Big 4 hyperscaler capex, 2026 (guided)</div>
       <div class="value">~$730B</div>
       <div class="delta">▲ ~78% vs 2025 · ~24× 2016</div>
-    </div>
-    <div class="tile"><div class="label">2027 outlook</div><div class="value">~$940B</div><div class="muted">Illustrative estimate. Google: "increase significantly"; Amazon: "meaningfully more"; Meta: "invest aggressively"</div></div>
-    <div class="tile"><div class="label">Oracle contracted backlog (RPO)</div><div class="value">$664B</div><div class="delta">▲ $209B YoY</div></div>
-    <div class="tile"><div class="label">CoreWeave contracted power</div><div class="value">~4.2 GW</div><div class="muted">As of Aug 2026 (3.7 GW in June). 1.5 GW active</div></div>
-    <div class="tile"><div class="label">Nvidia data-centre revenue, FY26</div><div class="value">$193.7B</div><div class="delta">▲ ~29× FY21</div><div class="muted">Latest quarter (Jul 2026): $89.0B, +117% YoY</div></div>
+    <div class="spark" id="hero-spark"></div>
   </div>
+  <div class="tile"><div class="label">2027 outlook</div><div class="value">~$940B</div><div class="muted">Illustrative estimate. Google: "increase significantly"; Amazon: "meaningfully more"; Meta: "invest aggressively"</div></div>
+  <div class="tile"><div class="label">Oracle contracted backlog (RPO)</div><div class="value">$664B</div><div class="delta">▲ $209B YoY</div></div>
+  <div class="tile"><div class="label">CoreWeave contracted power</div><div class="value">~4.2 GW</div><div class="muted">As of Aug 2026 (3.7 GW in June). 1.5 GW active</div></div>
+  <div class="tile"><div class="label">Nvidia data-centre revenue, FY26</div><div class="value">$193.7B</div><div class="delta">▲ ~29× FY21</div><div class="muted">Latest quarter (Jul 2026): $89.0B, +117% YoY</div></div>
 </section>
+
+<section class="card upnext" aria-labelledby="upnext-h">
+  <div class="upnext-head"><h2 id="upnext-h">Coming up</h2><p>Releases that will move these numbers</p></div>
+  <ol id="upnext"></ol>
+</section>
+
+<header class="chapter" id="ch-money">
+  <div class="ch-num">01</div>
+  <div><h2>The money</h2><p>What the four biggest spenders are putting into AI infrastructure, the contracts behind it, and whether their cash flow can carry it.</p></div>
+  <nav class="ch-links" aria-label="In this chapter"><a href="#capex">Capex by company</a><a href="#share">Who's spending</a><a href="#cloud">Cloud backlog</a><a href="#cashflow">Cash flow</a></nav>
+</header>
 
 <div class="grid">
 
@@ -135,8 +83,8 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 <section id="capex" data-section="capex" class="card span-8">
   <div class="card-head">
     <div>
-      <h2>Hyperscaler capex by company, 2016–2027E</h2>
-      <p class="muted">$B, calendar year. 2027 is an illustrative estimate (lighter bar). No company has given a 2027 number yet; Google and Amazon both say it will be higher (Q3 calls, late Oct).</p>
+      <h3 class="card-title">Hyperscaler capex by company, 2016–2027E</h3>
+      <p class="dek">$B, calendar year. 2027 is an illustrative estimate (lighter bar). No company has given a 2027 number yet; Google and Amazon both say it will be higher (Q3 calls, late Oct).</p>
     </div>
     <button class="toggle" data-table="t-capex">Table</button>
   </div>
@@ -147,28 +95,28 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 
 <!-- SHARE + GUIDANCE -->
 <section id="share" data-section="share" class="card span-4">
-  <h2>Who's spending, 2026</h2>
-  <p class="muted">Share of ~$730B in guided Big 4 capex</p>
+  <h3 class="card-title">Who's spending, 2026</h3>
+  <p class="dek">Share of ~$730B in guided Big 4 capex</p>
   <div class="seg" id="seg26"></div>
   <div class="legend" id="lg-seg"></div>
-  <table>
+  <div class="tscroll"><table>
     <thead><tr><th>Company</th><th class="num">2026 guide</th><th class="num">vs 2025</th></tr></thead>
     <tbody id="guide-body"></tbody>
-  </table>
-  <p class="muted" style="margin-top:10px">Microsoft trimmed its guide from ~$175B to ~$170B for calendar 2026 because third-party capacity arrived late (Sep-quarter capex $45.2B vs ~$51B expected). Its earlier cut, from ~$190B in July, was mostly accounting: longer data-centre lives turn future leases into operating leases, which drop out of capex. Its figure includes finance leases; Amazon's is cash capex. Meta narrowed its range to $135–145B on 21 Oct. Q3 capex: Amazon $75.9B (cash), Alphabet $51.4B, Microsoft $45.2B (incl. $7.4B of finance leases), Meta $34.9B.</p>
+  </table></div>
+  <p class="fine">Microsoft trimmed its guide from ~$175B to ~$170B for calendar 2026 because third-party capacity arrived late (Sep-quarter capex $45.2B vs ~$51B expected). Its earlier cut, from ~$190B in July, was mostly accounting: longer data-centre lives turn future leases into operating leases, which drop out of capex. Its figure includes finance leases; Amazon's is cash capex. Meta narrowed its range to $135–145B on 21 Oct. Q3 capex: Amazon $75.9B (cash), Alphabet $51.4B, Microsoft $45.2B (incl. $7.4B of finance leases), Meta $34.9B.</p>
 </section>
 
 <!-- CLOUD DEMAND -->
 <section id="cloud" data-section="cloud" class="card span-12">
-  <h2>What customers have signed: cloud backlog and growth, Sep quarter 2026</h2>
-  <p class="muted" style="margin-bottom:10px">The capex above is spent against these contracts. Backlog (remaining performance obligations) is revenue already signed but not yet delivered.</p>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 12px">
+  <h3 class="card-title">What customers have signed: cloud backlog and growth, Sep quarter 2026</h3>
+  <p class="dek">The capex above is spent against these contracts. Backlog (remaining performance obligations) is revenue already signed but not yet delivered.</p>
+  <div class="kpis">
     <div class="tile"><div class="label">Big 3 cloud backlog</div><div class="value">~$1.8T</div><div class="muted">Microsoft commercial RPO $677B (+73%), AWS $578B (~2× YoY), Google Cloud $561B</div></div>
     <div class="tile"><div class="label">Azure revenue</div><div class="value">$33.2B</div><div class="delta">▲ 48% YoY</div><div class="muted">First dollar disclosure. Guides 49–50% next quarter</div></div>
     <div class="tile"><div class="label">Google Cloud revenue</div><div class="value">$30.7B</div><div class="delta">▲ 103% YoY</div><div class="muted">Boosted by TPU system sales. Operating income $11.1B</div></div>
     <div class="tile"><div class="label">AWS revenue</div><div class="value">$46.0B</div><div class="delta">▲ 39% YoY</div><div class="muted">Fastest in ~5 years. Jassy expects &gt;40% in 2027–28</div></div>
   </div>
-  <ul class="note" style="padding-left:18px;margin:6px 0 0">
+  <ul class="note">
     <li><b>The backlog is concentrated in the two labs.</b> Anthropic's S-1/A lists at least $276B of commitments to these three clouds (Google ≥$121B, Amazon ≥$110B, Microsoft ≥$44.9B). OpenAI committed to $250B of incremental Azure in Oct 2025. Together that is roughly a quarter or more of the ~$1.8T, so the clouds' backlog depends on the labs' revenue too.</li>
     <li><b>Token volumes are still compounding.</b> Google's first-party model APIs process ~32B tokens a minute (+40% QoQ, &gt;4× YoY). Amazon Bedrock token volume is up ~17× YoY. OpenRouter handled ~194T tokens in the week of 26 Oct (unofficial charts). Microsoft says "demand exceeds supply".</li>
   </ul>
@@ -178,31 +126,31 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 <section id="cashflow" data-section="cashflow" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>Can they pay for it? Capex against the cash the business brings in</h2>
-      <p class="muted">Operating cash flow is the cash the core business generates; free cash flow is what's left after capex. When capex passes 100% of operating cash flow, the gap has to come from cash on hand, debt or new shares. All figures are from 10-K and 10-Q cash-flow statements (our calculations). Capex here is cash purchases of property and equipment, so Microsoft's finance leases and everyone's leases not yet started are left out.</p>
+      <h3 class="card-title">Can they pay for it? Capex against the cash the business brings in</h3>
+      <p class="dek">Operating cash flow is the cash the core business generates; free cash flow is what's left after capex. When capex passes 100% of operating cash flow, the gap has to come from cash on hand, debt or new shares. All figures are from 10-K and 10-Q cash-flow statements (our calculations). Capex here is cash purchases of property and equipment, so Microsoft's finance leases and everyone's leases not yet started are left out.</p>
     </div>
     <button class="toggle" data-table="t-cf">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
-    <div class="tile"><div class="label">Big 4 capex ÷ operating cash flow</div><div class="value">99%</div><div class="delta" style="color:var(--text-secondary)">Jan–Sep 2026 · 64% in 2025</div><div class="muted">~30–50% a year from 2016 to 2024. Trailing 12 months to Sep: 90%</div></div>
-    <div class="tile"><div class="label">Big 4 free cash flow, Jan–Sep 2026</div><div class="value">$4.7B</div><div class="delta" style="color:var(--text-secondary)">▼ 97% vs $146.7B a year earlier</div><div class="muted">Q3 alone was −$25.0B: Amazon −$33.5B, Alphabet −$9.1B, Meta −$1.2B, Microsoft +$18.6B</div></div>
+  <div class="kpis">
+    <div class="tile"><div class="label">Big 4 capex ÷ operating cash flow</div><div class="value">99%</div><div class="delta flat">Jan–Sep 2026 · 64% in 2025</div><div class="muted">~30–50% a year from 2016 to 2024. Trailing 12 months to Sep: 90%</div></div>
+    <div class="tile"><div class="label">Big 4 free cash flow, Jan–Sep 2026</div><div class="value">$4.7B</div><div class="delta flat">▼ 97% vs $146.7B a year earlier</div><div class="muted">Q3 alone was −$25.0B: Amazon −$33.5B, Alphabet −$9.1B, Meta −$1.2B, Microsoft +$18.6B</div></div>
     <div class="tile"><div class="label">Depreciation, latest quarter vs a year ago</div><div class="value">+39% to +56%</div><div class="muted">Amazon +39%, Meta +44%, Alphabet +49%, Microsoft +56%; Oracle +134%. The profit-and-loss cost of today's capex is only starting to arrive</div></div>
-    <div class="tile"><div class="label">Data-centre leases signed, not yet started</div><div class="value">≈$1.3T</div><div class="delta" style="color:var(--text-secondary)">▲ from ≈$0.66T at end-2025</div><div class="muted">Big 4 + Oracle, undiscounted: Microsoft $365B, Meta $356B, Oracle $288B, Amazon $165B, Alphabet $131B. Not in capex or debt until they start</div></div>
+    <div class="tile"><div class="label">Data-centre leases signed, not yet started</div><div class="value">≈$1.3T</div><div class="delta flat">▲ from ≈$0.66T at end-2025</div><div class="muted">Big 4 + Oracle, undiscounted: Microsoft $365B, Meta $356B, Oracle $288B, Amazon $165B, Alphabet $131B. Not in capex or debt until they start</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-7" style="min-width:0">
-      <h2 style="font-size:14px">Capex as a share of operating cash flow, 2016 – Sep 2026</h2>
-      <p class="muted" style="margin-bottom:6px">%, by company. Each point is a fiscal year (Microsoft's ends in June, Oracle's in May), placed mid-period; the last point is the 12 months to Sep 2026 (Oracle: Aug). Above the 100% line, a company spends more on capex than its business brings in.</p>
+  <div class="cols">
+    <div class="span-7">
+      <h4>Capex as a share of operating cash flow, 2016 – Sep 2026</h4>
+      <p class="dek">%, by company. Each point is a fiscal year (Microsoft's ends in June, Oracle's in May), placed mid-period; the last point is the 12 months to Sep 2026 (Oracle: Aug). Above the 100% line, a company spends more on capex than its business brings in.</p>
       <div class="legend" id="lg-cf"></div>
       <div id="c-cf"></div>
       <div class="datatable" id="t-cf"></div>
     </div>
-    <div class="span-5" style="min-width:0">
-      <h2 style="font-size:14px">Trailing 12 months to Sep 2026</h2>
-      <table style="margin-top:6px"><thead><tr><th>Company</th><th class="num">Operating cash</th><th class="num">Capex</th><th class="num">Free cash</th><th class="num">Net cash (debt)</th></tr></thead><tbody id="cf-ttm"></tbody></table>
-      <p class="muted" style="margin-top:6px">Oracle is the 12 months to Aug 2026, and its operating cash includes $16B of customer prepayments for capex over the last two quarters. Microsoft's own capex figure, which adds finance leases, was $155.6B. Alphabet's net cash includes $90.4B of listed shares, $75.2B of them SpaceX stock it can't sell yet. Net cash is cash and securities minus debt at the latest quarter.</p>
-      <h2 style="font-size:14px;margin-top:14px">Server lives: where the depreciation debate sits</h2>
-      <table style="margin-top:6px">
+    <div class="span-5">
+      <h4>Trailing 12 months to Sep 2026</h4>
+      <div class="tscroll"><table><thead><tr><th>Company</th><th class="num">Operating cash</th><th class="num">Capex</th><th class="num">Free cash</th><th class="num">Net cash (debt)</th></tr></thead><tbody id="cf-ttm"></tbody></table></div>
+      <p class="fine">Oracle is the 12 months to Aug 2026, and its operating cash includes $16B of customer prepayments for capex over the last two quarters. Microsoft's own capex figure, which adds finance leases, was $155.6B. Alphabet's net cash includes $90.4B of listed shares, $75.2B of them SpaceX stock it can't sell yet. Net cash is cash and securities minus debt at the latest quarter.</p>
+      <h4>Server lives: where the depreciation debate sits</h4>
+      <div class="tscroll"><table>
         <thead><tr><th>Company</th><th>Servers</th><th>Last change</th><th class="num">Depreciation YoY</th></tr></thead>
         <tbody>
           <tr><td>Microsoft</td><td>6 years</td><td>4 → 6 in FY23; data-centre buildings 15 → 25 years from FY27</td><td class="num">+56%</td></tr>
@@ -211,23 +159,23 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
           <tr><td>Amazon</td><td>5–6 years</td><td>Some servers 6 → 5 in 2025 (+$1.4B)</td><td class="num">+39%</td></tr>
           <tr><td>Oracle</td><td>6 years</td><td>5 → 6 in FY25</td><td class="num">+134%</td></tr>
         </tbody>
-      </table>
-      <p class="muted" style="margin-top:6px">Michael Burry argues the chips last 2–3 years, which would cut 2026–28 earnings by more than $176B. The counter-evidence is in the GPU card below: H100s rent for ~50% more than a year ago, and CoreWeave says it re-booked expiring H100 contracts at ~95% of the original price. None of the five changed server lives in 2026.</p>
+      </table></div>
+      <p class="fine">Michael Burry argues the chips last 2–3 years, which would cut 2026–28 earnings by more than $176B. The counter-evidence is in the GPU card below: H100s rent for ~50% more than a year ago, and CoreWeave says it re-booked expiring H100 contracts at ~95% of the original price. None of the five changed server lives in 2026.</p>
     </div>
   </div>
-  <div class="grid" style="gap:24px;margin-top:8px">
-    <div class="span-6" style="min-width:0">
-      <h2 style="font-size:14px">How the gap is being filled</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+  <div class="cols">
+    <div class="span-6">
+      <h4>How the gap is being filled</h4>
+      <ul class="note">
         <li><b>Buybacks have stopped at two of them.</b> Alphabet (2025: $45.7B) and Meta (2025: $26.2B) bought back no stock in Jan–Sep 2026. Amazon doesn't buy back stock, and Microsoft's buybacks have slowed a little.</li>
         <li><b>They're selling shares.</b> Alphabet raised $42.9B of common stock and $19.1B of mandatory convertibles in Jan–Sep 2026, for "capital expenditures to scale AI infrastructure". Meta agreed a $25B forward share sale (cash on settlement by Nov 2027) and ~$12.5B of mandatory convertibles. Oracle raised ~$35B of equity across convertibles, at-the-market sales and a $10B offering.</li>
-        <li><b>And borrowing.</b> In Jan–Sep 2026, Amazon raised $115.1B of long-term debt, Alphabet $85.2B and Meta $24.9B. Microsoft sold $25B of bonds on 29 Oct, its first in nine years. Amazon (−$66B) and Oracle (−$88B) now have net debt, and Meta is about even.</li>
+        <li><b>And borrowing.</b> In Jan–Sep 2026, Amazon raised $115.1B of long-term debt, Alphabet $85.2B and Meta $24.9B. Microsoft sold $25B of bonds on 29 Oct, its first in nine years. Meta followed with $15B of dollar bonds and a record €9B euro debut (3–4 Nov), and Alphabet with €6B (2 Nov). Amazon (−$66B) and Oracle (−$88B) now have net debt, and Meta is about even.</li>
         <li><b>Off balance sheet too.</b> Meta's Hyperion joint venture with Blue Owl (~$27B) and a ~$14B Texas venture leave it with up to $68.4B of exposure, mostly residual-value guarantees. Alphabet guarantees $48.0B of other companies' data-centre leases and power contracts, up from $16.9B at end-2025.</li>
       </ul>
     </div>
-    <div class="span-6" style="min-width:0">
-      <h2 style="font-size:14px">What the forecasts say, and the counter-case</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+    <div class="span-6">
+      <h4>What the forecasts say, and the counter-case</h4>
+      <ul class="note">
         <li><b>Free cash flow is expected to go negative.</b> S&amp;P Global Ratings expects all six hyperscalers (including Oracle and SpaceX) to have negative free operating cash flow in 2026 and 2027, recovering only in 2029. BofA's estimate for eight big spenders is −$64B (2026), −$144B (2027) and −$186B (2028). Amazon's own release: free cash flow "decreased to an outflow of $42.4 billion for the trailing twelve months".</li>
         <li><b>Microsoft is the exception.</b> It expects to stay free-cash-flow positive in FY27, and it still has net cash.</li>
         <li><b>Oracle has the tightest path.</b> It targets positive free cash flow in 2H FY28 and $30B+ in FY29, with capex peaking in FY27–28 and growth "self-funded beginning in FY29" (Investor Day, 28 Oct).</li>
@@ -237,34 +185,44 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
   </div>
 </section>
 
+</div>
+
+<header class="chapter" id="ch-capacity">
+  <div class="ch-num">02</div>
+  <div><h2>The capacity</h2><p>How much data-centre power exists, how much is coming, and who is building the overflow for the labs.</p></div>
+  <nav class="ch-links" aria-label="In this chapter"><a href="#gw">Gigawatts</a><a href="#neoclouds">Oracle and the neoclouds</a><a href="#oracle">Oracle capex</a></nav>
+</header>
+
+<div class="grid">
+
 <!-- GIGAWATTS -->
 <section id="gw" data-section="gw" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>Gigawatts of data-centre capacity: before AI, now, and next, 2015–2030</h2>
-      <p class="muted">Global installed capacity in GW, split into AI and non-AI workloads. 2015–2024 is modeled from IEA electricity data. 2025 and 2030 anchor to McKinsey; the years between are interpolated (lighter bars).</p>
+      <h3 class="card-title">Gigawatts of data-centre capacity: before AI, now, and next, 2015–2030</h3>
+      <p class="dek">Global installed capacity in GW, split into AI and non-AI workloads. 2015–2024 is modeled from IEA electricity data. 2025 and 2030 anchor to McKinsey; the years between are interpolated (lighter bars).</p>
     </div>
     <button class="toggle" data-table="t-gw">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+  <div class="kpis">
     <div class="tile"><div class="label">2015, pre-AI</div><div class="value">~30 GW</div><div class="muted">~2% AI · roughly flat for a decade</div></div>
     <div class="tile"><div class="label">2026, today</div><div class="value">~108 GW</div><div class="delta">▲ ~3.5× 2015 · ~60% AI</div></div>
     <div class="tile"><div class="label">2030, forecast</div><div class="value">~220 GW</div><div class="delta">▲ ~2× today · ~70% AI</div></div>
     <div class="tile"><div class="label">AI capacity added 2015→2030</div><div class="value">~155 GW</div><div class="muted">vs ~34 GW added for non-AI</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-8" style="min-width:0">
+  <div class="cols">
+    <div class="span-8">
       <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>AI workloads</span><span><i class="sw" style="background:var(--neutral)"></i>Non-AI (traditional cloud, enterprise, storage)</span></div>
       <div id="c-gw"></div>
       <div class="datatable" id="t-gw"></div>
     </div>
-    <div class="span-4" style="min-width:0">
-      <h2 style="font-size:14px">2030 forecasts disagree</h2>
-      <p class="muted" style="margin-bottom:6px">Global data-centre GW in 2030, by forecaster. They measure different things (installed capacity vs power drawn).</p>
+    <div class="span-4">
+      <h4>2030 forecasts disagree</h4>
+      <p class="dek">Global data-centre GW in 2030, by forecaster. Their definitions of capacity differ, so compare them loosely.</p>
       <div id="c-fc"></div>
-      <p class="muted" style="margin-top:4px">Goldman's bar is its 2025 estimate; in Feb 2026 it raised growth to +220% vs 2023, on an electricity basis. The IEA's 2026 update has ~950 TWh by 2030, from 485 TWh in 2025. US-only forecasts are in the power card.</p>
-      <h2 style="font-size:14px;margin-top:16px">What a gigawatt means</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+      <p class="fine">Goldman's bar is its 2 Nov 2026 note as reported in the press (we haven't seen the note itself): 103 GW in 2025 to 273 GW in 2030, up from 217 GW in its July update, with the US at 152 GW. The IEA's 2026 update has ~950 TWh by 2030, from 485 TWh in 2025. US-only forecasts are in the power card.</p>
+      <h4>What a gigawatt means</h4>
+      <ul class="note">
         <li>1 GW of power runs roughly 750k–850k US homes.</li>
         <li>1 GW of AI capacity is about 500k–600k Blackwell-class GPUs, all-in.</li>
         <li>All-in capex is roughly $35–50B per GW (chips, building, power).</li>
@@ -276,9 +234,9 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 
 <!-- NEOCLOUDS -->
 <section id="neoclouds" data-section="neoclouds" class="card span-7">
-  <h2>Oracle and the neoclouds</h2>
-  <p class="muted" style="margin-bottom:10px">Capacity sold mostly to OpenAI, Microsoft, Meta, Google and Anthropic. Their backlog is the hyperscalers' overflow.</p>
-  <table>
+  <h3 class="card-title">Oracle and the neoclouds</h3>
+  <p class="dek">Capacity sold mostly to OpenAI, Microsoft, Meta, Google and Anthropic. Their backlog is the hyperscalers' overflow.</p>
+  <div class="tscroll"><table class="wide">
     <thead><tr><th>Provider</th><th>Backlog / contracts</th><th>Power / capacity</th><th>Latest signal</th></tr></thead>
     <tbody>
       <tr><td><b>Oracle (OCI)</b></td><td>$664B RPO (Q1 FY27, Aug 2026). Roughly half is tied to OpenAI</td><td>Core Stargate partner; Abilene ~1.2 GW</td><td>OCI revenue $7.4B/qtr, +121%; FY27 capex guide $90–95B gross. Investor Day (28 Oct): FY30 revenue ≥$225B, FCF positive 2H FY28, outside funding capped at $20B, all raised 2–4 Nov ($10B of stock at $116, $10B of bonds at 7.0–8.65%)</td></tr>
@@ -289,14 +247,14 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
       <tr><td><b>IREN</b></td><td>$20.3B backlog; ~$1B operating ARR (Q1 FY27, 5 Nov)</td><td>&gt;5 GW secured power; 0.8 GW of data centres by end-2027</td><td>&gt;$4B ARR target slipped to Jan 2027 after a Microsoft design change</td></tr>
       <tr><td><b>Others</b></td><td colspan="3">Crusoe, Lambda and Nscale, plus xAI and OpenAI building their own campuses</td></tr>
     </tbody>
-  </table>
+  </table></div>
 </section>
 
-<section id="oracle" data-section="oracle" class="card span-5">
+<section id="oracle" data-section="oracle" class="card span-5 stick">
   <div class="card-head">
     <div>
-      <h2>Oracle capex, FY2021–FY2027E</h2>
-      <p class="muted">$B, fiscal year ending May. FY26 is $55.7B from the 10-K (Oracle's own "net cash outlay" measure was $47.7B). FY27 is the guide midpoint, including ~$20–25B to be repaid by customers.</p>
+      <h3 class="card-title">Oracle capex, FY2021–FY2027E</h3>
+      <p class="dek">$B, fiscal year ending May. FY26 is $55.7B from the 10-K (Oracle's own "net cash outlay" measure was $47.7B). FY27 is the guide midpoint, including ~$20–25B to be repaid by customers.</p>
     </div>
     <button class="toggle" data-table="t-orcl">Table</button>
   </div>
@@ -304,93 +262,113 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
   <div class="datatable" id="t-orcl"></div>
 </section>
 
+</div>
+
+<header class="chapter" id="ch-compute">
+  <div class="ch-num">03</div>
+  <div><h2>The compute</h2><p>How fast training runs are growing, and what the chip suppliers are booking.</p></div>
+  <nav class="ch-links" aria-label="In this chapter"><a href="#flop">Training compute</a><a href="#nvda">Nvidia and its rivals</a></nav>
+</header>
+
+<div class="grid">
+
 <!-- COMPUTE GROWTH -->
-<section id="flop" data-section="flop" class="card span-7">
+<section id="flop" data-section="flop" class="card span-7 stick">
   <div class="card-head">
     <div>
-      <h2>Frontier training compute, 2016–2030</h2>
-      <p class="muted">FLOP per training run, log scale. Notable models (Epoch AI estimates), then the trend projected to Epoch's ~2e29 "feasible by 2030" figure.</p>
+      <h3 class="card-title">Frontier training compute, 2016–2030</h3>
+      <p class="dek">FLOP per training run, log scale. Notable models (Epoch AI estimates), then the trend projected to Epoch's ~2e29 "feasible by 2030" figure.</p>
     </div>
     <button class="toggle" data-table="t-flop">Table</button>
   </div>
-  <div class="legend"><span><i class="sw" style="background:var(--s1);border-radius:50%"></i>Notable model</span><span><i class="sw line" style="background:var(--text-muted)"></i>Projection (~3–4×/yr)</span></div>
+  <div class="legend"><span><i class="sw" style="background:var(--s1);border-radius:50%"></i>Notable model</span><span><i class="sw line" style="background:var(--text-muted)"></i>Projection (~3–4×/yr)</span><span><i class="sw" style="background:transparent;border:2px solid var(--text-muted);border-radius:50%"></i>Rated "speculative" by Epoch</span></div>
   <div id="c-flop"></div>
   <div class="datatable" id="t-flop"></div>
-  <p class="muted" style="margin-top:6px">Epoch's largest estimate is now GPT-6 Astra (Sep 2026, ~9.4e26 FLOP, range ~5e26–2e27). That is ~2.7× Grok 3 in 19 months, about 1.9×/yr and below the projection line. Epoch has no estimate yet for most 2026 frontier models (GPT-5.x, Claude Mythos, Gemini 3.x), so part of the gap may be lag in the data. Epoch revised Grok 3 down to 3.5e26. The hollow point (Grok 4) is rated "speculative".</p>
+  <p class="fine">Epoch's largest estimate is now GPT-6 Astra (Sep 2026, ~9.4e26 FLOP, range ~5e26–2e27). That is ~2.7× Grok 3 in 19 months, about 1.9×/yr and below the projection line. Epoch has no estimate yet for most 2026 frontier models (GPT-5.x, Claude Mythos, Gemini 3.x), so part of the gap may be lag in the data. Epoch revised Grok 3 down to 3.5e26, and now counts only direct training compute for AlphaGo Zero (6.5e20, down from 3.4e23, by leaving out the compute used to generate its training games). The hollow points (Gemini 1.0 Ultra and Grok 4) are rated "speculative".</p>
 </section>
 
 <section id="nvda" data-section="nvda" class="card span-5">
   <div class="card-head">
     <div>
-      <h2>Nvidia data-centre revenue, by quarter</h2>
-      <p class="muted">$B per quarter (Nvidia's fiscal year ends in late January). The best single proxy for accelerator shipments. FY26 total: $193.7B, ~29× FY21.</p>
+      <h3 class="card-title">Nvidia data-centre revenue, by quarter</h3>
+      <p class="dek">$B per quarter (Nvidia's fiscal year ends in late January). The best single proxy for accelerator shipments. FY26 total: $193.7B, ~29× FY21.</p>
     </div>
     <button class="toggle" data-table="t-nvda">Table</button>
   </div>
   <div id="c-nvda"></div>
   <div class="datatable" id="t-nvda"></div>
-  <p class="muted" style="margin-top:6px">Next print: Q3 FY27 on 17 Nov, guided to $108B ±2% of total revenue (Q2: $96.2B, of which data centre $89.0B). Vera Rubin began shipping in Q3; the CFO expects it to be ~20% of Q3 data-centre revenue and FY28 revenue to grow ~70%, "supply-constrained". Huang (Mar 2026): "at least $1 trillion" of revenue over 2025–27.</p>
-  <ul class="note" style="padding-left:18px;margin:6px 0 0">
+  <p class="fine">Next print: Q3 FY27 on 17 Nov, guided to $108B ±2% of total revenue (Q2: $96.2B, of which data centre $89.0B). Vera Rubin began shipping in Q3; the CFO expects it to be ~20% of Q3 data-centre revenue and FY28 revenue to grow ~70%, "supply-constrained". Huang (Mar 2026): "at least $1 trillion" of revenue over 2025–27.</p>
+  <ul class="note">
     <li><b>The challengers are growing faster from a smaller base.</b> AMD's data-centre revenue was $8.5B in the Sep quarter (+97%), with the first MI450 racks shipped. Broadcom's AI chip revenue was $16.7B (+221%), with $21.7B guided for next quarter; Google has started selling TPU systems for customers' own data centres.</li>
     <li><b>Memory is the tightest input.</b> Nvidia's $279B of supply commitments are "primarily" memory. SK hynix made an 80% operating margin in Q3 and sees demand above supply through 2030; Micron's quarterly revenue went from $11.3B to $54.2B in a year.</li>
     <li><b>The foundry agrees.</b> TSMC's revenue was +41% YoY in Q3, and its 2026 capex budget is $60–64B (set in Jul, reiterated 15 Oct).</li>
   </ul>
 </section>
 
+</div>
+
+<header class="chapter" id="ch-demand">
+  <div class="ch-num">04</div>
+  <div><h2>The demand</h2><p>Prices per token, usage you can count, what the labs earn, and what the models can now do.</p></div>
+  <nav class="ch-links" aria-label="In this chapter"><a href="#deflation">Token prices</a><a href="#demand">Usage</a><a href="#lab-revenue">Lab revenue</a><a href="#autonomy">Autonomy</a></nav>
+</header>
+
+<div class="grid">
+
 <!-- TOKEN DEFLATION -->
 <section id="deflation" data-section="deflation" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>Token deflation: the price of a fixed level of capability, per task</h2>
-      <p class="muted">Cheapest model that reaches a set benchmark score, in USD per 1M tokens, log scale. Each step down is a cheaper model hitting the same bar. The chart is Epoch AI's 2025 dataset, which ends in Feb 2025 and hasn't been updated. The tiles and the lower panels add the 2026 evidence, which is measured per question or per task rather than per token.</p>
+      <h3 class="card-title">Token deflation: the price of a fixed level of capability, per task</h3>
+      <p class="dek">Cheapest model that reaches a set benchmark score, in USD per 1M tokens, log scale. Each step down is a cheaper model hitting the same bar. The chart is Epoch AI's 2025 dataset, which ends in Feb 2025 and hasn't been updated. The tiles and the lower panels add the 2026 evidence, which is measured per question or per task rather than per token.</p>
     </div>
     <button class="toggle" data-table="t-defl">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+  <div class="kpis">
     <div class="tile"><div class="label">GPT-4-level chat (Arena Elo ≥ 1186)</div><div class="value">$37.50 → $0.07</div><div class="delta">▼ ~540× cheaper in 19 months</div><div class="muted">Per 1M tokens, Mar 2023 → Oct 2024 (Epoch, 2025)</div></div>
     <div class="tile"><div class="label">Cost of a fixed benchmark score, Epoch 2026</div><div class="value">~13× / yr</div><div class="delta">▼ 47% a quarter since 2023</div><div class="muted">$ per question (price × tokens used). A newly state-of-the-art level falls ~75×/yr; two years on, ~5×/yr</div></div>
     <div class="tile"><div class="label">GPQA-level science, cost per question</div><div class="value">$0.30 → $0.0004</div><div class="delta">▼ ~725× in 15 months</div><div class="muted">o3 (Apr 2025) → GPT-5.6 Luna (Jul 2026), at a fixed GPQA Diamond score (Epoch's data)</div></div>
-    <div class="tile"><div class="label">Flagship list prices, Sep–Oct 2026</div><div class="value">$4–20 / 1M</div><div class="muted">GPT-6 Astra launched at $20 (GPT-4: $37.50). Four weeks later GPT-6.1 Sol matched its Epoch ECI score at $4. Claude Opus 5.5 $8, Gemini 4 Argon $4 (→ $8 in Dec)</div></div>
+    <div class="tile"><div class="label">Flagship list prices, Sep–Nov 2026</div><div class="value">$4–20 / 1M</div><div class="muted">GPT-6 Astra launched at $20 (GPT-4: $37.50). Four weeks later GPT-6.1 Sol matched its Epoch ECI score at $4. Claude Fable 5.2 (9 Nov) is $16 and now tops the ECI. Claude Opus 5.5 $8, Gemini 4 Argon $4 (→ $8 in Dec)</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-8" style="min-width:0">
+  <div class="cols">
+    <div class="span-8">
       <div class="legend" id="lg-defl"></div>
       <div id="c-defl"></div>
       <div class="datatable" id="t-defl"></div>
     </div>
-    <div class="span-4" style="min-width:0">
-      <h2 style="font-size:14px">How fast each task got cheaper</h2>
-      <p class="muted" style="margin-bottom:6px">From the first model at the bar to the cheapest one by Feb 2025. "Per year" is the annualised rate between those two points (our calculation). Epoch fits a trend instead, so its figures differ.</p>
-      <table>
+    <div class="span-4">
+      <h4>How fast each task got cheaper</h4>
+      <p class="dek">From the first model at the bar to the cheapest one by Feb 2025. "Per year" is the annualised rate between those two points (our calculation). Epoch fits a trend instead, so its figures differ.</p>
+      <div class="tscroll"><table>
         <thead><tr><th>Task (threshold)</th><th class="num">Total</th><th class="num">Per year</th></tr></thead>
         <tbody id="defl-body"></tbody>
-      </table>
-      <h2 style="font-size:14px;margin-top:16px">Why it matters for the build-out</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+      </table></div>
+      <h4>Why it matters for the build-out</h4>
+      <ul class="note">
         <li>Any given capability gets cheaper by roughly 5× to 100× a year, much faster than Moore's law. The estimates differ by method: Epoch 13×/yr (2026), MIT FutureTech 5–10×/yr, Artificial Analysis 18–123× in about a year depending on the score.</li>
         <li>The cost of frontier capability does not fall this way. Every new top model resets the price bar (below).</li>
         <li>Cheaper tokens drive more usage, including agents and long reasoning chains. That demand is what fills the gigawatts above.</li>
       </ul>
     </div>
   </div>
-  <div class="grid" style="gap:24px;margin-top:8px">
-    <div class="span-7" style="min-width:0">
-      <h2 style="font-size:14px">Flagship list prices at launch, 2023–2026</h2>
-      <p class="muted" style="margin-bottom:6px">$ per 1M tokens, as a 3:1 input:output blend of list prices (our calculation), log scale. Each dot is one of a lab's top models when it launched. Since 2025 launch prices have sat in a ~$3–$20 band, and OpenAI's rose four launches in a row to GPT-6 Astra's $20. Cheaper siblings follow fast: GPT-6.1 Sol matched Astra on Epoch's ECI at $4. Prices per token aren't costs per task, because newer models often use more tokens.</p>
+  <div class="cols">
+    <div class="span-7">
+      <h4>Flagship list prices at launch, 2023–2026</h4>
+      <p class="dek">$ per 1M tokens, as a 3:1 input:output blend of list prices (our calculation), log scale. Each dot is one of a lab's top models when it launched. Since 2025 launch prices have sat in a ~$3–$20 band, and OpenAI's rose four launches in a row to GPT-6 Astra's $20. Cheaper siblings follow fast: GPT-6.1 Sol matched Astra on Epoch's ECI at $4. Claude Fable 5.2 (9 Nov) took the top ECI score at $16, 20% below Fable 5.1. Prices per token aren't costs per task, because newer models often use more tokens.</p>
       <div class="legend" id="lg-fpx"></div>
       <div id="c-fpx"></div>
-      <button class="toggle" data-table="t-fpx" style="margin-top:4px">Table</button>
+      <button class="toggle" data-table="t-fpx">Table</button>
       <div class="datatable" id="t-fpx"></div>
     </div>
-    <div class="span-5" style="min-width:0">
-      <h2 style="font-size:14px">Cheaper per token, more tokens per task</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+    <div class="span-5">
+      <h4>Cheaper per token, more tokens per task</h4>
+      <ul class="note">
         <li><b>Reasoning multiplies tokens.</b> Reasoning models use ~8× the tokens of older models on the same questions, and their output length grows ~5× a year (Epoch). Claude 3.7 Sonnet used 98M output tokens to run Artificial Analysis's index with thinking on, against 6.3M with it off.</li>
         <li><b>Better scores still cost more.</b> The top Artificial Analysis index score rose from 21 to 58 in a year, at ~11× the cost per task (20 Oct 2026). Running frontier models is getting 3–18× more expensive a year (MIT FutureTech), even as each fixed level gets cheaper.</li>
         <li><b>Agents are the new token sink.</b> Agent traffic on OpenRouter grew ~14× from Feb to Aug 2026 (7-day averages), against 2.8× for human traffic (reported by The Decoder). The median OpenAI researcher's coding-agent spend went from $0 to ~$600 a day between Jan and Aug 2026 (Epoch, at list prices).</li>
         <li><b>Efficiency gains cut both ways.</b> At a fixed level, newer models often need fewer tokens: ~27% on FrontierMath took ~43M output tokens with o4-mini (Apr 2025) and ~5M with GPT-5.2 (Dec 2025).</li>
       </ul>
-      <p class="muted" style="margin-top:8px">Epoch's 2026 report measures cost per question, so it can't be joined to the per-token chart above. It also gives no confidence interval, and other methods give 43–58% a quarter. Epoch dates the starting o3 point to Jan 2025 (o3-mini's launch); o3 itself launched in Apr 2025, and we use that date.</p>
+      <p class="fine">Epoch's 2026 report measures cost per question, so it can't be joined to the per-token chart above. It also gives no confidence interval, and other methods give 43–58% a quarter. Epoch dates the starting o3 point to Jan 2025 (o3-mini's launch); o3 itself launched in Apr 2025, and we use that date.</p>
     </div>
   </div>
 </section>
@@ -399,38 +377,38 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 <section id="demand" data-section="demand" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>Demand you can count: tokens, users and businesses that pay</h2>
-      <p class="muted">The answer to "nobody is really using it" is in the counts. Each line is a different measure from a different source, so compare growth within a line, not levels across lines. Solid points are company or agency figures; hollow points are secondary or flagged.</p>
+      <h3 class="card-title">Demand you can count: tokens, users and businesses that pay</h3>
+      <p class="dek">The answer to "nobody is really using it" is in the counts. Each line is a different measure from a different source, so compare growth within a line, not levels across lines. Solid points are company or agency figures; hollow points are secondary or flagged.</p>
     </div>
     <button class="toggle" data-table="t-tok">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+  <div class="kpis">
     <div class="tile"><div class="label">Google, tokens processed per month</div><div class="value">&gt;3.2 quadrillion</div><div class="delta">▲ ~330× in two years (9.7T, Apr 2024)</div><div class="muted">May 2026, all surfaces. Its model APIs alone ran nearly 32B tokens a minute in Q3 (&gt;4× YoY)</div></div>
     <div class="tile"><div class="label">ChatGPT weekly users</div><div class="value">1.2B</div><div class="delta">▲ 12× since Nov 2023 (100M)</div><div class="muted">29 Sep 2026 (OpenAI). Gemini app: &gt;1B monthly users (Aug 2026)</div></div>
     <div class="tile"><div class="label">US businesses paying for AI (Ramp)</div><div class="value">56%</div><div class="delta">▲ from 25% in Jul 2023</div><div class="muted">Sep 2026. Anthropic passed OpenAI in May; in Sep, 43.8% of businesses paid Anthropic and 40.6% OpenAI</div></div>
     <div class="tile"><div class="label">US firms using AI (Census)</div><div class="value">24%</div><div class="delta">▲ from 17.3% in Nov 2025 (new question)</div><div class="muted">1 Nov 2026; 28% expect to within six months. The old question went 3.7% (Sep 2023) → 10.0% (Oct 2025)</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-6" style="min-width:0">
-      <h2 style="font-size:14px">Tokens processed per month, log scale</h2>
-      <p class="muted" style="margin-bottom:6px">Google's all-surfaces total is its own monthly figure, last given in May 2026. Its model-API line and OpenRouter's are converted from per-minute and per-week rates (our conversion). OpenRouter routes traffic across many models, so it's a market sample, not a total.</p>
+  <div class="cols">
+    <div class="span-6">
+      <h4>Tokens processed per month, log scale</h4>
+      <p class="dek">Google's all-surfaces total is its own monthly figure, last given in May 2026. Its model-API line and OpenRouter's are converted from per-minute and per-week rates (our conversion). OpenRouter routes traffic across many models, so it's a market sample, not a total.</p>
       <div class="legend" id="lg-tok"></div>
       <div id="c-tok"></div>
       <div class="datatable" id="t-tok"></div>
     </div>
-    <div class="span-6" style="min-width:0">
-      <h2 style="font-size:14px">Who's using it: firms, paying businesses and workers</h2>
-      <p class="muted" style="margin-bottom:6px">US. Three surveys of three populations, so the levels differ by design. The Census reworded its question in Nov 2025, which lifted its rate ~7 points at once; that jump isn't adoption. Ramp covers its own &gt;85,000 customers, not a random sample.</p>
+    <div class="span-6">
+      <h4>Who's using it: firms, paying businesses and workers</h4>
+      <p class="dek">US. Three surveys of three populations, so the levels differ by design. The Census reworded its question in Nov 2025, which lifted its rate ~7 points at once; that jump isn't adoption. Ramp covers its own &gt;85,000 customers, not a random sample.</p>
       <div class="legend" id="lg-adopt"></div>
       <div id="c-adopt"></div>
-      <button class="toggle" data-table="t-adopt" style="margin-top:4px">Table</button>
+      <button class="toggle" data-table="t-adopt">Table</button>
       <div class="datatable" id="t-adopt"></div>
     </div>
   </div>
-  <div class="grid" style="gap:24px;margin-top:8px">
-    <div class="span-6" style="min-width:0">
-      <h2 style="font-size:14px">Users and seats, latest company figures</h2>
-      <table style="margin-top:6px">
+  <div class="cols">
+    <div class="span-6">
+      <h4>Users and seats, latest company figures</h4>
+      <div class="tscroll"><table>
         <thead><tr><th>Product</th><th>Measure</th><th class="num">Latest</th><th class="num">About a year earlier</th></tr></thead>
         <tbody>
           <tr><td>ChatGPT</td><td>weekly users</td><td class="num">1.2B<div class="muted">29 Sep 2026</div></td><td class="num">~700M<div class="muted">Aug 2025</div></td></tr>
@@ -441,12 +419,12 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
           <tr><td>US adults (Pew)</td><td>have used ChatGPT</td><td class="num">44%<div class="muted">Feb 2026</div></td><td class="num">34%<div class="muted">2025</div></td></tr>
           <tr><td>US workers (St. Louis Fed)</td><td>use gen AI for their job</td><td class="num">40.5%<div class="muted">Q3 2026</div></td><td class="num">37.4%<div class="muted">Q3 2025</div></td></tr>
         </tbody>
-      </table>
-      <p class="muted" style="margin-top:6px">Weekly and monthly users aren't comparable, and Google and Meta don't publish their definitions. Meta's count includes Meta AI built into its apps. Pew changed its question wording in 2026. Anthropic publishes no consumer user count; its S-1/A lists &gt;11,900 customers paying over $100K a year.</p>
+      </table></div>
+      <p class="fine">Weekly and monthly users aren't comparable, and Google and Meta don't publish their definitions. Meta's count includes Meta AI built into its apps. Pew changed its question wording in 2026. Anthropic publishes no consumer user count; its S-1/A lists &gt;11,900 customers paying over $100K a year.</p>
     </div>
-    <div class="span-6" style="min-width:0">
-      <h2 style="font-size:14px">Counting honestly</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+    <div class="span-6">
+      <h4>Counting honestly</h4>
+      <ul class="note">
         <li><b>Enterprise spend is growing fast, but the yardstick moves.</b> Menlo Ventures puts spending on using AI at a $176.8B annual rate in Sep 2026, against $33B for 2025. Its new definition adds frontier-model inference and software converting to AI, and each edition restates the past (2024: $13.8B → $11.5B → $8.5B), so the ~5× isn't like-for-like.</li>
         <li><b>The "95% of pilots fail" study measured something narrow.</b> MIT NANDA (Jul 2025) found no measurable P&amp;L impact ~6 months after task-specific enterprise pilots, from 52 interviews and 153 survey responses. Generic chatbots went from pilot to deployment ~83% of the time. The report calls itself preliminary.</li>
         <li><b>Adoption isn't a straight line.</b> Ramp's index sat at 43.5–44.5% from Aug to Dec 2025, and OpenAI's share of businesses has been flat at ~40% since Jul 2025. Census large-firm use fell from 14.9% to 8.7% in mid-2025 before recovering. Workers' use of AI at work fell from 45.2% to 40.5% in Q3 2026.</li>
@@ -461,103 +439,103 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 <section id="lab-revenue" data-section="lab-revenue" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>The demand side: OpenAI and Anthropic annualised revenue, 2023–2028E</h2>
-      <p class="muted">Reported revenue run-rate (the current month × 12) in $B, log scale. Solid points are reported figures and hollow points are estimates, targets or single-source reports. Shaded fans are illustrative projections from each company's latest confirmed figure: 1.5× to 3×/yr, with a 2×/yr midline. They are not forecasts.</p>
+      <h3 class="card-title">The demand side: OpenAI and Anthropic annualised revenue, 2023–2028E</h3>
+      <p class="dek">Reported revenue run-rate (the current month × 12) in $B, log scale. Solid points are reported figures and hollow points are estimates, targets or single-source reports. Shaded fans are illustrative projections from each company's latest confirmed figure: 1.5× to 3×/yr, with a 2×/yr midline. They are not forecasts.</p>
     </div>
     <button class="toggle" data-table="t-rev">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+  <div class="kpis">
     <div class="tile"><div class="label">Anthropic run-rate (Jul 2026)</div><div class="value">$65B</div><div class="delta">▲ ~13× vs Jul 2025 ($5B)</div></div>
     <div class="tile"><div class="label">OpenAI run-rate (Sep 2026, net)</div><div class="value">~$50B</div><div class="delta">▲ ~3.8× vs Aug 2025 ($13B)</div><div class="muted">~$70B counted the way Anthropic counts</div></div>
     <div class="tile"><div class="label">Combined run-rate</div><div class="value">~$115B</div><div class="muted">≈ ⅙ of 2026 Big 4 capex (~$730B)</div></div>
     <div class="tile"><div class="label">Anthropic passes OpenAI</div><div class="value">~Apr 2026</div><div class="muted">On reported run-rates. The two count partner sales differently.</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-8" style="min-width:0">
+  <div class="cols">
+    <div class="span-8">
       <div class="legend" id="lg-rev"></div>
       <div id="c-rev"></div>
       <div class="datatable" id="t-rev"></div>
     </div>
-    <div class="span-4" style="min-width:0">
-      <h2 style="font-size:14px">Booked revenue (calendar year)</h2>
-      <p class="muted" style="margin-bottom:6px">Run-rates are snapshots. The revenue each company actually booked is lower.</p>
-      <table>
+    <div class="span-4">
+      <h4>Booked revenue (calendar year)</h4>
+      <p class="dek">Run-rates are snapshots. The revenue each company actually booked is lower.</p>
+      <div class="tscroll"><table>
         <thead><tr><th></th><th class="num">2024</th><th class="num">2025</th><th class="num">2026</th></tr></thead>
         <tbody>
-          <tr><td><i class="sw" style="background:var(--s1);margin-right:6px"></i>OpenAI</td><td class="num">$3.7B</td><td class="num">$13.1B</td><td class="num">~$36B<div class="muted">forecast; H1 $12.4B</div></td></tr>
-          <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td class="num">~$0.4B<div class="muted">implied</div></td><td class="num">$4.6B</td><td class="num">$33.2B<div class="muted">Jan–Sep; Q3 $17.0B</div></td></tr>
+          <tr><td><i class="sw" style="background:var(--s1)"></i>OpenAI</td><td class="num">$3.7B</td><td class="num">$13.1B</td><td class="num">~$36B<div class="muted">forecast; H1 $12.4B</div></td></tr>
+          <tr><td><i class="sw" style="background:var(--s2)"></i>Anthropic</td><td class="num">~$0.4B<div class="muted">implied</div></td><td class="num">$4.6B</td><td class="num">$33.2B<div class="muted">Jan–Sep; Q3 $17.0B</div></td></tr>
         </tbody>
-      </table>
-      <p class="muted" style="margin-top:6px">OpenAI's 2024 figure is from the CFO via Reuters, and 2025 is from leaked audited accounts (Fortune/FT). Its 2026 forecast is internal (FT) and its H1 2026 figure is from the WSJ. Anthropic's numbers are from its S-1/A (filed 2 Nov). Its 2024 figure is implied by "~12× growth" in 2025.</p>
-      <h2 style="font-size:14px;margin-top:16px">What the latest filings show</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+      </table></div>
+      <p class="fine">OpenAI's 2024 figure is from the CFO via Reuters, and 2025 is from leaked audited accounts (Fortune/FT). Its 2026 forecast is internal (FT) and its H1 2026 figure is from the WSJ. Anthropic's numbers are from its S-1/A (filed 2 Nov). Its 2024 figure is implied by "~12× growth" in 2025.</p>
+      <h4>What the latest filings show</h4>
+      <ul class="note">
         <li><b>Anthropic Q3 revenue: $16.96B</b>, 12.3× Q3 2025 and +47% on Q2. Annualised, that is ~$68B, so the reported $80B+ October run-rate is plausible. The S-1/A leaves that line blank.</li>
         <li><b>Close to break-even before non-cash items.</b> Q3 operating loss was $0.57B (−3% margin) and adjusted operating margin was 15%. Compute is ~58% of revenue. Most of the $104B Jan–Sep net loss ($94B) is fair-value changes on notes and SAFEs.</li>
         <li><b>Customers keep expanding.</b> Net revenue retention is ~900%. More than 11,900 customers pay over $100K a year, up from more than 950 a year earlier. The top 5 are ~25% of revenue. Anthropic held $132B of cash and short-term investments at 30 Sep.</li>
         <li><b>OpenAI:</b> Brockman (4 Nov) said annualised revenue grew ~70% in Q3 and enterprise is now the majority, after a "pretty rough" H1. Microsoft's 10-Q shows $10.0B of Sep-quarter revenue from OpenAI arrangements.</li>
       </ul>
-      <h2 style="font-size:14px;margin-top:16px">Company projections on record</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+      <h4>Company projections on record</h4>
+      <ul class="note">
         <li><b>OpenAI:</b> ≥$70B run-rate by end of 2026 (Bloomberg), and revenue of ~$36B in 2026 rising to ~$350B in 2030 (FT, July 2026 deck). That plan also burns ~$278B of cash over 2026–30.</li>
         <li><b>Anthropic:</b> in late 2025 it targeted a $20–26B run-rate in 2026 and up to $70B of revenue in 2028 (Reuters, The Information). It passed both run-rate levels by mid-2026.</li>
         <li><b>Epoch AI trend (Feb 2026):</b> OpenAI growing ~3.4×/yr and Anthropic ~10×/yr (~7× since mid-2025). Epoch calls straight-line extrapolation "aggressive".</li>
       </ul>
     </div>
   </div>
-  <h2 style="font-size:14px;margin-top:20px">Funding and valuation: what investors pay per dollar of run-rate</h2>
-  <p class="muted" style="margin-bottom:6px">Post-money valuation divided by the nearest reported run-rate at the time of the round. The multiple has compressed as revenue outgrew valuations. Italic rows are press reports, not company announcements.</p>
-  <table>
+  <h4>Funding and valuation: what investors pay per dollar of run-rate</h4>
+  <p class="dek">Post-money valuation divided by the nearest reported run-rate at the time of the round. The multiple has compressed as revenue outgrew valuations. Italic rows are press reports, not company announcements.</p>
+  <div class="tscroll"><table class="wide">
     <thead><tr><th>Lab</th><th>Round</th><th class="num">Raised</th><th class="num">Valuation</th><th class="num">Run-rate then</th><th class="num">Valuation ÷ run-rate</th></tr></thead>
     <tbody>
-      <tr><td><i class="sw" style="background:var(--s1);margin-right:6px"></i>OpenAI</td><td>Employee share sale, Oct 2025</td><td class="num">$6.6B<div class="muted">secondary</div></td><td class="num">$500B</td><td class="num">~$13B<div class="muted">Aug 2025</div></td><td class="num">~38×</td></tr>
-      <tr><td><i class="sw" style="background:var(--s1);margin-right:6px"></i>OpenAI</td><td>Primary round, Mar 2026 (Amazon $50B, SoftBank $30B, Nvidia ~$30B reported, others)</td><td class="num">$122B</td><td class="num">$852B</td><td class="num">~$24B<div class="muted">"$2B/month"</div></td><td class="num">~35×</td></tr>
-      <tr><td><i class="sw" style="background:var(--s1);margin-right:6px"></i>OpenAI</td><td><i>First close, Nov 2026 (SoftBank, MGX). Cut from a $30B target at $1.4–1.5T</i></td><td class="num"><i>$11B</i><div class="muted">~$20B expected</div></td><td class="num"><i>$1.25T</i><div class="muted">pre/post not stated</div></td><td class="num">~$50B<div class="muted">net, Sep 2026</div></td><td class="num">~25×<div class="muted">~18× on gross</div></td></tr>
-      <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td>Series F, Sep 2025</td><td class="num">$13B</td><td class="num">$183B</td><td class="num">~$5B<div class="muted">Aug 2025</div></td><td class="num">~37×</td></tr>
-      <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td>Series G, Feb 2026</td><td class="num">$30B</td><td class="num">$380B</td><td class="num">$14B</td><td class="num">~27×</td></tr>
-      <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td>Series H, May 2026 (Altimeter, Dragoneer, Greenoaks, Sequoia)</td><td class="num">$65B</td><td class="num">$965B</td><td class="num">$47B</td><td class="num">~21×</td></tr>
-      <tr><td><i class="sw" style="background:var(--s2);margin-right:6px"></i>Anthropic</td><td><i>IPO talk, Nov 2026 (Nasdaq: ANT; pricing reported ~19–20 Nov). Down from ~$2T a month earlier</i></td><td class="num">–</td><td class="num"><i>$1.0–1.5T</i></td><td class="num">$65B<div class="muted">Jul 2026</div></td><td class="num">~15–23×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s1)"></i>OpenAI</td><td>Employee share sale, Oct 2025</td><td class="num">$6.6B<div class="muted">secondary</div></td><td class="num">$500B</td><td class="num">~$13B<div class="muted">Aug 2025</div></td><td class="num">~38×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s1)"></i>OpenAI</td><td>Primary round, Mar 2026 (Amazon $50B, SoftBank $30B, Nvidia ~$30B reported, others)</td><td class="num">$122B</td><td class="num">$852B</td><td class="num">~$24B<div class="muted">"$2B/month"</div></td><td class="num">~35×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s1)"></i>OpenAI</td><td><i>First close, Nov 2026 (SoftBank, MGX). Cut from a $30B target at $1.4–1.5T</i></td><td class="num"><i>$11B</i><div class="muted">~$20B expected</div></td><td class="num"><i>$1.25T</i><div class="muted">pre/post not stated</div></td><td class="num">~$50B<div class="muted">net, Sep 2026</div></td><td class="num">~25×<div class="muted">~18× on gross</div></td></tr>
+      <tr><td><i class="sw" style="background:var(--s2)"></i>Anthropic</td><td>Series F, Sep 2025</td><td class="num">$13B</td><td class="num">$183B</td><td class="num">~$5B<div class="muted">Aug 2025</div></td><td class="num">~37×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s2)"></i>Anthropic</td><td>Series G, Feb 2026</td><td class="num">$30B</td><td class="num">$380B</td><td class="num">$14B</td><td class="num">~27×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s2)"></i>Anthropic</td><td>Series H, May 2026 (Altimeter, Dragoneer, Greenoaks, Sequoia)</td><td class="num">$65B</td><td class="num">$965B</td><td class="num">$47B</td><td class="num">~21×</td></tr>
+      <tr><td><i class="sw" style="background:var(--s2)"></i>Anthropic</td><td><i>IPO talk, Nov 2026 (Nasdaq: ANT; first trading reported for ~19–20 Nov). Down from ~$2T a month earlier</i></td><td class="num">–</td><td class="num"><i>$1.0–1.5T</i></td><td class="num">$65B<div class="muted">Jul 2026</div></td><td class="num">~15–23×</td></tr>
     </tbody>
-  </table>
-  <p class="muted" style="margin-top:6px">The Nov 2026 OpenAI figures come from Bloomberg and Reuters (anonymous sources). OpenAI hasn't announced them. Anthropic's IPO range combines the FT and Reuters (~$1.5T), Bloomberg investor estimates ($1.1–1.3T) and a WSJ shareholder (~$1T). The S-1/A has no price range yet (no new amendment by 9 Nov). On 7 Nov investors told CNBC $1.5T was a "stretch" and $1.0–1.25T more likely, with a raise of up to $100B, possibly ~$80B, and the roadshow starting the week of 9 Nov (The Information/CNBC, anonymous). OpenAI's multiple is on net revenue, so it reads high next to Anthropic's gross figure.</p>
+  </table></div>
+  <p class="fine">The Nov 2026 OpenAI figures come from Bloomberg and Reuters (anonymous sources). OpenAI hasn't announced them. Anthropic's IPO range combines the FT and Reuters (~$1.5T), Bloomberg investor estimates ($1.1–1.3T) and a WSJ shareholder (~$1T). The S-1/A has no price range yet (no new amendment on EDGAR by 10 Nov). Late on 9 Nov Reuters reported that Anthropic emailed bankers a filing showing ~867M shares at $70–80, then retracted it, saying the pricing details were inaccurate, so those terms aren't used here. The FT (8 Nov, via Seeking Alpha) put the target at $1.25–1.75T with a raise of $80–100B, above the Bloomberg and WSJ figures. On 7 Nov investors told CNBC $1.5T was a "stretch" and $1.0–1.25T more likely, with a raise of up to $100B, possibly ~$80B, and the roadshow starting the week of 9 Nov (The Information/CNBC, anonymous). OpenAI's multiple is on net revenue, so it reads high next to Anthropic's gross figure.</p>
 </section>
 
 <!-- METR + AUTOMATION -->
 <section id="autonomy" data-section="autonomy" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>How long a task can AI handle on its own, and what work it's taking on</h2>
-      <p class="muted">METR's "time horizon" is how long the software, ML and cybersecurity tasks a model can finish 50% of the time take a skilled human. Log scale, by model release date. Then Anthropic's usage data on which work is actually being handed to AI.</p>
+      <h3 class="card-title">How long a task can AI handle on its own, and what work it's taking on</h3>
+      <p class="dek">METR's "time horizon" is how long the software, ML and cybersecurity tasks a model can finish 50% of the time take a skilled human. Log scale, by model release date. Then Anthropic's usage data on which work is actually being handed to AI.</p>
     </div>
     <button class="toggle" data-table="t-metr">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+  <div class="kpis">
     <div class="tile"><div class="label">Longest horizon measured (50% success)</div><div class="value">~17 h</div><div class="muted">Claude Mythos Preview (early), Apr 2026. CI 8.5–55 h, above METR's 16 h reliability limit. METR's May 2026 report puts the public frontier at ~12 h and internal models at ≥16 h</div></div>
     <div class="tile"><div class="label">Same model at 80% success</div><div class="value">~3 h</div><div class="muted">Reliability lags raw capability by ~5×</div></div>
     <div class="tile"><div class="label">Doubling time since 2023</div><div class="value">~4.2 months</div><div class="delta">▲ ≈ 7× per year</div><div class="muted">~3.5 months (105 days) for models released since 2024 (METR, May 2026). ~6 months over 2019–2026</div></div>
     <div class="tile"><div class="label">GPT-4 (Mar 2023) → frontier (Apr 2026)</div><div class="value">4 min → 17 h</div><div class="delta">▲ ~260× in 3 years</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-8" style="min-width:0">
+  <div class="cols">
+    <div class="span-8">
       <div class="legend"><span><i class="sw" style="background:var(--s1);border-radius:50%"></i>New frontier model</span><span><i class="sw" style="background:var(--neutral);border-radius:50%"></i>Other model</span><span><i class="sw line" style="background:var(--text-muted)"></i>Trend since 2023, doubling every ~129 days<span id="metr-trend-note"></span></span></div>
       <div id="c-metr"></div>
       <div class="datatable" id="t-metr"></div>
-      <ul class="note" style="padding-left:18px;margin:10px 0 0">
+      <ul class="note">
         <li><b>Not the same as "can do any 17-hour job."</b> METR's tasks are well specified and scored automatically. Real work is messier, and METR says a 50% horizon of X hours "does not mean we can delegate tasks under X hours to AIs."</li>
         <li><b>The benchmark has run out of road.</b> METR says frontier agents "essentially saturated" Time Horizon 1.1 (May 2026), and at least 16% of successful runs on 8h+ tasks were illegitimate. The page stopped updating in Sep 2026, and the last model was added in May. METR's one later attempt, GPT-5.6 Sol (Jun 2026), gave ~11 h (CI 5–40 h) counting cheating as failure and &gt;270 h counting it as success; METR calls neither robust. It now tests new models (GPT-6, Claude Opus 5.5) on AI R&amp;D tasks, and its 5 Nov assessment puts overall progress at "around twice" the Mar 2024–Oct 2025 rate.</li>
         <li><b>The skill profile is jagged.</b> Maths, science Q&amp;A and coding show similar horizons that double every 2–6 months. Visual computer use is 40–100× shorter but improving at a similar rate. Self-driving improves much more slowly, at ~0.6 doublings a year (METR, Jul 2025).</li>
       </ul>
     </div>
-    <div class="span-4" style="min-width:0">
-      <h2 style="font-size:14px">Who's automating vs. collaborating</h2>
-      <p class="muted" style="margin-bottom:4px">Share of conversations that delegate the task outright (automation) vs. iterate with the AI (augmentation). Anthropic Economic Index.</p>
-      <div class="muted" style="margin-top:8px">Claude.ai, people (Nov 2025)</div>
+    <div class="span-4">
+      <h4>Who's automating vs. collaborating</h4>
+      <p class="dek">Share of conversations that delegate the task outright (automation) vs. iterate with the AI (augmentation). Anthropic Economic Index.</p>
+      <div class="seg-label">Claude.ai, people (Nov 2025)</div>
       <div class="seg" id="seg-ai-chat"></div>
-      <div class="muted">API, businesses building on Claude (Aug 2025)</div>
+      <div class="seg-label">API, businesses building on Claude (Aug 2025)</div>
       <div class="seg" id="seg-ai-api"></div>
-      <p class="muted" style="margin:0 0 6px">Anthropic's Mar 2026 report (Feb data) says API automation then "decreased sharply" and Claude.ai augmentation rose slightly. It shows the new shares only in charts, so the bars keep the older figures. No Economic Index report has come out since Jun 2026.</p>
+      <p class="fine">Anthropic's Mar 2026 report (Feb data) says API automation then "decreased sharply" and Claude.ai augmentation rose slightly. It shows the new shares only in charts, so the bars keep the older figures. No Economic Index report has come out since Jun 2026.</p>
       <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>Automation</span><span><i class="sw" style="background:var(--s3)"></i>Augmentation</span><span><i class="sw" style="background:var(--neutral)"></i>Other</span></div>
-      <h2 style="font-size:14px;margin-top:14px">What's being handed off</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+      <h4>What's being handed off</h4>
+      <ul class="note">
         <li><b>Software comes first.</b> Computer &amp; maths work is ~34% of Claude.ai conversations and ~46% of API traffic. The single most common API task is fixing bugs in code, about 1 in 10 records.</li>
         <li><b>Back-office work comes next.</b> Office &amp; admin support is 13% of API traffic, up 3 points in three months. Examples: email triage and replies, invoice processing, CRM, scheduling, B2B sales emails.</li>
         <li><b>The time compression is large.</b> Tasks people estimate at ~3 h without AI take ~15 min with Claude. On the API, ~1.7 h of work runs in ~5 min.</li>
@@ -567,87 +545,98 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
       </ul>
     </div>
   </div>
-  <div class="grid" style="gap:24px;margin-top:8px">
-    <div class="span-7" style="min-width:0">
-      <h2 style="font-size:14px">After METR: two task-success series that are still moving</h2>
-      <p class="muted" style="margin-bottom:6px">Best result at each date, % of tasks. <b>GDPval</b> (OpenAI) has experts grade work products from 44 occupations; the score is how often the model's output wins or ties against an industry expert's. <b>Remote Labor Index</b> (Scale AI and CAIS) is the share of 240 real freelance projects done to a standard a client would accept. The gap between the two lines is the gap between well-specified tasks and messy real jobs.</p>
+  <div class="cols">
+    <div class="span-7">
+      <h4>After METR: two task-success series that are still moving</h4>
+      <p class="dek">Best result at each date, % of tasks. <b>GDPval</b> (OpenAI) has experts grade work products from 44 occupations; the score is how often the model's output wins or ties against an industry expert's. <b>Remote Labor Index</b> (Scale AI and CAIS) is the share of 240 real freelance projects done to a standard a client would accept. The gap between the two lines is the gap between well-specified tasks and messy real jobs. It narrowed sharply on 9 Nov, when Claude Fable 5.2 took the Remote Labor Index from 21% to 41%.</p>
       <div id="c-bench"></div>
-      <button class="toggle" data-table="t-bench" style="margin-top:4px">Table</button>
+      <button class="toggle" data-table="t-bench">Table</button>
       <div class="datatable" id="t-bench"></div>
-      <p class="muted" style="margin-top:6px">GDPval figures after Sep 2025 are OpenAI's own evaluations from its launch pages. From GPT-5.6 on, OpenAI reports Elo scores instead, which can't be compared with win rates. The RLI is graded by people; its automated grader overstated new models 2.3–2.9×.</p>
+      <p class="fine">GDPval figures after Sep 2025 are OpenAI's own evaluations from its launch pages. From GPT-5.6 on, OpenAI reports Elo scores instead, which can't be compared with win rates. The RLI is graded by people; its automated grader overstated new models 2.3–2.9×.</p>
     </div>
-    <div class="span-5" style="min-width:0">
-      <h2 style="font-size:14px">Epoch Capabilities Index, top models (8 Nov 2026)</h2>
-      <p class="muted" style="margin-bottom:6px">Epoch's composite of many benchmarks. The frontier has risen ~14 points a year since reasoning models arrived (Sep 2024), up from ~6 before. At launch, Epoch said ~5 points was roughly one METR time-horizon doubling.</p>
-      <table>
+    <div class="span-5">
+      <h4>Epoch Capabilities Index, top models (10 Nov 2026)</h4>
+      <p class="dek">Epoch's composite of many benchmarks. The frontier has risen ~14 points a year since reasoning models arrived (Sep 2024), up from ~6 before. At launch, Epoch said ~5 points was roughly one METR time-horizon doubling.</p>
+      <div class="tscroll"><table>
         <thead><tr><th>Model</th><th>Released</th><th class="num">ECI</th></tr></thead>
         <tbody>
-          <tr><td>GPT-6 Astra</td><td>3 Sep 2026</td><td class="num">169.1</td></tr>
+          <tr><td>Claude Fable 5.2</td><td>9 Nov 2026</td><td class="num">174.2</td></tr>
+          <tr><td>GPT-6 Astra</td><td>3 Sep 2026</td><td class="num">169.2</td></tr>
           <tr><td>GPT-6.1 Sol</td><td>29 Sep 2026</td><td class="num">168.9</td></tr>
-          <tr><td>Claude Opus 5.5</td><td>22 Sep 2026</td><td class="num">168.4</td></tr>
-          <tr><td>GPT-6.1 Terra</td><td>26 Oct 2026</td><td class="num">167.8</td></tr>
-          <tr><td>Claude Fable 5.1</td><td>1 Sep 2026</td><td class="num">166.9</td></tr>
+          <tr><td>Claude Opus 5.5</td><td>22 Sep 2026</td><td class="num">168.7</td></tr>
+          <tr><td>GPT-6.1 Terra</td><td>26 Oct 2026</td><td class="num">168.1</td></tr>
+          <tr><td>Claude Fable 5.1</td><td>1 Sep 2026</td><td class="num">167.0</td></tr>
           <tr><td>Gemini 4 Argon <span class="muted">(limited access)</span></td><td>30 Sep 2026</td><td class="num">166.5</td></tr>
           <tr><td class="muted">A year earlier: GPT-5 Pro</td><td class="muted">2025</td><td class="num muted">151.2</td></tr>
         </tbody>
-      </table>
-      <p class="muted" style="margin-top:6px">The top scores' confidence intervals overlap (Astra 166.2–172.3), and scores shift each time Epoch refits the index. Mythos-class models aren't in it. Anthropic's internal "AECI" is a different fork of the index and isn't comparable.</p>
+      </table></div>
+      <p class="fine">Claude Fable 5.2 took the top score at its 9 Nov launch. Its confidence interval (170.1–178.8) still overlaps GPT-6 Astra's (166.2–172.5), and scores shift each time Epoch refits the index: the other models moved by up to 0.3 points since 8 Nov. Mythos-class models aren't in it. Anthropic's internal "AECI" is a different fork of the index and isn't comparable.</p>
     </div>
   </div>
 </section>
+
+</div>
+
+<header class="chapter" id="ch-markets">
+  <div class="ch-num">05</div>
+  <div><h2>The market tests</h2><p>Three checks on the story: what a GPU-hour rents for, what credit markets charge, and how circular the money is.</p></div>
+  <nav class="ch-links" aria-label="In this chapter"><a href="#gpu">GPU rental rates</a><a href="#credit">Credit stress</a><a href="#circular">Circular deals</a></nav>
+</header>
+
+<div class="grid">
 
 <!-- GPU RENTAL RATES -->
 <section id="gpu" data-section="gpu" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>Fundamentals check: what GPUs actually rent for</h2>
-      <p class="muted">The price of an hour of GPU time is the cash-flow reality underneath the AI equity and credit trade. If GPUs were overbuilt, rental rates would be falling. Since late 2025 they've been rising for every chip generation. Main series: Silicon Data's daily neocloud (non-hyperscaler) rental indices, $ per GPU-hour. Price levels vary 2–5× by source and method, so compare trends within a series, not levels across series.</p>
+      <h3 class="card-title">Fundamentals check: what GPUs actually rent for</h3>
+      <p class="dek">The price of an hour of GPU time is the cash-flow reality underneath the AI equity and credit trade. If GPUs were overbuilt, rental rates would be falling. Since late 2025 they've been rising for every chip generation. Main series: Silicon Data's daily neocloud (non-hyperscaler) rental indices, $ per GPU-hour. Price levels vary 2–5× by source and method, so compare trends within a series, not levels across series.</p>
     </div>
     <button class="toggle" data-table="t-gpu">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+  <div class="kpis">
     <div class="tile"><div class="label">H100 rental index (neocloud)</div><div class="value">$3.01/hr</div><div class="delta">+50% from the $2.00 low (9 Dec 2025)</div><div class="muted">Silicon Data, 9 Nov. Ornn's executed-trade index: $3.37 (8 Nov). SemiAnalysis 1-yr contracts: $1.70 (Oct 2025) → $2.35 (Mar 2026)</div></div>
-    <div class="tile"><div class="label">B200 · B300 rental index</div><div class="value">$6.84 · $7.68</div><div class="delta">B200 +55% YTD · B300 ~+59% since Apr launch</div><div class="muted">9 Nov. B200 +15% in four weeks (Silicon Data's own "7D" labels don't match its daily tables). Ornn B200: $9.94 (+33% in a month)</div></div>
+    <div class="tile"><div class="label">B200 · B300 rental index</div><div class="value">$6.84 · $7.68</div><div class="delta">B200 +55% YTD · B300 ~+59% since Apr launch</div><div class="muted">9 Nov. B200 +15% in four weeks (Silicon Data's "7D" label is really the change across its 30-day table). Ornn B200: $9.94 (+33% in a month)</div></div>
     <div class="tile"><div class="label">Hyperscaler H100, on-demand</div><div class="value">~$6.9–7.5/hr</div><div class="muted">AWS p5 is $6.88/GPU after its 44% cut in Jun 2025. Silicon Data's hyperscaler index held $7.40–7.55 Mar–May 2026, ~2.5× neocloud</div></div>
     <div class="tile"><div class="label">List prices going up, not down</div><div class="value">5 hikes</div><div class="muted">AWS Capacity Blocks +15% (Jan 2026). RunPod H100 $3.29 → $3.99. Lambda twice in 2026 (8× B200 $4.99 → $6.69 → $7.69). Nebius B200 $7.15 → $8.50 (1 Oct)</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-8" style="min-width:0">
-      <h2 style="font-size:14px">Neocloud GPU rental indices, May 2025 – Nov 2026 ($/GPU-hr)</h2>
-      <p class="muted" style="margin-bottom:6px">Dated prints from Silicon Data's index page, blog updates and its 6 Nov chart, not the full daily series. Hollow points are read off that chart by eye, come from before Silicon Data's reported Dec 2025 restatement (H100 history moved by about −4–6%), or are secondary. Dashed segments span months with no print.</p>
+  <div class="cols">
+    <div class="span-8">
+      <h4>Neocloud GPU rental indices, May 2025 – Nov 2026 ($/GPU-hr)</h4>
+      <p class="dek">Dated prints from Silicon Data's index page, blog updates and its 6 Nov chart, not the full daily series. Hollow points are read off that chart by eye, come from before Silicon Data's reported Dec 2025 restatement (H100 history moved by about −4–6%), or are secondary. Dashed segments span months with no print.</p>
       <div class="legend" id="lg-gpu"></div>
       <div id="c-gpu"></div>
       <div class="datatable" id="t-gpu"></div>
     </div>
-    <div class="span-4" style="min-width:0">
-      <h2 style="font-size:14px">Change from each series' base</h2>
-      <table style="margin-top:6px">
+    <div class="span-4">
+      <h4>Change from each series' base</h4>
+      <div class="tscroll"><table>
         <thead><tr><th>GPU</th><th class="num">From</th><th class="num">Now</th><th class="num">Change</th></tr></thead>
         <tbody id="gpu-chg"></tbody>
-      </table>
-      <h2 style="font-size:14px;margin-top:16px">The long view: the 2023–25 slide came first</h2>
-      <p class="muted" style="margin-bottom:6px">SemiAnalysis H100 spot-contract composite (public preview; full series paywalled). It's a different method, so it's flatter through 2026 than Silicon Data. 2023 shortage contracts reportedly topped $8/hr (Latent Space, single-sourced).</p>
+      </table></div>
+      <h4>The long view: the 2023–25 slide came first</h4>
+      <p class="dek">SemiAnalysis H100 spot-contract composite (public preview; full series paywalled). It's a different method, so it's flatter through 2026 than Silicon Data. 2023 shortage contracts reportedly topped $8/hr (Latent Space, single-sourced).</p>
       <div id="c-gpul"></div>
-      <button class="toggle" data-table="t-gpul" style="margin-top:4px">Table</button>
+      <button class="toggle" data-table="t-gpul">Table</button>
       <div class="datatable" id="t-gpul"></div>
     </div>
   </div>
-  <div class="grid" style="gap:24px;margin-top:8px">
-    <div class="span-7" style="min-width:0">
-      <h2 style="font-size:14px">Same chip, different price: early Nov 2026, $/GPU-hr</h2>
-      <table style="margin-top:6px">
+  <div class="cols">
+    <div class="span-7">
+      <h4>Same chip, different price: early Nov 2026, $/GPU-hr</h4>
+      <div class="tscroll"><table>
         <thead><tr><th>Source and method</th><th class="num">H100</th><th class="num">H200</th><th class="num">B200</th></tr></thead>
         <tbody id="gpu-snap"></tbody>
-      </table>
-      <p class="muted" style="margin-top:6px">Spot runs ~55–65% of on-demand (GetDeploying). Term discounts are modest at neoclouds: Together's 91–180-day H100 is 20% below on-demand. Big interconnected clusters cost more per GPU than single nodes (Lambda's 1-Click Clusters run $5.54–6.16 vs $4.59).</p>
+      </table></div>
+      <p class="fine">Spot runs ~57% of on-demand overall (H100 59%, H200 71%; GetDeploying, week of 9 Nov). Term discounts are modest at neoclouds: Together's 91–180-day H100 is 20% below on-demand. Big interconnected clusters cost more per GPU than single nodes (Lambda's 1-Click Clusters run $5.54–6.16 vs $4.59).</p>
     </div>
-    <div class="span-5" style="min-width:0">
-      <h2 style="font-size:14px">What it says about the build-out</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+    <div class="span-5">
+      <h4>What it says about the build-out</h4>
+      <ul class="note">
         <li><b>The market is pricing the future, not today.</b> Rental rates rose through the same months that AI equities sold off and CoreWeave's CDS hit distress. As Silicon Data put it on 6 Nov: the fear is about "the odds of what will happen in the next couple years," not current demand.</li>
         <li><b>Old chips are earning more, not less.</b> A three-year-old H100 rents for ~50% more than a year ago, and SemiAnalysis reports 4-year H100 renewals at close to the original rates. That supports the 5–6-year depreciation the hyperscalers use and cuts against the "GPUs are worthless in 2 years" argument, at least for Hopper.</li>
         <li><b>Payback is back above the hurdle (our inference).</b> Latent Space's 2024 model (~$50k all-in per H100, 5-year life) loses money below ~$1.65/hr and clears ~10% IRR at ~$2.85. The late-2025 trough of $1.70–2.00 sat near the loss line. Today's ~$3 clears the hurdle.</li>
-        <li><b>What would flip it:</b> Rubin-class price-performance (new chips gain ~49%/yr in performance per dollar, per Epoch) resetting Hopper rates; a wave of capacity landing in 2027; or lab revenue slowing. Early tell: GB200 on-demand medians fell 17% in one week (thin sample). Watch for the indices rolling over.</li>
+        <li><b>What would flip it:</b> Rubin-class price-performance (new chips gain ~49%/yr in performance per dollar, per Epoch) resetting Hopper rates; a wave of capacity landing in 2027; or lab revenue slowing. Early tells: GetDeploying's on-demand H100 median fell ~5% in the week of 9 Nov ($3.94 → $3.73, with fewer providers listed), and its GB200 median fell 17% a week earlier and hasn't recovered (four providers). Watch for the indices rolling over.</li>
       </ul>
     </div>
   </div>
@@ -657,51 +646,51 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 <section id="credit" data-section="credit" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>Credit stress monitor: are AI-trade CDS spreads blowing out?</h2>
-      <p class="muted">A credit default swap (CDS) is insurance against a company defaulting on its debt. The spread is the yearly cost, in basis points, of insuring $10,000 of that debt for 5 years (100 bps = $100 a year), so a wider spread means the market sees more default risk. Levels are the latest in the press: CoreWeave as of 9 Nov 2026, the others 28 Oct–6 Nov. Vendors (Solve, S&amp;P Global MI, Markit, ICE, Deutsche Bank) print different levels for the same name, often 10–30 bps apart, so each figure names its source. There's no free CDS feed, so paste terminal data into <code>CDS</code> in <code>data.js</code> when you have it.</p>
+      <h3 class="card-title">Credit stress monitor: are AI-trade CDS spreads blowing out?</h3>
+      <p class="dek">A credit default swap (CDS) is insurance against a company defaulting on its debt. The spread is the yearly cost, in basis points, of insuring $10,000 of that debt for 5 years (100 bps = $100 a year), so a wider spread means the market sees more default risk. Levels are the latest in the press: CoreWeave as reported on 9 Nov 2026 (no print date given), the others 28 Oct–6 Nov. Vendors (Solve, S&amp;P Global MI, Markit, ICE, Deutsche Bank) print different levels for the same name, often 10–30 bps apart, so each figure names its source. There's no free CDS feed, so paste terminal data into <code>CDS</code> in <code>data.js</code> when you have it.</p>
     </div>
     <button class="toggle" data-table="t-cds">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
-    <div class="tile"><div class="label">CoreWeave 5y CDS</div><div class="value">&gt;1,240 bps</div><div class="status" style="--st:var(--st-critical)"><i></i>Distress · record &gt;1,289 on 5 Nov</div><div class="muted">9 Nov (CNBC). ~3.2× a year ago, +50% in a month. Bonds yield 15–16%+, trading ~80c on the dollar</div></div>
+  <div class="kpis">
+    <div class="tile"><div class="label">CoreWeave 5y CDS</div><div class="value">&gt;1,240 bps</div><div class="status" style="--st:var(--st-critical)"><i></i>Distress · record &gt;1,289 on 5 Nov</div><div class="muted">Reported 9 Nov before the US open (CNBC; print date and vendor not given). ~3.2× a year ago, +50% in a month. Bonds yield 15–16%+, trading ~80c on the dollar</div></div>
     <div class="tile"><div class="label">Oracle 5y CDS</div><div class="value">~290–305 bps</div><div class="status" style="--st:var(--st-serious)"><i></i>Priced like junk</div><div class="muted">~2× since end-2025. Rated BBB- (S&amp;P), one notch above junk; Fitch and Moody's affirmed 2 Nov</div></div>
     <div class="tile"><div class="label">Nvidia · Meta 5y CDS</div><div class="value">~139 · ~125 bps</div><div class="status" style="--st:var(--st-warning)"><i></i>Record highs, still investment grade</div><div class="muted">Amazon ~100, Alphabet ~92, Microsoft ~53. Broad IG index (CDX) only 59 → 62 on 5 Nov</div></div>
-    <div class="tile"><div class="label">AI bond supply since 29 Oct</div><div class="value">~$67B</div><div class="muted">Five deals: Microsoft $25B, Meta $15B + €9B, Oracle $10B, Alphabet €6B (Goldman). Hyperscaler debt YTD $296B. CDS trading &gt;$9B/week in Sep</div></div>
+    <div class="tile"><div class="label">AI bond supply since 29 Oct</div><div class="value">~$67B</div><div class="muted">Five deals: Microsoft $25B, Meta $15B + €9B, Oracle $10B, Alphabet €6B (Goldman). Hyperscaler debt YTD $296B; Reuters/LSEG counts &gt;$370B of bonds with Oracle included (6 Nov). CDS trading &gt;$9B/week in Sep</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-7" style="min-width:0">
-      <h2 style="font-size:14px">Latest reported 5-year CDS, bps</h2>
-      <p class="muted" style="margin-bottom:6px">Bars are coloured by credit state. The 1,000 bps line is the level S&amp;P Global calls a sign of distress. Implied default odds (hover) assume 40% recovery. They are risk-neutral, so they overstate real-world odds.</p>
+  <div class="cols">
+    <div class="span-7">
+      <h4>Latest reported 5-year CDS, bps</h4>
+      <p class="dek">Bars are coloured by credit state. The 1,000 bps line is the level S&amp;P Global calls a sign of distress. Implied default odds (hover) assume 40% recovery. They are risk-neutral, so they overstate real-world odds.</p>
       <div id="c-cds"></div>
       <div class="datatable" id="t-cds"></div>
     </div>
-    <div class="span-5" style="min-width:0">
-      <h2 style="font-size:14px">How fast they widened, Oct 2025 – Nov 2026</h2>
-      <p class="muted" style="margin-bottom:6px">Sparse reported prints from mixed vendors, not daily data. Dashed segments span months with no prints. Hollow points are derived from reported % changes.</p>
+    <div class="span-5">
+      <h4>How fast they widened, Oct 2025 – Nov 2026</h4>
+      <p class="dek">Sparse reported prints from mixed vendors, not daily data. Dashed segments span months with no prints. Hollow points are derived from reported % changes or have no stated print date.</p>
       <div class="legend" id="lg-cdst"></div>
       <div id="c-cdst"></div>
     </div>
   </div>
-  <div class="grid" style="gap:24px;margin-top:8px">
-    <div class="span-7" style="min-width:0">
-      <h2 style="font-size:14px">Verdict by company</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
-        <li><b>CoreWeave: yes, blown out.</b> Its spread went from ~855 bps (late Jul) to above 1,000 in mid-October, then to a record above 1,289 on 5 Nov, eased to ~1,155 on 6 Nov (Deutsche Bank via CNBC) and was back above 1,240 on 9 Nov (CNBC, vendor not named). At ~1,155 that implies ~60% risk-neutral odds of default within 5 years. Its four dollar bonds ($7.75B face) trade around 80 cents, yielding ~15–16%. Q3 results on 10 Nov are the next test. It carries more than $51B of debt and obligations, financed against GPU contracts. The ~$104B backlog is the offset, but lenders want operating cash flow, not promises.</li>
+  <div class="cols">
+    <div class="span-7">
+      <h4>Verdict by company</h4>
+      <ul class="note">
+        <li><b>CoreWeave: yes, blown out.</b> Its spread went from ~855 bps (late Jul) to above 1,000 in mid-October, then to a record above 1,289 on 5 Nov and eased to ~1,155 on 6 Nov (Deutsche Bank via CNBC). CNBC reported it "above 1,240" before the US open on 9 Nov, without a print date or vendor, so that level may predate the 6 Nov print. At ~1,155 that implies ~60% risk-neutral odds of default within 5 years. Its four dollar bonds ($7.75B face) trade around 80 cents, yielding ~15–16%. Q3 results on 10 Nov are the next test. It carries more than $51B of debt and obligations, financed against GPU contracts. The ~$104B backlog is the offset, but lenders want operating cash flow, not promises.</li>
         <li><b>Oracle: widening, not distressed.</b> It is still rated investment grade (BBB- since S&amp;P's July cut; Fitch and Moody's affirmed on 2 Nov), but its CDS prices like a BB/B credit at ~290–305. At its 28 Oct Investor Day it capped outside funding for FY27–30 at $20B, and the spread fell 22 bps. It then raised all $20B at once: $10B of stock at an 11% discount and $10B of bonds at 7.0–8.65%. The shares fell ~18% in three days. It has ~$125B of debt, and roughly half its $664B backlog is tied to OpenAI. It is the hinge between the neoclouds and big tech.</li>
         <li><b>Hyperscalers and Nvidia: records, but from a tiny base.</b> ~100 bps is ~8% risk-neutral 5-year odds, which is still strong investment grade. Much of the move is equity investors buying cheap downside hedges on the AI trade. CreditSights calls it "80% driven by technicals and sentiment." The new bond supply (~$67B since 29 Oct) also pushes spreads wider. Meta's equity raise helped for a week. It was reported as $95B, but the filings show a $25B forward share sale (cash only on settlement, by Nov 2027) and ~$12.5B of mandatory convertibles closed on 29 Oct. Its spread is at a record again, and S&amp;P moved its outlook to negative, citing free operating cash flow deficits of $39B in 2026 and $71B in 2027.</li>
         <li><b>Other neoclouds (Nebius, IREN, Applied Digital, Lambda, Crusoe):</b> no liquid single-name CDS shows up in reporting. Watch their bond and convertible yields and share prices instead.</li>
       </ul>
     </div>
-    <div class="span-5" style="min-width:0">
-      <h2 style="font-size:14px">Signals that would mean real contagion</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+    <div class="span-5">
+      <h4>Signals that would mean real contagion</h4>
+      <ul class="note">
         <li>Oracle above ~400 bps, or a downgrade to junk. Investment-grade-only funds would be forced to sell.</li>
         <li>Hyperscaler spreads above ~150–200 bps alongside capex guidance cuts, rather than just hedging volume.</li>
         <li>CoreWeave failing to refinance, or its customers (Microsoft, OpenAI, Meta) renegotiating contracts.</li>
         <li>Data-centre ABS and private-credit marks widening together with the public names.</li>
       </ul>
-      <p class="muted" style="margin-top:8px"><b>The 5 Nov selloff.</b> After the 3 Nov midterms, where Texas elected a governor who ran on a data-centre moratorium, the Nasdaq fell 5.5%, its worst day since April 2025. Nvidia fell 9%, CoreWeave 10%, AMD and Micron ~17%, Nebius and IREN 15–17%. CoreWeave's CDS hit its record that day, but the broad investment-grade CDX index moved only 59 → 62 bps, and the Nasdaq 100 rebounded ~2% on 6 Nov. So far this is equity and single-name stress, not a credit-market event.</p>
-      <p class="muted" style="margin-top:8px">Equity-side warning, 6 Nov: OpenAI's new round came in smaller and cheaper than planned (~$20B at $1.25T, against a $30B target at $1.4–1.5T). Anthropic's IPO talk fell from ~$2T to $1.0–1.5T. The labs owe most of the neocloud and Oracle backlog, so if equity gets harder to raise, those counterparties look weaker.</p>
+      <p class="fine"><b>The 5 Nov selloff.</b> After the 3 Nov midterms, where Texas elected a governor who ran on a data-centre moratorium, the Nasdaq fell 5.5%, its worst day since April 2025. Nvidia fell 9%, CoreWeave 10%, AMD and Micron ~17%, Nebius and IREN 15–17%. CoreWeave's CDS hit its record that day, but the broad investment-grade CDX index moved only 59 → 62 bps, and the Nasdaq 100 rebounded ~2% on 6 Nov and 3.4% on 9 Nov (S&amp;P 500 +2.3%). Nvidia fell 4.2% on 9 Nov on company-specific news, a board inquiry involving its CEO (NBC News). So far this is equity and single-name stress, not a credit-market event.</p>
+      <p class="fine">Equity-side warning, 6 Nov: OpenAI's new round came in smaller and cheaper than planned (~$20B at $1.25T, against a $30B target at $1.4–1.5T). Anthropic's IPO talk fell from ~$2T to $1.0–1.5T. The labs owe most of the neocloud and Oracle backlog, so if equity gets harder to raise, those counterparties look weaker.</p>
     </div>
   </div>
 </section>
@@ -710,30 +699,30 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 <section id="circular" data-section="circular" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>Circular deals: who funds the labs, and who the labs pay</h2>
-      <p class="muted">The "circular financing" critique says AI vendors invest in the labs so the labs can buy their products. This map shows the deals that have been signed, from filings where possible. Ribbon width is proportional to dollars. Hollow, dashed ribbons are conditional: "up to" stakes, cancellable contracts, guarantees and undrawn facilities. ⇄ marks companies on both sides. Financial investors (SoftBank, venture funds) are left out on purpose, because their money isn't circular.</p>
+      <h3 class="card-title">Circular deals: who funds the labs, and who the labs pay</h3>
+      <p class="dek">The "circular financing" critique says AI vendors invest in the labs so the labs can buy their products. This map shows the deals that have been signed, from filings where possible. Ribbon width is proportional to dollars. Hollow, dashed ribbons are conditional: "up to" stakes, cancellable contracts, guarantees and undrawn facilities. ⇄ marks companies on both sides. Financial investors (SoftBank, venture funds) are left out on purpose, because their money isn't circular.</p>
     </div>
     <button class="toggle" data-table="t-flows">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+  <div class="kpis">
     <div class="tile"><div class="label">Firm vendor money into the two labs</div><div class="value">~$134B</div><div class="muted">Equity funded or committed. Another ~$202B is conditional: guarantees, "up to" stakes and undrawn facilities</div></div>
     <div class="tile"><div class="label">Firm compute commitments out</div><div class="value">~$1.15T</div><div class="muted">Plus ~$226B conditional or cancellable. Excludes deals with no $ figure (AMD 6 GW, Broadcom 10 GW, Cerebras 750 MW)</div></div>
     <div class="tile"><div class="label">Vendor money ÷ what the labs owe</div><div class="value">~12%</div><div class="muted">~24% counting the conditional money. Most of the bill has to be paid from revenue and outside investors</div></div>
     <div class="tile"><div class="label">Nvidia's own investing, Feb–Jul 2026</div><div class="value">$42.4B</div><div class="muted">Equity purchases, against $1.2B a year earlier: 24% of revenue and 57% of operating cash flow (our calculation from its 10-Q). It has also agreed to rent back $36B of cloud capacity</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-8" style="min-width:0">
+  <div class="cols">
+    <div class="span-8">
       <div class="legend"><span><i class="sw" style="background:var(--s1)"></i>OpenAI</span><span><i class="sw" style="background:var(--s2)"></i>Anthropic</span><span><i class="sw" style="background:transparent;border:1px dashed var(--text-muted)"></i>Conditional, "up to" or cancellable</span><span>⇄ on both sides</span></div>
       <div id="c-flows"></div>
       <div class="datatable" id="t-flows"></div>
-      <p class="muted" style="margin-top:6px">Nvidia sits only on the left because the labs mostly rent its chips through the clouds on the right, and it owns stakes in several of them. Commitments are minimums or headline values over many years (Anthropic's run to 2036), not annual spend. Anthropic also estimates $125–150B of further TPU capacity for 2028–31 that has no fixed dollar commitment yet, so it isn't shown.</p>
+      <p class="fine">Nvidia sits only on the left because the labs mostly rent its chips through the clouds on the right, and it owns stakes in several of them. Commitments are minimums or headline values over many years (Anthropic's run to 2036), not annual spend. Anthropic also estimates $125–150B of further TPU capacity for 2028–31 that has no fixed dollar commitment yet, so it isn't shown.</p>
     </div>
-    <div class="span-4" style="min-width:0">
-      <h2 style="font-size:14px">Vendor money in vs. commitments back</h2>
-      <p class="muted" style="margin-bottom:6px">For each company on both sides: what it put into the labs, and what the labs have committed to pay it. % = firm money in ÷ firm commitments back.</p>
-      <table><thead><tr><th>Vendor</th><th class="num">In</th><th class="num">Back</th><th class="num">%</th></tr></thead><tbody id="circ-ratio"></tbody></table>
-      <h2 style="font-size:14px;margin-top:16px">How circular is it?</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+    <div class="span-4">
+      <h4>Vendor money in vs. commitments back</h4>
+      <p class="dek">For each company on both sides: what it put into the labs, and what the labs have committed to pay it. % = firm money in ÷ firm commitments back.</p>
+      <div class="tscroll"><table><thead><tr><th>Vendor</th><th class="num">In</th><th class="num">Back</th><th class="num">%</th></tr></thead><tbody id="circ-ratio"></tbody></table></div>
+      <h4>How circular is it?</h4>
+      <ul class="note">
         <li><b>It's real, and it's growing.</b> Compute vendors put up ~66% of OpenAI's $122B round (Amazon $50B, Nvidia ~$30B reported) and ~23% of Anthropic's $65B Series H. Nvidia holds $99B of equity stakes, including $21.0B of SpaceX, $4.7B of CoreWeave and &gt;5% of Nscale, which all sell compute to the labs. It has $108.5B of guarantees outstanding.</li>
         <li><b>But it's a minority of the money.</b> Analysts put the circular share of Nvidia's revenue at under 15% (Goldman, for 2027) or up to 13% (UBS, the OpenAI deal against 2026 estimates). The most aggressive view, New Street's, had Nvidia investing $10B for every $35B of GPUs OpenAI buys.</li>
         <li><b>The revenue behind it is real.</b> Microsoft booked $24.1B of revenue from OpenAI in FY26, against $13B invested. Anthropic booked $33.2B of revenue in Jan–Sep 2026.</li>
@@ -743,29 +732,39 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
   </div>
 </section>
 
+</div>
+
+<header class="chapter" id="ch-limits">
+  <div class="ch-num">06</div>
+  <div><h2>The limits</h2><p>Power is the constraint you can measure, in auction prices, turbine order books and local politics.</p></div>
+  <nav class="ch-links" aria-label="In this chapter"><a href="#power">Power</a><a href="#campuses">Campuses</a></nav>
+</header>
+
+<div class="grid">
+
 <!-- POWER -->
 <section id="power" data-section="power" class="card span-12">
   <div class="card-head">
     <div>
-      <h2>Power: the constraint you can see in prices, order books and queues</h2>
-      <p class="muted">PJM runs the largest US grid (13 states plus DC, including Northern Virginia's data-centre cluster). Each year it auctions capacity, a promise of power three years ahead. That price, gas-turbine order books and interconnection queues are the hardest evidence of how tight power is.</p>
+      <h3 class="card-title">Power: the constraint you can see in prices, order books and queues</h3>
+      <p class="dek">PJM runs the largest US grid (13 states plus DC, including Northern Virginia's data-centre cluster). Each year it auctions capacity, a promise of power three years ahead. That price, gas-turbine order books and interconnection queues are the hardest evidence of how tight power is.</p>
     </div>
     <button class="toggle" data-table="t-pjm">Table</button>
   </div>
-  <div class="hero" style="grid-template-columns: repeat(4, 1fr); margin: 4px 0 16px">
+  <div class="kpis">
     <div class="tile"><div class="label">PJM capacity price, 2028/29</div><div class="value">$325 / MW-day</div><div class="delta">▲ ~11× vs 2024/25 ($28.92)</div><div class="muted">At the price cap for the third auction running, and still 6.8 GW short of target. Uncapped, it would have cleared ≈$555</div></div>
     <div class="tile"><div class="label">Data centres' share of PJM capacity costs</div><div class="value">~46%</div><div class="muted">$29.4bn of the last four auctions' charges, per the market monitor's no-data-centre counterfactual (PJM doesn't endorse it)</div></div>
     <div class="tile"><div class="label">Gas turbines on order or reserved, GE Vernova</div><div class="value">122 GW</div><div class="delta">▲ from 116 GW in Q2</div><div class="muted">64 GW backlog + 58 GW of slot reservations (Q3 2026). Now booking 2032 delivery; 2026 order prices ~50% above 2025</div></div>
     <div class="tile"><div class="label">US data centres' share of electricity</div><div class="value">4.7% → ~12%</div><div class="muted">192 TWh in 2024 to 649 TWh in 2030 (LBNL, Jun 2026; range 9.5–15.3%). EPRI: 9–17% by 2030</div></div>
   </div>
-  <div class="grid" style="gap:24px">
-    <div class="span-7" style="min-width:0">
-      <h2 style="font-size:14px">PJM capacity auction clearing price, by delivery year</h2>
-      <p class="muted" style="margin-bottom:6px">$ per MW-day, RTO zone. The last three auctions cleared at the cap of a price collar agreed with regulators, which runs through 2029/30. The dashed outline is where 2028/29 would have cleared without it. Hover for the data-centre share of each auction's cost. Next auction (2029/30): 9–15 Dec 2026.</p>
+  <div class="cols">
+    <div class="span-7">
+      <h4>PJM capacity auction clearing price, by delivery year</h4>
+      <p class="dek">$ per MW-day, RTO zone. The last three auctions cleared at the cap of a price collar agreed with regulators, which runs through 2029/30. The dashed outline is where 2028/29 would have cleared without it. Hover for the data-centre share of each auction's cost. Next auction (2029/30): 9–15 Dec 2026, with results expected around 22 Dec (ESAI calendar).</p>
       <div id="c-pjm"></div>
       <div class="datatable" id="t-pjm"></div>
-      <h2 style="font-size:14px;margin-top:14px">US forecasts published in 2026</h2>
-      <table style="margin-top:6px">
+      <h4>US forecasts published in 2026</h4>
+      <div class="tscroll"><table>
         <thead><tr><th>Source</th><th>Measure</th><th class="num">Forecast</th></tr></thead>
         <tbody>
           <tr><td>LBNL (Jun 2026)</td><td>Data-centre electricity, 2030</td><td class="num">649 TWh · 11.8%<div class="muted">range 9.5–15.3% of US use</div></td></tr>
@@ -775,16 +774,16 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
           <tr><td><i>BloombergNEF (Jul 2026)</i></td><td>Data-centre power, 2035</td><td class="num"><i>194 GW</i><div class="muted">106 GW in its Dec 2025 forecast</div></td></tr>
           <tr><td>Grid Strategies (Nov 2025)</td><td>Peak-demand growth to 2030</td><td class="num">+166 GW<div class="muted">~90 GW from data centres, which it thinks is ~25 GW too high</div></td></tr>
         </tbody>
-      </table>
-      <p class="muted" style="margin-top:6px">Italic rows are from press reports of the forecasts. They measure different things (energy, connections, peak demand), so they can't be ranked against each other.</p>
+      </table></div>
+      <p class="fine">Italic rows are from press reports of the forecasts. They measure different things (energy, connections, peak demand), so they can't be ranked against each other.</p>
     </div>
-    <div class="span-5" style="min-width:0">
-      <h2 style="font-size:14px">Where it bites</h2>
-      <ul class="note" style="padding-left:18px;margin:6px 0 0">
+    <div class="span-5">
+      <h4>Where it bites</h4>
+      <ul class="note">
         <li><b>Queues are a wish list, not a pipeline.</b> Texas's grid operator had ~474 GW of large-load requests in late Jul 2026, ~90% of them data centres, against ~8.9 GW approved to energise (Jun). PJM expects 21.5 GW of data-centre load by 2028/29, up from 5.0 GW in service.</li>
-        <li><b>Turbines are sold out for years.</b> Siemens Energy has a 69 GW gas-turbine backlog and lead times of three years or more. Wood Mackenzie counts 110 GW of orders against 60–70 GW a year of factory capacity, and expects turbine prices of ~$600/kW by end-2027 (+195% vs 2019). Labs are buying their own: Anthropic reportedly took over OnePWR's Caterpillar orders for ~1.7 GW of gas generators, ~$3.4B (FT via Il Sole 24 Ore, 8 Nov; not confirmed by either company).</li>
+        <li><b>Turbines are sold out for years.</b> Siemens Energy has a 69 GW gas-turbine backlog and lead times of three years or more. Mitsubishi Heavy's backlog is 83 large gas turbines (37 GW), up from 29 GW a year earlier (results, 6 Nov). Wood Mackenzie counts 110 GW of orders against 60–70 GW a year of factory capacity, and expects turbine prices of ~$600/kW by end-2027 (+195% vs 2019). Labs are buying their own: Anthropic reportedly committed ~$3.4B in late September for ~1.7 GW of gas-fired generators from OnePWR (FT, 8 Nov, via CNBC; neither company commented and Reuters couldn't verify it).</li>
         <li><b>Bills are rising, modestly so far.</b> PJM's wholesale cost was $114.50/MWh in Jan–Jun 2026, against $103.40 without data-centre effects (market monitor, +11%). The US average residential price was 18.16¢/kWh in Aug 2026, +3.4% YoY (EIA).</li>
-        <li><b>Politics has turned.</b> Texas: Gina Hinojosa beat Greg Abbott on 3 Nov after calling for a data-centre moratorium (there's no evidence it decided the race). Abbott had already paused new data-centre environmental permits pending audits (21 Sep). 40 of 41 local ballot measures went against data centres (CNBC, from Ballotpedia's list). Data Center Watch counts ~$130B (Q1) and ~$68B (Q2) of projects blocked or delayed, but publishes no method. CoreWeave's CEO has written to Hinojosa about six of its Texas sites exposed to her proposed building pause (TipRanks, 9 Nov).</li>
+        <li><b>Politics has turned.</b> Texas: Gina Hinojosa beat Greg Abbott on 3 Nov after calling for a data-centre moratorium (there's no evidence it decided the race). Abbott had already paused new data-centre environmental permits pending audits (21 Sep). 40 of 41 local ballot measures went against data centres (Ballotpedia, 6 Nov). Data Center Watch counts ~$130B (Q1) and ~$68B (Q2) of projects blocked or delayed, but publishes no method. CoreWeave's CEO wrote to Hinojosa on 7 Nov about six of its Texas sites exposed to her proposed building pause, asking that permitted projects be allowed to finish (Bloomberg, via The Next Web).</li>
         <li><b>Chips aren't off the hook.</b> The IEA also names high-bandwidth memory shortages as a bottleneck for new data centres.</li>
       </ul>
     </div>
@@ -792,29 +791,39 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
 </section>
 
 <section id="campuses" data-section="campuses" class="card span-12">
-  <h2>Gigawatt-class campuses</h2>
-  <p class="muted" style="margin-bottom:10px">A single 1 GW AI campus is roughly $35–50B of all-in capex at current GPU prices. Scale is the announced target; status is what's live or scheduled.</p>
-  <table>
+  <h3 class="card-title">Gigawatt-class campuses</h3>
+  <p class="dek">A single 1 GW AI campus is roughly $35–50B of all-in capex at current GPU prices. Scale is the announced target; status is what's live or scheduled.</p>
+  <div class="tscroll"><table class="wide">
     <thead><tr><th>Campus</th><th>Owner / tenant</th><th class="num">Announced scale</th><th class="num">Live or scheduled</th></tr></thead>
     <tbody>
-      <tr><td>Stargate (Abilene, TX + sites)</td><td>OpenAI · Oracle · SoftBank</td><td class="num">~10 GW target</td><td class="num">Abilene ~1.2 GW</td></tr>
+      <tr><td>Stargate (Abilene, TX + sites)</td><td>OpenAI · Oracle · SoftBank</td><td class="num">~10 GW target</td><td class="num">Abilene ~0.8 GW of IT live (~1.2 GW facility)</td></tr>
       <tr><td>Hyperion (Louisiana)</td><td>Meta</td><td class="num">2 GW → 5 GW</td><td class="num">~1.6 GW of IT by Jan 2028</td></tr>
-      <tr><td>Prometheus (Ohio)</td><td>Meta</td><td class="num">~1 GW</td><td class="num">–</td></tr>
-      <tr><td>Project Rainier (Indiana)</td><td>Amazon · Anthropic</td><td class="num">~2.2 GW</td><td class="num">~0.9–1.0 GW live</td></tr>
-      <tr><td>Fairwater (Wisconsin, Atlanta)</td><td>Microsoft · OpenAI</td><td class="num">multi-GW</td><td class="num">Wisconsin ~2.3 GW by May 2028</td></tr>
+      <tr><td>Prometheus (Ohio)</td><td>Meta</td><td class="num">~1 GW</td><td class="num">~0.5 GW live; ~1.0 GW by Jul 2028</td></tr>
+      <tr><td>Project Rainier (Indiana)</td><td>Amazon · Anthropic</td><td class="num">~2.2 GW</td><td class="num">~1.04 GW live; ~1.9 GW by Mar 2028</td></tr>
+      <tr><td>Fairwater (Wisconsin, Atlanta)</td><td>Microsoft · OpenAI</td><td class="num">multi-GW</td><td class="num">Atlanta ~0.6 GW live; Wisconsin ~2.3 GW by May 2028</td></tr>
       <tr><td>Colossus 1 &amp; 2 (Memphis)</td><td>xAI (SpaceX)</td><td class="num">~1 GW+</td><td class="num">Colossus 2 ~946 MW</td></tr>
       <tr><td>Georgia ("Project Camellia")</td><td>OpenAI</td><td class="num">~3.2 GW</td><td class="num">power 2028–32</td></tr>
       <tr><td>SB Energy campus (Ohio)</td><td>OpenAI (leases) · Nvidia-only gear</td><td class="num">4.25 GW + 3.8 GW option</td><td class="num">leases start 2028; Nvidia guarantees up to $105B</td></tr>
       <tr><td>Laramie County, Wyoming</td><td>Google</td><td class="num">$17B · 702 MW fuel cells</td><td class="num">announced 5 Nov</td></tr>
     </tbody>
-  </table>
-  <p class="muted" style="margin-top:8px">Epoch AI's tracker (6 Nov) shows no site above 1 GW of live IT power yet; live and scheduled figures are from it unless noted. The Ohio campus is from Nvidia's 8-K (17 Aug 2026): Nvidia guarantees OpenAI's leases from SB Energy up to $105B, ending if OpenAI gets a satisfactory credit rating.</p>
+  </table></div>
+  <p class="fine">Epoch AI's tracker (data stamped 6 Nov, read 10 Nov) now puts one site above 1 GW of live IT power: Project Rainier at ~1.04 GW, which Epoch estimates from construction progress rather than a disclosure. Live and scheduled figures are IT power from Epoch unless noted. The Ohio campus is from Nvidia's 8-K (17 Aug 2026): Nvidia guarantees OpenAI's leases from SB Energy up to $105B, ending if OpenAI gets a satisfactory credit rating.</p>
 </section>
 
+</div>
+
+<header class="chapter" id="ch-read">
+  <div class="ch-num">07</div>
+  <div><h2>The read</h2><p>What the numbers add up to, and where each one comes from.</p></div>
+  <nav class="ch-links" aria-label="In this chapter"><a href="#takeaways">Takeaways</a><a href="#sources">Sources</a></nav>
+</header>
+
+<div class="grid">
+
 <!-- TAKEAWAYS -->
-<section class="card span-12">
-  <h2>How to read the AI trade</h2>
-  <ul class="note">
+<section id="takeaways" class="card span-12">
+  <h3 class="card-title">How to read the AI trade</h3>
+  <ul class="takeaways">
     <li><b>Hyperscaler capex growth sped up.</b> Big 4 capex roughly doubled from 2016 to 2021, an ordinary cloud cycle. Then it went ~$155B (2023) → ~$410B (2025) → ~$730B (2026). That is about 5× in three years.</li>
     <li><b>Spending is now a meaningful slice of the economy.</b> At ~$0.7–0.8T/yr, it is roughly 2.5% of US GDP, comparable to peak railroad or telecom build-outs.</li>
     <li><b>The neoclouds and Oracle carry the leverage.</b> Their combined backlog ($770B+) is concentrated in a few AI labs, and they rely more on debt than the Big 4. Oracle has capped new outside funding at $20B through FY30 and raised all of it in early November.</li>
@@ -825,17 +834,17 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
     <li><b>Private investors are getting pickier, but not leaving.</b> OpenAI's Nov 2026 round was cut to ~$20B at $1.25T, from a $30B target at $1.4–1.5T. Anthropic's IPO talk fell from ~$2T to $1.0–1.5T. The valuation-to-run-rate multiple has fallen from ~35–38× in late 2025 to ~20–25×, mostly because revenue grew faster than valuations, not because valuations fell. The risk is the funding gap: OpenAI's &gt;$665B of compute commitments are many times what any single round now raises.</li>
     <li><b>Circular, but only partly.</b> Vendors' firm money into OpenAI and Anthropic (~$134B) is ~12% of the ~$1.15T of firm compute the two have committed to buy, or ~24% counting guarantees and conditional stakes. Most of the bill has to be paid from revenue and outside capital. The circular part is growing, though: Nvidia's equity purchases were 24% of its revenue in Feb–Jul 2026, and vendors supplied ~66% of OpenAI's last big round.</li>
     <li><b>Usage is broad, and you can count it.</b> ChatGPT has 1.2B weekly users, Google processed &gt;3.2 quadrillion tokens a month in May 2026 (~330× in two years), 56% of US businesses on Ramp pay for AI and 24% of firms tell the Census they use it. Adoption has plateaus, though, and the companies are disclosing less.</li>
-    <li><b>Autonomy compounds, and so does token demand.</b> The length of task an AI agent can finish on its own doubled every ~4 months from 2023 until METR's benchmark ran out at ~17 hours in 2026, and METR now puts overall progress at about twice the 2024–25 pace. Models match or beat experts on ~85% of GDPval's work samples but complete only ~21% of real freelance projects. Hours-long agent runs consume orders of magnitude more tokens than a chat reply. That is why falling token prices coexist with rising compute demand.</li>
-    <li><b>The fundamentals and the market disagree.</b> GPU rental rates are rising for every generation: H100 +50% since Dec 2025, B200 +55% YTD, with list-price hikes at AWS, Lambda, Nebius and RunPod. Equity and credit stress is about whether that demand lasts through the next wave of capacity, not about today's pricing. A rollover in the rental indices would be the first real sign of oversupply. The 5 Nov selloff was driven by politics and sentiment; the rental indices hadn't turned as of 6 Nov.</li>
+    <li><b>Autonomy compounds, and so does token demand.</b> The length of task an AI agent can finish on its own doubled every ~4 months from 2023 until METR's benchmark ran out at ~17 hours in 2026, and METR now puts overall progress at about twice the 2024–25 pace. Models match or beat experts on ~85% of GDPval's work samples and complete ~41% of real freelance projects, up from ~21% before Claude Fable 5.2 launched on 9 Nov. Hours-long agent runs consume orders of magnitude more tokens than a chat reply. That is why falling token prices coexist with rising compute demand.</li>
+    <li><b>The fundamentals and the market disagree.</b> GPU rental rates are rising for every generation: H100 +50% since Dec 2025, B200 +55% YTD, with list-price hikes at AWS, Lambda, Nebius and RunPod. Equity and credit stress is about whether that demand lasts through the next wave of capacity, not about today's pricing. A rollover in the rental indices would be the first real sign of oversupply. The 5 Nov selloff was driven by politics and sentiment; the Silicon Data indices hadn't turned as of 9 Nov.</li>
     <li><b>The credit market is drawing the line at leverage, not at AI.</b> CoreWeave's CDS hit a record above 1,289 bps on 5 Nov (distress) and Oracle's prices like junk. Meta, Nvidia and the other hyperscalers sit at records, but only ~50–140 bps, and the broad IG index barely moved. The stress is in debt-funded capacity with concentrated customers, not yet in the Big 4, although they now borrow and sell shares too (see the cash-flow card).</li>
-    <li><b>Tokens deflate while capex inflates.</b> Holding capability fixed, the cost falls roughly 5× to 100× a year depending on the task and method (Epoch's 2026 estimate: ~13×/yr). Frontier launch prices don't fall that way ($4–20 per 1M tokens for the Sep–Oct 2026 flagships), and newer models use more tokens per task. Cheaper intelligence widens the use cases. That is the bull case for the spend, but it also squeezes margins for anyone selling commodity tokens.</li>
+    <li><b>Tokens deflate while capex inflates.</b> Holding capability fixed, the cost falls roughly 5× to 100× a year depending on the task and method (Epoch's 2026 estimate: ~13×/yr). Frontier launch prices don't fall that way ($4–20 per 1M tokens for the Sep–Nov 2026 flagships), and newer models use more tokens per task. Cheaper intelligence widens the use cases. That is the bull case for the spend, but it also squeezes margins for anyone selling commodity tokens.</li>
     <li><b>Compute keeps compounding, with a caveat.</b> Frontier training runs grew ~4–5×/yr through 2024. Epoch's newest estimate (GPT-6 Astra, ~9.4e26) sits below that trend, although most 2026 models have no estimate yet. Sustaining that to 2030 means 1–5 GW training clusters, which is what the campuses above are for.</li>
   </ul>
 </section>
 
-<section class="card span-12">
-  <h2>Sources &amp; caveats</h2>
-  <p class="muted" style="margin-bottom:10px">Historical capex figures are approximate calendar-year totals from company filings. Microsoft's include finance leases from 2023 on. Estimates (2027E, FY27E, projections) are illustrative, not consensus. Verify against filings before you publish any figure.</p>
+<section id="sources" class="card span-12">
+  <h3 class="card-title">Sources &amp; caveats</h3>
+  <p class="dek">Historical capex figures are approximate calendar-year totals from company filings. Microsoft's include finance leases from 2023 on. Estimates (2027E, FY27E, projections) are illustrative, not consensus. Verify against filings before you publish any figure.</p>
   <div class="sources">
     <div><a href="https://www.hl.co.uk/news/ai-hyperscalers-are-expected-to-finish-the-year-spending-a-whopping-828-billion-on-capex">HL: hyperscalers' 2026 capex $803–828B (incl. SpaceX)</a></div>
     <div><a href="https://finance.yahoo.com/markets/article/magnificent-7-earnings-rush-reveals-ai-spending-surge-with-hyperscaler-capex-set-to-reach-725-billion-in-2026-224901707.html">Yahoo Finance: hyperscaler capex ~$725B in 2026</a></div>
@@ -945,11 +954,23 @@ code { font-size: 12px; background: var(--grid); border-radius: 4px; padding: 0 
     <div><a href="https://arxiv.org/abs/2510.04374">OpenAI: GDPval paper</a> · <a href="https://labs.scale.com/leaderboard/rli">Remote Labor Index leaderboard</a> · <a href="https://safe.ai/blog/significant-increase-in-digital-labor-automation">CAIS: RLI update (Jul 2026)</a></div>
     <div><a href="https://digitaleconomy.stanford.edu/news/canariesaug26/">Stanford Digital Economy Lab: jobs update (Aug 2026)</a> · <a href="https://www.federalreserve.gov/econres/notes/feds-notes/the-ai-buildout-and-the-economy-publicly-available-data-to-assess-ais-impact-20260717.html">Fed note on the AI build-out (Jul 2026)</a></div>
     <div><a href="https://www.sec.gov/Archives/edgar/data/1045810/000104581026000073/q2fy27cfocommentary.htm">Nvidia Q2 FY27 CFO commentary (quarterly data-centre revenue)</a> · <a href="https://www.sec.gov/Archives/edgar/data/1730168/000173016826000076/avgo-08022026x8kxex99.htm">Broadcom Q3 FY26 results</a></div>
+    <div><a href="https://www.anthropic.com/claude/fable">Anthropic: Claude Fable 5.2 (launch, 9 Nov 2026)</a> · <a href="https://epoch.ai/data/eci_scores.csv">Epoch ECI scores (CSV)</a></div>
+    <div><a href="https://www.investing.com/news/stock-market-news/exclusiveanthropic-aims-to-raise-up-to-693-billion-in-blockbuster-ipo-5013861">Reuters (via Investing.com): Anthropic sends out, then retracts IPO details (9 Nov)</a> · <a href="https://seekingalpha.com/article/4964841-wall-street-brunch-anthropic-ipo-goes-on-the-road">Seeking Alpha (citing the FT): valuation target</a></div>
+    <div><a href="https://www.nbcnews.com/business/markets/nvidia-stock-falls-probe-ceos-relationship-chinese-spy-rcna608290">NBC News: 9 Nov market rebound, Nvidia</a> · <a href="https://tech-insider.org/big-tech-us-corporate-bond-record-1-88-trillion-2026/">Tech Insider (citing Reuters/LSEG): big-tech bond issuance in 2026</a></div>
+    <div><a href="https://biz.sbs.co.kr/amp/article/20000344174">SBS Biz: Goldman's 2 Nov note, 273 GW by 2030</a> · <a href="https://www.webull.com/news/15858525970668544">Zhitong Finance (via Webull)</a></div>
+    <div><a href="https://epoch.ai/data/data-centers">Epoch AI: frontier data centres (IT power, timelines)</a> · <a href="https://www.mhi.com/finance/library/result/pdf/fy20262q/presentation.pdf">Mitsubishi Heavy H1 FY2026 results (gas-turbine backlog)</a></div>
+    <div><a href="https://news.ballotpedia.org/2026/11/06/voters-favored-limiting-data-center-development-in-40-of-41-local-ballot-measures-on-nov-3/">Ballotpedia: 40 of 41 local data-centre measures</a> · <a href="https://thenextweb.com/news/coreweave-texas-hinojosa-data-centre-letter">The Next Web: CoreWeave's letter to Hinojosa</a> · <a href="https://www.cnbc.com/2026/11/08/anthropic-generator-deal-ai-data-centers.html">CNBC (citing the FT): Anthropic generator deal</a></div>
     <div><a href="https://investor.tsmc.com/english/monthly-revenue/2026">TSMC monthly revenue</a> · <a href="https://news.skhynix.com/en/q3-2026-business-results/">SK hynix Q3 2026</a> · <a href="https://www.sec.gov/Archives/edgar/data/723125/000072312526000018/a2026q4ex991-pressrelease.htm">Micron FQ4 2026</a></div>
   </div>
 </section>
 
 </div>
+
+<footer class="foot">
+  <p>Built from company filings, investor-relations pages and public datasets. Estimates, projections, single-source figures and values read off charts are marked as such. This is not investment advice. Check the primary sources before quoting a figure.</p>
+  <p>Last full refresh: <span data-updated>6 Nov 2026</span></p>
+</footer>
+
 </div>
 <div id="tip"></div>
 </div>
