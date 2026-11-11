@@ -488,7 +488,7 @@ function drawCds() {
   const host = document.getElementById("c-cds"); host.innerHTML = "";
   const rowH = 34, VW = 700, m = { t: 22, r: 190, b: 22, l: 150 };
   const VH = m.t + m.b + CDS.length * rowH, W = VW - m.l - m.r;
-  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Bar chart of latest 5-year CDS spreads: CoreWeave above 1,240 bps, Oracle 305, Nvidia 139, Meta 125, Amazon 100, Alphabet 92, Microsoft 53" }, host);
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Bar chart of latest 5-year CDS spreads: CoreWeave about 1,152 bps, Oracle 305, Nvidia 139, Meta 125, Amazon 100, Alphabet 92, Microsoft 53" }, host);
   const max = 1400, sx = v => m.l + (v / max) * W;
   [0, 250, 500, 750, 1000].forEach(v => {
     el("line", { x1: sx(v), x2: sx(v), y1: m.t - 4, y2: VH - m.b, stroke: v === 0 ? css("--axis") : css("--grid"), "shape-rendering": "crispEdges" }, svg);
