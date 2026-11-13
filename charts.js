@@ -814,7 +814,7 @@ function drawFrontierPx() {
   // selective labels, placed by hand around the crowded Sep–Oct 2026 cluster
   const LAB = { "GPT-4": [8, 4, "start", "GPT-4 $37.50"], "GPT-5": [0, 17, "middle", "GPT-5 $3.44"], "Claude Opus 4.5": [6, 15, "start", "Opus 4.5 $10"],
     "Claude Mythos Preview": [-8, 4, "end", "Mythos Preview $50 (gated)"], "GPT-6 Astra": [6, -9, "start", "GPT-6 Astra $20"], "Claude Opus 5.5": [8, 4, "start", "Opus 5.5 $8"], "Claude Fable 5.2 / Mythos 5.2": [8, 4, "start", "Fable 5.2 $16"],
-    "GPT-6.1 Sol": [-2, 18, "end", "GPT-6.1 Sol $4"], "Gemini 4 Argon, introductory": [8, 4, "start", "Gemini 4 Argon $4"] };
+    "GPT-6.1 Sol": [-2, 18, "end", "GPT-6.1 Sol $4"], "Gemini 4 Carbon, introductory": [8, 4, "start", "Gemini 4 Carbon $4"] };
   S.forEach(s => s.pts.forEach(p => {
     const L = LAB[p.n.split(" (")[0]]; if (!L) return;
     el("text", { x: r.sx(p.x) + L[0], y: r.sy(p.v) + L[1], "text-anchor": L[2], class: "dlabel" }, r.svg).textContent = L[3];
