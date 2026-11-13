@@ -22,7 +22,7 @@ const SECTIONS = {
   nvda:          { title: "Nvidia DC revenue",          asOf: "2026-11-13", every: 90,  consts: ["NVDA", "NVDA_Q"], sources: ["Nvidia CFO commentary, each quarter (FY ends late Jan)", "AMD / Broadcom 8-K releases", "TSMC monthly revenue", "SK hynix, Micron results"] },
   deflation:     { title: "Token deflation",            asOf: "2026-11-13", every: 180, consts: ["DEFL", "DEFL_END", "FRONTIER_PX", "(tiles in index.html)"], sources: ["https://epoch.ai/data-insights/llm-inference-price-trends (ends Feb 2025, not updated)", "https://epoch.ai/publications/the-plunging-price-of-thought", "https://artificialanalysis.ai", "provider pricing pages"] },
   "lab-revenue": { title: "OpenAI / Anthropic revenue", asOf: "2026-11-13", every: 30,  consts: ["LABS", "REV_PROJ", "(funding table in index.html)"], sources: ["https://epoch.ai/data-insights/anthropic-openai-revenue", "CNBC / Bloomberg / The Information / FT run-rate reports", "Anthropic S-1", "Bloomberg / Reuters funding-round reports"] },
-  autonomy:      { title: "METR + Economic Index",      asOf: "2026-11-10", every: 60,  consts: ["METR", "METR_DOUBLING_DAYS", "AEI", "BENCH"], sources: ["https://metr.org/time-horizons", "https://metr.org/assets/benchmark_results_1_1.yaml", "https://metr.org/blog (model evaluations, Frontier Risk Report)", "https://www.anthropic.com/research (Economic Index)", "https://epoch.ai/benchmarks/eci", "https://labs.scale.com/leaderboard/rli", "OpenAI model launch pages (GDPval)"] },
+  autonomy:      { title: "METR + Economic Index",      asOf: "2026-11-13", every: 60,  consts: ["METR", "METR_DOUBLING_DAYS", "AEI", "BENCH"], sources: ["https://metr.org/time-horizons", "https://metr.org/assets/benchmark_results_1_1.yaml", "https://metr.org/blog (model evaluations, Frontier Risk Report)", "https://www.anthropic.com/research (Economic Index)", "https://epoch.ai/benchmarks/eci", "https://labs.scale.com/leaderboard/rli", "OpenAI model launch pages (GDPval)"] },
   credit:        { title: "CDS credit monitor",         asOf: "2026-11-13", every: 7,   consts: ["CDS", "CDS_TS", "CDS_ASOF"], sources: ["Bloomberg/ICE terminal if available", "CNBC, WSJ (Solve data), Bloomberg press reports"] },
   power:         { title: "Power constraint",           asOf: "2026-11-11", every: 90,  consts: ["PJM", "PJM_UNCAPPED", "(tiles + forecast table in index.html)"], sources: ["PJM BRA reports", "Monitoring Analytics (PJM IMM)", "LBNL", "EPRI", "GE Vernova / Siemens Energy results", "EIA Electric Power Monthly", "ERCOT via Texas governor's office"] },
   gpu:           { title: "GPU rental rates",           asOf: "2026-11-13", every: 30,  consts: ["GPU", "GPU_RANGE", "GPU_RESTATE", "GPU_SNAP"], sources: ["https://www.silicondata.com/products/silicon-index/h100", "https://www.silicondata.com/blog", "Vast.ai public marketplace API (snapshot)"] },
@@ -261,15 +261,15 @@ const FRONTIER_PX = [
     ["2023-03-14", 37.5, "GPT-4 ($30 / $60)"], ["2023-11-06", 15, "GPT-4 Turbo ($10 / $30)"], ["2024-05-13", 7.5, "GPT-4o ($5 / $15)"],
     ["2024-12-17", 26.25, "o1 ($15 / $60)"], ["2025-04-16", 17.5, "o3 ($10 / $40); cut 80% to $2 / $8 on 10 Jun 2025"], ["2025-08-07", 3.44, "GPT-5 ($1.25 / $10)"],
     ["2025-12-11", 4.81, "GPT-5.2 ($1.75 / $14)"], ["2026-03-05", 5.63, "GPT-5.4 ($2.50 / $15)"], ["2026-04-24", 11.25, "GPT-5.5 ($5 / $30)"],
-    ["2026-09-03", 20, "GPT-6 Astra ($10 / $50). Epoch ECI 169.2, the top score until Claude Fable 5.2 on 9 Nov"], ["2026-09-29", 4, "GPT-6.1 Sol ($2 / $10). Epoch ECI 168.9, level with GPT-6 Astra"]] },
+    ["2026-09-03", 20, "GPT-6 Astra ($10 / $50). Epoch ECI 169.0, the top score until Claude Fable 5.2 on 9 Nov"], ["2026-09-29", 4, "GPT-6.1 Sol ($2 / $10). Epoch ECI 168.5, level with GPT-6 Astra"]] },
   { name: "Anthropic", c: "--s2", dots: 1, pts: [
     ["2024-03-04", 30, "Claude 3 Opus ($15 / $75)"], ["2025-08-05", 30, "Claude Opus 4.1 ($15 / $75)"], ["2025-11-24", 10, "Claude Opus 4.5 ($5 / $25), a 67% cut"],
     ["2026-04-07", 50, "Claude Mythos Preview ($25 / $125), gated access", 1], ["2026-06-09", 20, "Claude Fable 5 / Mythos 5 ($10 / $50)"],
-    ["2026-09-22", 8, "Claude Opus 5.5 ($4 / $20)"], ["2026-11-09", 16, "Claude Fable 5.2 / Mythos 5.2 ($8 / $40), 20% below Fable 5.1. Epoch ECI 174.2, the top score"]] },
+    ["2026-09-22", 8, "Claude Opus 5.5 ($4 / $20)"], ["2026-11-09", 16, "Claude Fable 5.2 / Mythos 5.2 ($8 / $40), 20% below Fable 5.1. Epoch ECI 173.4, the top score"]] },
   { name: "Google", c: "--s3", dots: 1, pts: [
     ["2025-06-17", 3.44, "Gemini 2.5 Pro ($1.25 / $10, prompts ≤200K)"], ["2026-02-19", 4.5, "Gemini 3.1 Pro Preview ($2 / $12, prompts ≤200K)"],
     ["2026-10-13", 4, "Gemini 4 Argon, introductory ($2 / $10); rises to $4 / $20 on 1 Dec 2026"],
-    ["2026-11-10", 4, "Gemini 4 Carbon, introductory ($2 / $10); rises to $4 / $20 on 1 Dec 2026. Gemini 4 Hydrogen (12 Nov) is $1.50 / $7.50"]] },
+    ["2026-11-10", 4, "Gemini 4 Carbon, introductory ($2 / $10); rises to $4 / $20 on 1 Dec 2026. Epoch ECI 169.8, second. Gemini 4 Hydrogen (12 Nov) is $1.50 / $7.50"]] },
 ];
 
 // ---------- Demand you can count ----------

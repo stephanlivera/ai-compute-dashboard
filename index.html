@@ -328,7 +328,7 @@
     <div class="tile"><div class="label">GPT-4-level chat (Arena Elo ≥ 1186)</div><div class="value">$37.50 → $0.07</div><div class="delta">▼ ~540× cheaper in 19 months</div><div class="muted">Per 1M tokens, Mar 2023 → Oct 2024 (Epoch, 2025)</div></div>
     <div class="tile"><div class="label">Cost of a fixed benchmark score, Epoch 2026</div><div class="value">~13× / yr</div><div class="delta">▼ 47% a quarter since 2023</div><div class="muted">$ per question (price × tokens used). A newly state-of-the-art level falls ~75×/yr; two years on, ~5×/yr</div></div>
     <div class="tile"><div class="label">GPQA-level science, cost per question</div><div class="value">$0.30 → $0.0004</div><div class="delta">▼ ~725× in 15 months</div><div class="muted">o3 (Apr 2025) → GPT-5.6 Luna (Jul 2026), at a fixed GPQA Diamond score (Epoch's data)</div></div>
-    <div class="tile"><div class="label">Flagship list prices, Sep–Nov 2026</div><div class="value">$4–20 / 1M</div><div class="muted">GPT-6 Astra launched at $20 (GPT-4: $37.50). Four weeks later GPT-6.1 Sol matched its Epoch ECI score at $4. Claude Fable 5.2 (9 Nov) is $16 and now tops the ECI. Claude Opus 5.5 $8, Gemini 4 Argon $4 (→ $8 in Dec)</div></div>
+    <div class="tile"><div class="label">Flagship list prices, Sep–Nov 2026</div><div class="value">$4–20 / 1M</div><div class="muted">GPT-6 Astra launched at $20 (GPT-4: $37.50). Four weeks later GPT-6.1 Sol matched its Epoch ECI score at $4. Claude Fable 5.2 (9 Nov) is $16 and now tops the ECI. Claude Opus 5.5 $8. Gemini 4 Carbon (10 Nov) is $4 (→ $8 in Dec) and second on the ECI</div></div>
   </div>
   <div class="cols">
     <div class="span-8">
@@ -359,12 +359,22 @@
       <div id="c-fpx"></div>
       <button class="toggle" data-table="t-fpx">Table</button>
       <div class="datatable" id="t-fpx"></div>
+      <h4>Intelligence per dollar, Nov 2026</h4>
+      <p class="dek">Artificial Analysis runs every model through the same Intelligence Index and reports what the run cost per task: list price × the tokens the model actually used. Read 13 Nov 2026, each model at the effort setting Artificial Analysis shows by default (its highest).</p>
+      <div class="tscroll"><table>
+        <thead><tr><th>Model</th><th>Launched (2026)</th><th class="num">Index</th><th class="num">List, in / out per 1M</th><th class="num">Cost per task</th></tr></thead>
+        <tbody><tr><td>Claude Fable 5.2</td><td>9 Nov</td><td class="num">65</td><td class="num">$8 / $40</td><td class="num">$26.54</td></tr><tr><td><b>Gemini 4 Carbon</b></td><td>10 Nov</td><td class="num">60</td><td class="num">$2 / $10*</td><td class="num">$5.48</td></tr><tr><td>Claude Opus 5.5</td><td>22 Sep</td><td class="num">59</td><td class="num">$4 / $20</td><td class="num">$10.04</td></tr><tr><td>GPT-6 Astra</td><td>3 Sep</td><td class="num">57</td><td class="num">$10 / $50</td><td class="num">$6.24</td></tr><tr><td>GPT-6.1 Sol</td><td>29 Sep</td><td class="num">55</td><td class="num">$2 / $10</td><td class="num">$1.27</td></tr><tr><td><b>Gemini 4 Hydrogen</b></td><td>12 Nov</td><td class="num">54</td><td class="num">$1.50 / $7.50</td><td class="num">$3.16</td></tr><tr><td>GPT-6.1 Terra</td><td>26 Oct</td><td class="num">51</td><td class="num">$1 / $5</td><td class="num">$0.96</td></tr><tr><td>Gemini 4 Argon</td><td>13 Oct</td><td class="num">50</td><td class="num">$2 / $10*</td><td class="num">$4.97</td></tr><tr><td>Claude Fable 5.1</td><td>1 Sep</td><td class="num">49</td><td class="num">$10 / $50</td><td class="num">$12.99</td></tr><tr><td>Gemini 3.8 Flash</td><td>Sep</td><td class="num">31</td><td class="num">$0.75 / $3.75</td><td class="num">$7.77</td></tr></tbody>
+      </table></div>
+      <p class="fine">* Introductory price; doubles to $4 / $20 on 1 Dec, which would roughly double the cost per task. Costs are Artificial Analysis's own, on its own task mix; a different workload gives different ratios. Gemini 3.8 Flash is the model Hydrogen replaces.</p>
     </div>
     <div class="span-5">
       <h4>Cheaper per token, more tokens per task</h4>
       <ul class="note">
         <li><b>Reasoning multiplies tokens.</b> Reasoning models use ~8× the tokens of older models on the same questions, and their output length grows ~5× a year (Epoch). Claude 3.7 Sonnet used 98M output tokens to run Artificial Analysis's index with thinking on, against 6.3M with it off.</li>
-        <li><b>Better scores still cost more.</b> The top Artificial Analysis index score rose from 21 to 58 in a year, at ~11× the cost per task (20 Oct 2026). Running frontier models is getting 3–18× more expensive a year (MIT FutureTech), even as each fixed level gets cheaper.</li>
+        <li><b>Better scores still cost more.</b> The top Artificial Analysis index score rose from 21 to 58 in a year, at ~11× the cost per task (20 Oct 2026). Claude Fable 5.2 has since taken it to 65, at the highest cost per task in the table. Running frontier models is getting 3–18× more expensive a year (MIT FutureTech), even as each fixed level gets cheaper.</li>
+        <li><b>Near-frontier at a fifth of the cost (Nov 2026).</b> Google's Gemini 4 Carbon scores 60 on Artificial Analysis's index for $5.48 a task. The leader, Claude Fable 5.2, scores 65 for $26.54, so the last five points cost about 5×. On Epoch's ECI Carbon is second (169.8), a touch above GPT-6 Astra (169.0), whose list price is five times higher. Carbon's price is introductory and doubles on 1 Dec.</li>
+        <li><b>September's flagship level reached the cheap tier in ten weeks.</b> Gemini 4 Hydrogen (12 Nov, $1.50 / $7.50, with a free tier) scores 54, above Claude Fable 5.1 (49), which launched on 1 Sep at $10 / $50. Its cost per task is about a quarter of Fable 5.1's. It replaces Gemini 3.8 Flash at twice the list price, and still costs less per task on a far higher score.</li>
+        <li><b>The sticker price can point the wrong way.</b> Hydrogen is cheaper per token than GPT-6.1 Sol, but it wrote 304M output tokens on the index against Sol's 64M, so Sol does the same job (55) for $1.27 a task against $3.16. Cost per task is the number to watch, and it depends on the workload.</li>
         <li><b>Agents are the new token sink.</b> Agent traffic on OpenRouter grew ~14× from Feb to Aug 2026 (7-day averages), against 2.8× for human traffic (reported by The Decoder). The median OpenAI researcher's coding-agent spend went from $0 to ~$600 a day between Jan and Aug 2026 (Epoch, at list prices).</li>
         <li><b>Efficiency gains cut both ways.</b> At a fixed level, newer models often need fewer tokens: ~27% on FrontierMath took ~43M output tokens with o4-mini (Apr 2025) and ~5M with GPT-5.2 (Dec 2025).</li>
       </ul>
@@ -555,22 +565,23 @@
       <p class="fine">GDPval figures after Sep 2025 are OpenAI's own evaluations from its launch pages. From GPT-5.6 on, OpenAI reports Elo scores instead, which can't be compared with win rates. The RLI is graded by people; its automated grader overstated new models 2.3–2.9×.</p>
     </div>
     <div class="span-5">
-      <h4>Epoch Capabilities Index, top models (10 Nov 2026)</h4>
+      <h4>Epoch Capabilities Index, top models (13 Nov 2026)</h4>
       <p class="dek">Epoch's composite of many benchmarks. The frontier has risen ~14 points a year since reasoning models arrived (Sep 2024), up from ~6 before. At launch, Epoch said ~5 points was roughly one METR time-horizon doubling.</p>
       <div class="tscroll"><table>
         <thead><tr><th>Model</th><th>Released</th><th class="num">ECI</th></tr></thead>
         <tbody>
-          <tr><td>Claude Fable 5.2</td><td>9 Nov 2026</td><td class="num">174.2</td></tr>
-          <tr><td>GPT-6 Astra</td><td>3 Sep 2026</td><td class="num">169.2</td></tr>
-          <tr><td>GPT-6.1 Sol</td><td>29 Sep 2026</td><td class="num">168.9</td></tr>
-          <tr><td>Claude Opus 5.5</td><td>22 Sep 2026</td><td class="num">168.7</td></tr>
-          <tr><td>GPT-6.1 Terra</td><td>26 Oct 2026</td><td class="num">168.1</td></tr>
+          <tr><td>Claude Fable 5.2</td><td>9 Nov 2026</td><td class="num">173.4</td></tr>
+          <tr><td>Gemini 4 Carbon</td><td>10 Nov 2026</td><td class="num">169.8</td></tr>
+          <tr><td>GPT-6 Astra</td><td>3 Sep 2026</td><td class="num">169.0</td></tr>
+          <tr><td>Claude Opus 5.5</td><td>22 Sep 2026</td><td class="num">168.5</td></tr>
+          <tr><td>GPT-6.1 Sol</td><td>29 Sep 2026</td><td class="num">168.5</td></tr>
+          <tr><td>GPT-6.1 Terra</td><td>26 Oct 2026</td><td class="num">167.7</td></tr>
           <tr><td>Claude Fable 5.1</td><td>1 Sep 2026</td><td class="num">167.0</td></tr>
           <tr><td>Gemini 4 Argon <span class="muted">(limited access)</span></td><td>30 Sep 2026</td><td class="num">166.5</td></tr>
           <tr><td class="muted">A year earlier: GPT-5 Pro</td><td class="muted">2025</td><td class="num muted">151.2</td></tr>
         </tbody>
       </table></div>
-      <p class="fine">Claude Fable 5.2 took the top score at its 9 Nov launch. Its confidence interval (170.1–178.8) still overlaps GPT-6 Astra's (166.2–172.5), and scores shift each time Epoch refits the index: the other models moved by up to 0.3 points since 8 Nov. Mythos-class models aren't in it. Anthropic's internal "AECI" is a different fork of the index and isn't comparable.</p>
+      <p class="fine">Claude Fable 5.2 took the top score at its 9 Nov launch. Its confidence interval (169.9–177.5) still overlaps Gemini 4 Carbon's (166.5–173.5) and GPT-6 Astra's (166.1–172.3), and scores shift each time Epoch refits the index: Fable 5.2 itself moved from 174.2 to 173.4 between 10 and 13 Nov. Epoch scored Carbon before release (it dates it 28 Oct); general availability was 10 Nov. Mythos-class models aren't in it. Anthropic's internal "AECI" is a different fork of the index and isn't comparable.</p>
     </div>
   </div>
 </section>
@@ -959,7 +970,7 @@
     <div><a href="https://arxiv.org/abs/2510.04374">OpenAI: GDPval paper</a> · <a href="https://labs.scale.com/leaderboard/rli">Remote Labor Index leaderboard</a> · <a href="https://safe.ai/blog/significant-increase-in-digital-labor-automation">CAIS: RLI update (Jul 2026)</a></div>
     <div><a href="https://digitaleconomy.stanford.edu/news/canariesaug26/">Stanford Digital Economy Lab: jobs update (Aug 2026)</a> · <a href="https://www.federalreserve.gov/econres/notes/feds-notes/the-ai-buildout-and-the-economy-publicly-available-data-to-assess-ais-impact-20260717.html">Fed note on the AI build-out (Jul 2026)</a></div>
     <div><a href="https://www.sec.gov/Archives/edgar/data/1045810/000104581026000073/q2fy27cfocommentary.htm">Nvidia Q2 FY27 CFO commentary (quarterly data-centre revenue)</a> · <a href="https://www.sec.gov/Archives/edgar/data/1730168/000173016826000076/avgo-08022026x8kxex99.htm">Broadcom Q3 FY26 results</a></div>
-    <div><a href="https://www.anthropic.com/claude/fable">Anthropic: Claude Fable 5.2 (launch, 9 Nov 2026)</a> · <a href="https://epoch.ai/data/eci_scores.csv">Epoch ECI scores (CSV)</a></div>
+    <div><a href="https://artificialanalysis.ai/models/gemini-4-carbon">Artificial Analysis: Gemini 4 Carbon</a> · <a href="https://artificialanalysis.ai/models/gemini-4-hydrogen">Gemini 4 Hydrogen</a> (index and cost per task, 13 Nov 2026) · <a href="https://aistudio.google.com/docs/pricing">Google: Gemini API pricing</a> · <a href="https://www.anthropic.com/claude/fable">Anthropic: Claude Fable 5.2 (launch, 9 Nov 2026)</a> · <a href="https://epoch.ai/data/eci_scores.csv">Epoch ECI scores (CSV)</a></div>
     <div><a href="https://www.investing.com/news/stock-market-news/exclusiveanthropic-aims-to-raise-up-to-693-billion-in-blockbuster-ipo-5013861">Reuters (via Investing.com): Anthropic sends out, then retracts IPO details (9 Nov)</a> · <a href="https://seekingalpha.com/article/4964841-wall-street-brunch-anthropic-ipo-goes-on-the-road">Seeking Alpha (citing the FT): valuation target</a></div>
     <div><a href="https://www.nbcnews.com/business/markets/nvidia-stock-falls-probe-ceos-relationship-chinese-spy-rcna608290">NBC News: 9 Nov market rebound, Nvidia</a> · <a href="https://tech-insider.org/big-tech-us-corporate-bond-record-1-88-trillion-2026/">Tech Insider (citing Reuters/LSEG): big-tech bond issuance in 2026</a></div>
     <div><a href="https://biz.sbs.co.kr/amp/article/20000344174">SBS Biz: Goldman's 2 Nov note, 273 GW by 2030</a> · <a href="https://www.webull.com/news/15858525970668544">Zhitong Finance (via Webull)</a></div>
