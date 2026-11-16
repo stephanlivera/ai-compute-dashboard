@@ -19,13 +19,13 @@ const SECTIONS = {
   neoclouds:     { title: "Oracle & neoclouds table",   asOf: "2026-11-14", every: 30,  consts: ["(table in index.html)"], sources: ["Oracle, CoreWeave, Nebius IR / earnings", "OpenAI commitments: The Information (via SiliconANGLE)"] },
   oracle:        { title: "Oracle capex",               asOf: "2026-11-08", every: 90,  consts: ["ORCL"], sources: ["Oracle 10-Q/10-K, FY guide"] },
   flop:          { title: "Frontier training compute",  asOf: "2026-11-10", every: 90,  consts: ["FLOP", "FLOP_PROJ"], sources: ["https://epoch.ai/data/notable-ai-models"] },
-  nvda:          { title: "Nvidia DC revenue",          asOf: "2026-11-13", every: 90,  consts: ["NVDA", "NVDA_Q"], sources: ["Nvidia CFO commentary, each quarter (FY ends late Jan)", "AMD / Broadcom 8-K releases", "TSMC monthly revenue", "SK hynix, Micron results"] },
+  nvda:          { title: "Nvidia DC revenue",          asOf: "2026-11-16", every: 90,  consts: ["NVDA", "NVDA_Q"], sources: ["Nvidia CFO commentary, each quarter (FY ends late Jan)", "AMD / Broadcom 8-K releases", "TSMC monthly revenue", "SK hynix, Micron results"] },
   deflation:     { title: "Token deflation",            asOf: "2026-11-13", every: 180, consts: ["DEFL", "DEFL_END", "FRONTIER_PX", "(tiles in index.html)"], sources: ["https://epoch.ai/data-insights/llm-inference-price-trends (ends Feb 2025, not updated)", "https://epoch.ai/publications/the-plunging-price-of-thought", "https://artificialanalysis.ai", "provider pricing pages"] },
-  "lab-revenue": { title: "OpenAI / Anthropic revenue", asOf: "2026-11-13", every: 30,  consts: ["LABS", "REV_PROJ", "(funding table in index.html)"], sources: ["https://epoch.ai/data-insights/anthropic-openai-revenue", "CNBC / Bloomberg / The Information / FT run-rate reports", "Anthropic S-1", "Bloomberg / Reuters funding-round reports"] },
+  "lab-revenue": { title: "OpenAI / Anthropic revenue", asOf: "2026-11-16", every: 30,  consts: ["LABS", "REV_PROJ", "(funding table in index.html)"], sources: ["https://epoch.ai/data-insights/anthropic-openai-revenue", "CNBC / Bloomberg / The Information / FT run-rate reports", "Anthropic S-1", "Bloomberg / Reuters funding-round reports"] },
   autonomy:      { title: "METR + Economic Index",      asOf: "2026-11-13", every: 60,  consts: ["METR", "METR_DOUBLING_DAYS", "AEI", "BENCH"], sources: ["https://metr.org/time-horizons", "https://metr.org/assets/benchmark_results_1_1.yaml", "https://metr.org/blog (model evaluations, Frontier Risk Report)", "https://www.anthropic.com/research (Economic Index)", "https://epoch.ai/benchmarks/eci", "https://labs.scale.com/leaderboard/rli", "OpenAI model launch pages (GDPval)"] },
-  credit:        { title: "CDS credit monitor",         asOf: "2026-11-14", every: 7,   consts: ["CDS", "CDS_TS", "CDS_ASOF"], sources: ["Bloomberg/ICE terminal if available", "CNBC, WSJ (Solve data), Bloomberg press reports"] },
+  credit:        { title: "CDS credit monitor",         asOf: "2026-11-16", every: 7,   consts: ["CDS", "CDS_TS", "CDS_ASOF"], sources: ["Bloomberg/ICE terminal if available", "CNBC, WSJ (Solve data), Bloomberg press reports"] },
   power:         { title: "Power constraint",           asOf: "2026-11-11", every: 90,  consts: ["PJM", "PJM_UNCAPPED", "(tiles + forecast table in index.html)"], sources: ["PJM BRA reports", "Monitoring Analytics (PJM IMM)", "LBNL", "EPRI", "GE Vernova / Siemens Energy results", "EIA Electric Power Monthly", "ERCOT via Texas governor's office"] },
-  gpu:           { title: "GPU rental rates",           asOf: "2026-11-13", every: 30,  consts: ["GPU", "GPU_RANGE", "GPU_RESTATE", "GPU_SNAP"], sources: ["https://www.silicondata.com/products/silicon-index/h100", "https://www.silicondata.com/blog", "Vast.ai public marketplace API (snapshot)"] },
+  gpu:           { title: "GPU rental rates",           asOf: "2026-11-16", every: 30,  consts: ["GPU", "GPU_RANGE", "GPU_RESTATE", "GPU_SNAP"], sources: ["https://www.silicondata.com/products/silicon-index/h100", "https://www.silicondata.com/blog", "Vast.ai public marketplace API (snapshot)"] },
   cloud:         { title: "Cloud backlog + demand",     asOf: "2026-11-07", every: 90,  consts: ["(tiles in index.html)"], sources: ["MSFT 10-Q, GOOGL / AMZN 8-K releases + Q3 calls"] },
   cashflow:      { title: "Can they pay for it?",       asOf: "2026-11-08", every: 90,  consts: ["CF_CO", "(tiles + tables in index.html)"], sources: ["10-K / 10-Q cash-flow statements via SEC XBRL (data.sec.gov companyfacts)", "Q3 2026 earnings releases and calls", "10-Q lease and guarantee notes", "S&P Global Ratings, BofA, Reuters/LSEG forecasts"] },
   demand:        { title: "Demand you can count",       asOf: "2026-11-13", every: 30,  consts: ["TOKENS", "ADOPT", "(tiles + users table in index.html)"], sources: ["Alphabet / Microsoft earnings releases and calls, Google I/O", "OpenRouter releases", "https://www.census.gov/hfp/btos/data_downloads", "https://ramp.com/data/ai-index", "FRED: RPSGENAIUSAGESHAREWORK", "OpenAI / Google / Microsoft user announcements", "Menlo Ventures enterprise reports"] },
@@ -35,9 +35,8 @@ const SECTIONS = {
 
 // Known upcoming events that should trigger a refresh (approximate; confirm dates).
 const EVENTS = [
-  { when: "16 Nov 2026",  what: "Lambda's higher GPU list prices take effect (8× B200 $7.69, H100 $4.59)", sections: ["gpu"] },
-  { when: "17 Nov 2026",  what: "Nvidia Q3 FY27 results, its first under interim CEO Colette Kress (guide $108B ±2%; equity purchases, cloud agreements, any word on the board inquiry)", sections: ["nvda", "hero", "circular", "credit"] },
-  { when: "18–19 Nov 2026", what: "Anthropic IPO prices on 18 Nov and starts trading on 19 Nov (Nasdaq: ANT; range $70–78), per its prospectus", sections: ["lab-revenue", "credit", "circular"] },
+  { when: "17 Nov 2026",  what: "Nvidia Q3 FY27 results, its first under interim CEO Colette Kress (guide $108B ±2%; equity purchases, cloud agreements, any word on the board inquiry or on Jensen Huang's reported push to return)", sections: ["nvda", "hero", "circular", "credit"] },
+  { when: "18–19 Nov 2026", what: "Anthropic IPO prices on 18 Nov and starts trading on 19 Nov (Nasdaq: ANT; range $70–78), per its prospectus. The book was reported ~6× covered on 12 Nov", sections: ["lab-revenue", "credit", "circular"] },
   { when: "19 Nov 2026", what: "Census BTOS biweekly release (collected 2–15 Nov)", sections: ["demand"] },
   { when: "before 26 Nov 2026", what: "Jensen Huang's testimony to Congress, as agreed per the House Foreign Affairs chair", sections: ["nvda", "credit"] },
   { when: "late Nov 2026", what: "OpenAI round final close (~$15B raised so far at $1.25T, per CNBC)", sections: ["lab-revenue", "neoclouds", "circular"] },
@@ -355,20 +354,20 @@ const GPU_TICKS = [["2025-07-01", "Jul 25"], ["2025-10-01", "Oct"], ["2026-01-01
 const GPU = [
   { chip: "B300", c: "--s4", base: "2026-04-23", pts: [
     ["2026-04-23", 4.83, 1, "Index starts; level read off Silicon Data's chart"], ["2026-06-01", 5.15, 1, "Read off chart"], ["2026-07-10", 5.6, 1, "Read off chart"],
-    ["2026-08-05", 7.1, 1, "Read off chart"], ["2026-10-10", 6.7, 1, "Read off chart (Sep–Oct dip)"], ["2026-11-06", 7.56, 0, "Silicon Data index page"], ["2026-11-09", 7.68, 0, "Index page. Its daily table gives 7.55 on 2 Nov (~+2% in a week); the page's \"7D\" figure (+15%) is really the change across its 30-day table (6.67 on 11 Oct)"], ["2026-11-12", 7.67, 0, "Index page daily table (7.68 on 10 Nov). 7.56 on 5 Nov, so ~+1.5% in a week"]] },
+    ["2026-08-05", 7.1, 1, "Read off chart"], ["2026-10-10", 6.7, 1, "Read off chart (Sep–Oct dip)"], ["2026-11-06", 7.56, 0, "Silicon Data index page"], ["2026-11-09", 7.68, 0, "Index page. Its daily table gives 7.55 on 2 Nov (~+2% in a week); the page's \"7D\" figure (+15%) is really the change across its 30-day table (6.67 on 11 Oct)"], ["2026-11-12", 7.67, 0, "Index page daily table (7.68 on 10 Nov). 7.56 on 5 Nov, so ~+1.5% in a week"], ["2026-11-15", 7.67, 0, "Index page daily table; flat on the week"]] },
   { chip: "B200", c: "--s2", base: "2026-01-01", pts: [
     ["2025-11-05", 4.85, 1, "Read off Silicon Data's chart"], ["2026-01-01", 4.40, 0, "Opened 2026 (Silicon Data blog)"], ["2026-01-11", 4.29, 0, "Low"],
     ["2026-03-25", 6.11, 0, "Spike: +$0.96 on 23 Mar"], ["2026-03-30", 5.48, 0, ""], ["2026-07-27", 5.66, 0, ""], ["2026-09-07", 5.69, 0, "Term rates same day: 3-mo $5.73, 6-mo $5.64, 12-mo $5.39"],
     ["2026-11-06", 6.58, 0, "Index page; +11.9% in 7 days. The 5 Nov chart in Silicon Data's post shows $6.70"],
-    ["2026-11-09", 6.84, 0, "Index page. Daily table: 6.50 on 2 Nov (~+5% in a week), 5.93 on 11 Oct (~+15% in four weeks)"], ["2026-11-12", 6.97, 0, "Index page daily table; a new high (6.97 on 10 Nov, 6.84 on 11 Nov). 6.70 on 5 Nov, so ~+4% in a week"]] },
+    ["2026-11-09", 6.84, 0, "Index page. Daily table: 6.50 on 2 Nov (~+5% in a week), 5.93 on 11 Oct (~+15% in four weeks)"], ["2026-11-12", 6.97, 0, "Index page daily table; a new high (6.97 on 10 Nov, 6.84 on 11 Nov). 6.70 on 5 Nov, so ~+4% in a week"], ["2026-11-15", 6.87, 0, "Index page daily table; ~1.4% below the 10–12 Nov high of 6.97"]] },
   { chip: "H200", c: "--s3", base: "2026-05-04", pts: [
     ["2026-05-04", 2.70, 0, "Index starts"], ["2026-07-18", 3.10, 0, ""], ["2026-09-07", 3.29, 0, ""],
-    ["2026-10-24", 3.48, 1, "Secondary source (explainx.ai)"], ["2026-11-06", 3.51, 0, "Index page (the daily table now shows 3.52)"], ["2026-11-08", 3.55, 0, "Index page"], ["2026-11-09", 3.48, 0, "Index page; −2% on the day"], ["2026-11-12", 3.52, 0, "Index page daily table (3.47 on 11 Nov)"]] },
+    ["2026-10-24", 3.48, 1, "Secondary source (explainx.ai)"], ["2026-11-06", 3.51, 0, "Index page (the daily table now shows 3.52)"], ["2026-11-08", 3.55, 0, "Index page"], ["2026-11-09", 3.48, 0, "Index page; −2% on the day"], ["2026-11-12", 3.52, 0, "Index page daily table (3.47 on 11 Nov)"], ["2026-11-15", 3.50, 0, "Index page daily table"]] },
   { chip: "H100", c: "--s1", base: "2025-12-09", pts: [
     ["2025-05-27", 2.37, 1, "Older method. IEEE Spectrum, at index launch"], ["2025-08-15", 2.24, 1, "Older method. Aug range $2.22–2.26"], ["2025-09-15", 2.13, 1, "Older method. Mid-Sep low"],
     ["2025-11-05", 1.98, 1, "Read off Silicon Data's chart (current method)"], ["2025-12-09", 2.00, 0, "Cycle low"], ["2026-01-06", 2.20, 0, "+10% in four weeks"],
     ["2026-04-01", 2.63, 0, ""], ["2026-04-08", 2.47, 0, ""], ["2026-05-04", 2.57, 0, ""], ["2026-05-31", 2.73, 0, ""], ["2026-06-05", 2.79, 0, "Mid-year high"],
-    ["2026-07-27", 2.75, 0, ""], ["2026-09-07", 2.63, 0, ""], ["2026-10-08", 2.80, 0, ""], ["2026-10-22", 2.88, 0, ""], ["2026-11-06", 2.99, 0, "Index page (SDH100RT)"], ["2026-11-07", 3.04, 0, "Daily table; the high so far"], ["2026-11-09", 3.01, 0, "Index page; 2.94 on 2 Nov"], ["2026-11-12", 3.06, 0, "Index page daily table; 3.06 on 10, 11 and 12 Nov, a new high. 2.97 on 5 Nov, so ~+3% in a week"]] },
+    ["2026-07-27", 2.75, 0, ""], ["2026-09-07", 2.63, 0, ""], ["2026-10-08", 2.80, 0, ""], ["2026-10-22", 2.88, 0, ""], ["2026-11-06", 2.99, 0, "Index page (SDH100RT)"], ["2026-11-07", 3.04, 0, "Daily table; the high so far"], ["2026-11-09", 3.01, 0, "Index page; 2.94 on 2 Nov"], ["2026-11-12", 3.06, 0, "Index page daily table; 3.06 on 10, 11 and 12 Nov, a new high. 2.97 on 5 Nov, so ~+3% in a week"], ["2026-11-15", 3.10, 0, "Index page daily table; a new high of 3.13 on 14 Nov"]] },
   { chip: "A100", c: "--neutral", base: "2025-11-05", pts: [
     ["2025-11-05", 1.38, 1, "Read off Silicon Data's chart"], ["2026-07-15", 1.65, 1, "Read off chart (peak)"], ["2026-11-06", 1.59, 0, "Index page (SDA100RT)"], ["2026-11-09", 1.59, 0, "Index page; unchanged"], ["2026-11-12", 1.60, 0, "Index page daily table"]] },
 ];
@@ -380,12 +379,12 @@ const GPU_LONG = [["2H23", 2023.75, 6.62], ["1Q24", 2024.125, 5.78], ["2Q24", 20
 // Same chip, different price: early Nov 2026 snapshot by source and method. $/GPU-hr; null = not listed.
 const GPU_SNAP = [
   { src: "Vast.ai marketplace median", kind: "Marketplace, on-demand, all hosts (own API pull 10 Nov, 17–51 listings per chip; verified hosts only: H100 $3.41)", h100: 2.54, h200: 4.00, b200: 8.75 },
-  { src: "Silicon Data index", kind: "Neocloud rental index (12 Nov)", h100: 3.06, h200: 3.52, b200: 6.97 },
+  { src: "Silicon Data index", kind: "Neocloud rental index (15 Nov)", h100: 3.10, h200: 3.50, b200: 6.87 },
   { src: "Ornn OCPI", kind: "Executed trades, volume-weighted (settled 12 Nov; moves ±10% a day)", h100: 3.39, h200: 7.12, b200: 9.78 },
   { src: "GetDeploying median", kind: "On-demand list, 22–44 providers per chip (wk of 9 Nov; H100 re-read 13 Nov at $3.93 across 44 providers, after a $3.73 reading on 10 Nov with fewer listed)", h100: 3.93, h200: 4.74, b200: 8.13 },
   { src: "Together AI", kind: "On-demand list (91–180-day reserved: H100 $3.19)", h100: 3.99, h200: 5.99, b200: 8.19 },
   { src: "Nebius", kind: "On-demand list", h100: 4.50, h200: 5.40, b200: 8.50 },
-  { src: "Lambda", kind: "On-demand list, 8× node, effective 16 Nov", h100: 4.59, h200: null, b200: 7.69 },
+  { src: "Lambda", kind: "On-demand list, 8× node, in effect from 16 Nov (1× H100 SXM $4.89, B200 $7.99)", h100: 4.59, h200: null, b200: 7.69 },
   { src: "CoreWeave", kind: "On-demand list (GB200 $10.50)", h100: 6.16, h200: 6.31, b200: 8.60 },
   { src: "AWS p5", kind: "On-demand (spot $2.64–4.67; 3-yr plan $2.97)", h100: 6.88, h200: null, b200: null },
   { src: "Google a3-high / Azure ND H100 v5", kind: "On-demand list (aggregators)", h100: "11.06 / 12.29", h200: null, b200: null },
