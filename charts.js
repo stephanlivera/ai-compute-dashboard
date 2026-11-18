@@ -897,7 +897,7 @@ function drawNvdaQ() {
   const bars = NVDA_Q.map(([q, end, v, comp, net], i) => ({ lab: q + " (" + end + ")", tickLab: (i % 3 === 0 || i === n - 1) ? end : "", v, c: "--neutral",
     label: i === 0 || i >= n - 2, strong: i === n - 1,
     n: comp != null ? "Compute $" + comp.toFixed(1) + "B · networking $" + net.toFixed(1) + "B" : "Hyperscale $48.7B · other customers $40.3B (no compute / networking split)" }));
-  columnChart({ host: "c-nvda", aria: "Column chart of Nvidia data-centre revenue by quarter, from $22.6 billion in the April 2024 quarter to $89.0 billion in the July 2026 quarter",
+  columnChart({ host: "c-nvda", aria: "Column chart of Nvidia data-centre revenue by quarter, from $22.6 billion in the April 2024 quarter to $107.6 billion in the October 2026 quarter",
     VW: 460, VH: 260, m: { t: 22, r: 8, b: 26, l: 46 }, bars, fmt: v => "$" + v.toFixed(1) + "B", yfmt: v => "$" + v + "B", valLabel: "Data-centre revenue", bw: 22 });
   document.getElementById("t-nvda").innerHTML = table(["Quarter", "Ended", "Data centre", "Compute", "Networking"],
     NVDA_Q.map(([q, end, v, c, nt]) => [q, end, "$" + v.toFixed(1) + "B", c != null ? "$" + c.toFixed(1) + "B" : "–", nt != null ? "$" + nt.toFixed(1) + "B" : "–"])

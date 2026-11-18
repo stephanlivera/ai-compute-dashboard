@@ -12,16 +12,16 @@ const UPDATED = "2026-11-10"; // date of the last full refresh (drives "today" m
 // should be refreshed (days), and where the numbers come from. Rendered as a
 // stamp on every card; `./check.sh` lists anything overdue.
 const SECTIONS = {
-  hero:          { title: "Headline tiles",             asOf: "2026-11-11", every: 90,  consts: ["(tiles in index.html)"], sources: ["Big 4 + Oracle + CoreWeave + Nvidia latest earnings/IR"] },
+  hero:          { title: "Headline tiles",             asOf: "2026-11-18", every: 90,  consts: ["(tiles in index.html)"], sources: ["Big 4 + Oracle + CoreWeave + Nvidia latest earnings/IR"] },
   capex:         { title: "Hyperscaler capex",          asOf: "2026-11-10", every: 90,  consts: ["CAPEX", "CAPEX_YEARS", "CAPEX_EST_FROM"], sources: ["10-Q/10-K cash flow statements", "earnings-call capex guidance"] },
   share:         { title: "2026 capex share + guides",  asOf: "2026-11-10", every: 90,  consts: ["CAPEX_GUIDES"], sources: ["earnings-call capex guidance"] },
   gw:            { title: "Data-centre GW",             asOf: "2026-11-10", every: 180, consts: ["GW_YEARS", "GW_AI", "GW_NONAI", "FORECASTS_2030"], sources: ["IEA Energy & AI", "McKinsey", "JLL", "Goldman Sachs Research"] },
   neoclouds:     { title: "Oracle & neoclouds table",   asOf: "2026-11-14", every: 30,  consts: ["(table in index.html)"], sources: ["Oracle, CoreWeave, Nebius IR / earnings", "OpenAI commitments: The Information (via SiliconANGLE)"] },
   oracle:        { title: "Oracle capex",               asOf: "2026-11-08", every: 90,  consts: ["ORCL"], sources: ["Oracle 10-Q/10-K, FY guide"] },
   flop:          { title: "Frontier training compute",  asOf: "2026-11-10", every: 90,  consts: ["FLOP", "FLOP_PROJ"], sources: ["https://epoch.ai/data/notable-ai-models"] },
-  nvda:          { title: "Nvidia DC revenue",          asOf: "2026-11-16", every: 90,  consts: ["NVDA", "NVDA_Q"], sources: ["Nvidia CFO commentary, each quarter (FY ends late Jan)", "AMD / Broadcom 8-K releases", "TSMC monthly revenue", "SK hynix, Micron results"] },
+  nvda:          { title: "Nvidia DC revenue",          asOf: "2026-11-18", every: 90,  consts: ["NVDA", "NVDA_Q"], sources: ["Nvidia CFO commentary, each quarter (FY ends late Jan)", "AMD / Broadcom 8-K releases", "TSMC monthly revenue", "SK hynix, Micron results"] },
   deflation:     { title: "Token deflation",            asOf: "2026-11-13", every: 180, consts: ["DEFL", "DEFL_END", "FRONTIER_PX", "(tiles in index.html)"], sources: ["https://epoch.ai/data-insights/llm-inference-price-trends (ends Feb 2025, not updated)", "https://epoch.ai/publications/the-plunging-price-of-thought", "https://artificialanalysis.ai", "provider pricing pages"] },
-  "lab-revenue": { title: "OpenAI / Anthropic revenue", asOf: "2026-11-16", every: 30,  consts: ["LABS", "REV_PROJ", "(funding table in index.html)"], sources: ["https://epoch.ai/data-insights/anthropic-openai-revenue", "CNBC / Bloomberg / The Information / FT run-rate reports", "Anthropic S-1", "Bloomberg / Reuters funding-round reports"] },
+  "lab-revenue": { title: "OpenAI / Anthropic revenue", asOf: "2026-11-18", every: 30,  consts: ["LABS", "REV_PROJ", "(funding table in index.html)"], sources: ["https://epoch.ai/data-insights/anthropic-openai-revenue", "CNBC / Bloomberg / The Information / FT run-rate reports", "Anthropic S-1", "Bloomberg / Reuters funding-round reports"] },
   autonomy:      { title: "METR + Economic Index",      asOf: "2026-11-13", every: 60,  consts: ["METR", "METR_DOUBLING_DAYS", "AEI", "BENCH"], sources: ["https://metr.org/time-horizons", "https://metr.org/assets/benchmark_results_1_1.yaml", "https://metr.org/blog (model evaluations, Frontier Risk Report)", "https://www.anthropic.com/research (Economic Index)", "https://epoch.ai/benchmarks/eci", "https://labs.scale.com/leaderboard/rli", "OpenAI model launch pages (GDPval)"] },
   credit:        { title: "CDS credit monitor",         asOf: "2026-11-16", every: 7,   consts: ["CDS", "CDS_TS", "CDS_ASOF"], sources: ["Bloomberg/ICE terminal if available", "CNBC, WSJ (Solve data), Bloomberg press reports"] },
   power:         { title: "Power constraint",           asOf: "2026-11-11", every: 90,  consts: ["PJM", "PJM_UNCAPPED", "(tiles + forecast table in index.html)"], sources: ["PJM BRA reports", "Monitoring Analytics (PJM IMM)", "LBNL", "EPRI", "GE Vernova / Siemens Energy results", "EIA Electric Power Monthly", "ERCOT via Texas governor's office"] },
@@ -35,8 +35,8 @@ const SECTIONS = {
 
 // Known upcoming events that should trigger a refresh (approximate; confirm dates).
 const EVENTS = [
-  { when: "17 Nov 2026",  what: "Nvidia Q3 FY27 results, its first under interim CEO Colette Kress (guide $108B ±2%; equity purchases, cloud agreements, any word on the board inquiry or on Jensen Huang's reported push to return)", sections: ["nvda", "hero", "circular", "credit"] },
-  { when: "18–19 Nov 2026", what: "Anthropic IPO prices on 18 Nov and starts trading on 19 Nov (Nasdaq: ANT; range $70–78), per its prospectus. The book was reported ~6× covered on 12 Nov", sections: ["lab-revenue", "credit", "circular"] },
+  { when: "late Nov 2026", what: "Nvidia Q3 FY27 10-Q: equity purchases, guarantees, cloud and supply commitments for the circular-deals map", sections: ["circular", "cashflow"] },
+  { when: "18–19 Nov 2026", what: "Anthropic IPO prices on the evening of 18 Nov and starts trading on 19 Nov (Nasdaq: ANT; range $70–78). Bloomberg reports ~7× demand and pricing at or above the top of the range; the WSJ says it could go above $80", sections: ["lab-revenue", "credit", "circular"] },
   { when: "19 Nov 2026", what: "Census BTOS biweekly release (collected 2–15 Nov)", sections: ["demand"] },
   { when: "before 26 Nov 2026", what: "Jensen Huang's testimony to Congress, as agreed per the House Foreign Affairs chair", sections: ["nvda", "credit"] },
   { when: "late Nov 2026", what: "OpenAI round final close (~$15B raised so far at $1.25T, per CNBC)", sections: ["lab-revenue", "neoclouds", "circular"] },
@@ -48,6 +48,7 @@ const EVENTS = [
   { when: "mid-Dec 2026",  what: "Oracle Q2 FY27 results; date not yet announced (RPO, capex guide, free cash flow)", sections: ["neoclouds", "oracle", "hero", "credit", "cashflow"] },
   { when: "late Jan–early Feb 2027", what: "Big 4 Q4 results: first 2027 capex guides, cash flow, token and user updates", sections: ["capex", "share", "hero", "cashflow", "demand"] },
   { when: "Feb 2027", what: "Nebius Q4 results: did ARR pass $7B, two months later than first guided?", sections: ["neoclouds"] },
+  { when: "late Feb 2027", what: "Nvidia Q4 FY27 results (guide $130B ±3%, a quarter with an extra week, with no China data-centre compute assumed) and the first full FY27 data-centre total", sections: ["nvda", "hero", "circular"] },
 ];
 
 // ---------- Can they pay for it? ----------
@@ -94,12 +95,13 @@ const CAPEX_EST_FROM = 2027;
 const ORCL = { labels: ["FY21","FY22","FY23","FY24","FY25","FY26","FY27E"], vals: [2.1,4.5,8.7,6.9,21.2,55.7,92.5], est: 6 }; // 10-K cash capex; FY27E = guide midpoint
 const NVDA = { labels: ["FY20","FY21","FY22","FY23","FY24","FY25","FY26"], vals: [3.0,6.7,10.6,15.0,47.5,115.2,193.7] }; // FY26 = sum of the four quarters below
 // Nvidia data-centre revenue by quarter, $B, from its CFO commentary. [fiscal quarter, quarter end, total, compute, networking]
-// Q2 FY27 has no compute / networking split (Nvidia switched to hyperscale $48.7B vs other $40.3B).
+// Q2 and Q3 FY27 have no compute / networking split (Nvidia switched to hyperscale vs other: Q2 $48.7B / $40.3B; Q3 $60.1B / $47.5B per the CFO commentary).
+// Q3 FY27 is $107.6B as rounded in the 17 Nov press release.
 const NVDA_Q = [
   ["Q1 FY25", "Apr 24", 22.563, 19.392, 3.171], ["Q2 FY25", "Jul 24", 26.272, 22.604, 3.668], ["Q3 FY25", "Oct 24", 30.771, 27.644, 3.127],
   ["Q4 FY25", "Jan 25", 35.580, 32.556, 3.024], ["Q1 FY26", "Apr 25", 39.112, 34.155, 4.957], ["Q2 FY26", "Jul 25", 41.096, 33.844, 7.252],
   ["Q3 FY26", "Oct 25", 51.215, 43.028, 8.187], ["Q4 FY26", "Jan 26", 62.314, 51.334, 10.980], ["Q1 FY27", "Apr 26", 75.246, 60.4, 14.8],
-  ["Q2 FY27", "Jul 26", 89.023, null, null],
+  ["Q2 FY27", "Jul 26", 89.023, null, null], ["Q3 FY27", "Oct 26", 107.6, null, null],
 ];
 const FLOP = [
   { m: "GNMT",           x: 2016.7, y: 6.6e21 },
