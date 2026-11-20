@@ -523,7 +523,7 @@ function drawCds() {
   const TW = 460, TH = 280, tm = { t: 14, r: 72, b: 26, l: 40 };
   const tW = TW - tm.l - tm.r, tH = TH - tm.t - tm.b;
   const ts = el("svg", { viewBox: `0 0 ${TW} ${TH}`, role: "img", "aria-label": "Line chart of CoreWeave, Oracle and Meta 5-year CDS from October 2025 to November 2026" }, th);
-  const x0 = decYear("2025-10-01"), x1 = decYear("2026-11-10");
+  const x0 = decYear("2025-10-01"), x1 = Math.max(...CDS_TS.flatMap(s => s.pts.map(p => decYear(p[0])))); // ends at the latest print
   const tx = x => tm.l + ((x - x0) / (x1 - x0)) * tW, ty = v => tm.t + tH - (v / 1400) * tH;
   [0, 400, 800, 1200].forEach(v => {
     el("line", { x1: tm.l, x2: tm.l + tW, y1: ty(v), y2: ty(v), stroke: v === 0 ? css("--axis") : css("--grid"), "shape-rendering": "crispEdges" }, ts);
@@ -813,7 +813,7 @@ function drawFrontierPx() {
     series: S, fmt: v => "$" + (v < 10 ? v.toFixed(2) : v.toFixed(v % 1 ? 2 : 0)) + " / 1M tokens", valLabel: "List price (3:1 blend)", hollowNote: "Gated / restricted access", endLabel: () => "" });
   // selective labels, placed by hand around the crowded Sep–Oct 2026 cluster
   const LAB = { "GPT-4": [8, 4, "start", "GPT-4 $37.50"], "GPT-5": [0, 17, "middle", "GPT-5 $3.44"], "Claude Opus 4.5": [6, 15, "start", "Opus 4.5 $10"],
-    "Claude Mythos Preview": [-8, 4, "end", "Mythos Preview $50 (gated)"], "GPT-6 Astra": [6, -9, "start", "GPT-6 Astra $20"], "Claude Opus 5.5": [8, 4, "start", "Opus 5.5 $8"], "Claude Fable 5.2 / Mythos 5.2": [8, 4, "start", "Fable 5.2 $16"],
+    "Claude Mythos Preview": [-8, 4, "end", "Mythos Preview $50 (gated)"], "GPT-6 Astra": [6, -9, "start", "GPT-6 Astra $20"], "Claude Opus 5.5": [8, 4, "start", "Opus 5.5 $8"], "Claude Fable 5.2 / Mythos 5.2": [8, 4, "start", "Fable 5.2 $16"], "GPT-6.2 Astra": [8, 18, "start", "GPT-6.2 Astra $16"],
     "GPT-6.1 Sol": [-2, 18, "end", "GPT-6.1 Sol $4"], "Gemini 4 Carbon, introductory": [8, 4, "start", "Gemini 4 Carbon $4"] };
   S.forEach(s => s.pts.forEach(p => {
     const L = LAB[p.n.split(" (")[0]]; if (!L) return;
