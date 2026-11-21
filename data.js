@@ -269,8 +269,8 @@ const FRONTIER_PX = [
     ["2023-03-14", 37.5, "GPT-4 ($30 / $60)"], ["2023-11-06", 15, "GPT-4 Turbo ($10 / $30)"], ["2024-05-13", 7.5, "GPT-4o ($5 / $15)"],
     ["2024-12-17", 26.25, "o1 ($15 / $60)"], ["2025-04-16", 17.5, "o3 ($10 / $40); cut 80% to $2 / $8 on 10 Jun 2025"], ["2025-08-07", 3.44, "GPT-5 ($1.25 / $10)"],
     ["2025-12-11", 4.81, "GPT-5.2 ($1.75 / $14)"], ["2026-03-05", 5.63, "GPT-5.4 ($2.50 / $15)"], ["2026-04-24", 11.25, "GPT-5.5 ($5 / $30)"],
-    ["2026-09-03", 20, "GPT-6 Astra ($10 / $50). Epoch ECI 169.0, the top score until Claude Fable 5.2 on 9 Nov"], ["2026-09-29", 4, "GPT-6.1 Sol ($2 / $10). Epoch ECI 168.5, level with GPT-6 Astra"],
-    ["2026-11-17", 16, "GPT-6.2 Astra ($8 / $40), 20% below GPT-6 Astra. Epoch ECI ~174, about level with Claude Fable 5.2. GPT-6.2 Sol launched alongside, unchanged at $2 / $10"]] },
+    ["2026-09-03", 20, "GPT-6 Astra ($10 / $50). Epoch ECI 169.2, the top score until Claude Fable 5.2 on 9 Nov"], ["2026-09-29", 4, "GPT-6.1 Sol ($2 / $10). Epoch ECI 168.6, level with GPT-6 Astra"],
+    ["2026-11-17", 16, "GPT-6.2 Astra ($8 / $40), 20% below GPT-6 Astra. Epoch ECI 172.8, second, 0.6 behind Claude Fable 5.2; Artificial Analysis index 62 at $4.00 a task. GPT-6.2 Sol launched alongside, unchanged at $2 / $10"]] },
   { name: "Anthropic", c: "--s2", dots: 1, pts: [
     ["2024-03-04", 30, "Claude 3 Opus ($15 / $75)"], ["2025-08-05", 30, "Claude Opus 4.1 ($15 / $75)"], ["2025-11-24", 10, "Claude Opus 4.5 ($5 / $25), a 67% cut"],
     ["2026-04-07", 50, "Claude Mythos Preview ($25 / $125), gated access", 1], ["2026-06-09", 20, "Claude Fable 5 / Mythos 5 ($10 / $50)"],
@@ -278,8 +278,8 @@ const FRONTIER_PX = [
   { name: "Google", c: "--s3", dots: 1, pts: [
     ["2025-06-17", 3.44, "Gemini 2.5 Pro ($1.25 / $10, prompts ≤200K)"], ["2026-02-19", 4.5, "Gemini 3.1 Pro Preview ($2 / $12, prompts ≤200K)"],
     ["2026-10-13", 4, "Gemini 4 Argon, introductory ($2 / $10); rises to $4 / $20 on 1 Dec 2026"],
-    ["2026-11-10", 4, "Gemini 4 Carbon, introductory ($2 / $10); rises to $4 / $20 on 1 Dec 2026. Epoch ECI 169.8, second. Gemini 4 Hydrogen (12 Nov) is $1.50 / $7.50"],
-    ["2026-11-18", 6, "Gemini 4 Neon ($3 / $15), priced between Hydrogen and Carbon; it replaces Argon in the Gemini app (Argon stays in the API). Artificial Analysis index 61, a point above Carbon"]] },
+    ["2026-11-10", 4, "Gemini 4 Carbon, introductory ($2 / $10); rises to $4 / $20 on 1 Dec 2026. Epoch ECI 169.7, third. Gemini 4 Hydrogen (12 Nov) is $1.50 / $7.50"],
+    ["2026-11-18", 6, "Gemini 4 Neon ($3 / $15), priced between Hydrogen and Carbon; it replaces Argon in the Gemini app (Argon stays in the API). Artificial Analysis index 61, a point above Carbon, at $6.44 a task. Not yet scored on Epoch's ECI"]] },
 ];
 
 // ---------- Demand you can count ----------
