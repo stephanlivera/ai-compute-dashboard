@@ -488,8 +488,8 @@ function drawCds() {
   const host = document.getElementById("c-cds"); host.innerHTML = "";
   const rowH = 34, VW = 700, m = { t: 22, r: 190, b: 22, l: 150 };
   const VH = m.t + m.b + CDS.length * rowH, W = VW - m.l - m.r;
-  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Bar chart of latest 5-year CDS spreads: CoreWeave about 1,152 bps, Oracle 305, Nvidia 139, Meta 125, Amazon 100, Alphabet 92, Microsoft 53" }, host);
-  const max = 1400, sx = v => m.l + (v / max) * W;
+  const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Bar chart of latest 5-year CDS spreads: CoreWeave 1,314 bps, Oracle 356, Nvidia 147.3, Meta 125, Amazon 100, Alphabet 95, Microsoft 53" }, host);
+  const max = 1500, sx = v => m.l + (v / max) * W;
   [0, 250, 500, 750, 1000].forEach(v => {
     el("line", { x1: sx(v), x2: sx(v), y1: m.t - 4, y2: VH - m.b, stroke: v === 0 ? css("--axis") : css("--grid"), "shape-rendering": "crispEdges" }, svg);
     el("text", { x: sx(v), y: VH - 6, "text-anchor": "middle", class: "tick" }, svg).textContent = v;
@@ -524,7 +524,7 @@ function drawCds() {
   const tW = TW - tm.l - tm.r, tH = TH - tm.t - tm.b;
   const ts = el("svg", { viewBox: `0 0 ${TW} ${TH}`, role: "img", "aria-label": "Line chart of CoreWeave, Oracle and Meta 5-year CDS from October 2025 to November 2026" }, th);
   const x0 = decYear("2025-10-01"), x1 = Math.max(...CDS_TS.flatMap(s => s.pts.map(p => decYear(p[0])))); // ends at the latest print
-  const tx = x => tm.l + ((x - x0) / (x1 - x0)) * tW, ty = v => tm.t + tH - (v / 1400) * tH;
+  const tx = x => tm.l + ((x - x0) / (x1 - x0)) * tW, ty = v => tm.t + tH - (v / 1500) * tH;
   [0, 400, 800, 1200].forEach(v => {
     el("line", { x1: tm.l, x2: tm.l + tW, y1: ty(v), y2: ty(v), stroke: v === 0 ? css("--axis") : css("--grid"), "shape-rendering": "crispEdges" }, ts);
     el("text", { x: tm.l - 6, y: ty(v) + 4, "text-anchor": "end", class: "tick" }, ts).textContent = v;
