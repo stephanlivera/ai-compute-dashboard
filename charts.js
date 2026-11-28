@@ -558,9 +558,10 @@ function drawGpu() {
   const VW = 760, VH = 340, m = { t: 16, r: 120, b: 28, l: 44 };
   const W = VW - m.l - m.r, H = VH - m.t - m.b;
   const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": "Line chart of Silicon Data neocloud GPU rental price indices, mid-2025 to November 2026: H100, H200, B200 and B300 rising, A100 roughly flat" }, host);
-  const x0 = decYear(GPU_RANGE[0]), x1 = decYear(GPU_RANGE[1]), ymax = 8;
+  const x0 = decYear(GPU_RANGE[0]), x1 = decYear(GPU_RANGE[1]);
+  const { max: ymax, step: ystep } = niceMax(Math.max(8.01, ...GPU.flatMap(g => g.pts.map(p => p[1]))), 5);
   const sx = x => m.l + ((x - x0) / (x1 - x0)) * W, sy = v => m.t + H - (v / ymax) * H;
-  yAxis(svg, m, W, H, ymax, 2, v => "$" + v);
+  yAxis(svg, m, W, H, ymax, ystep, v => "$" + v);
   GPU_TICKS.forEach(([d, l]) => el("text", { x: sx(decYear(d)), y: VH - 8, "text-anchor": "middle", class: "tick" }, svg).textContent = l);
   // restatement marker: points before it used Silicon Data's older methodology
   const rx = sx(decYear(GPU_RESTATE));
@@ -589,7 +590,7 @@ function drawGpu() {
   document.getElementById("t-gpu").innerHTML = table(["GPU", "Date", "$/GPU-hr", "Note"], rows);
   // change table
   document.getElementById("gpu-chg").innerHTML = S.map(g => {
-    const f = (g.base && g.P.find(p => p.d === g.base)) || g.P.find(p => !p.h) || g.P[0], l = g.P[g.P.length - 1], ch = (l.v / f.v - 1) * 100;
+    const f = (g.base && g.P.find(p => p.d === g.base)) || g.P.find(p => !p.h) || g.P[0], l = g.P[g.P.length - 1], ch = ((l.v - f.v) / f.v) * 100;
     return `<tr><td><i class="sw" style="background:var(${g.c})"></i> ${g.chip}</td><td class="num">${fmtH(f.v)} <span class="muted">(${mon(f.d)})</span></td><td class="num"><b>${fmtH(l.v)}</b></td><td class="num">${ch >= 0 ? "+" : ""}${Math.round(ch)}%</td></tr>`;
   }).join("");
 }
@@ -894,9 +895,9 @@ function drawCashflow() {
 // ---------- CHART: Nvidia data-centre revenue by quarter ----------
 function drawNvdaQ() {
   const n = NVDA_Q.length;
-  const bars = NVDA_Q.map(([q, end, v, comp, net], i) => ({ lab: q + " (" + end + ")", tickLab: (i % 3 === 0 || i === n - 1) ? end : "", v, c: "--neutral",
+  const bars = NVDA_Q.map(([q, end, v, comp, net, note], i) => ({ lab: q + " (" + end + ")", tickLab: (i % 3 === 0 || i === n - 1) ? end : "", v, c: "--neutral",
     label: i === 0 || i >= n - 2, strong: i === n - 1,
-    n: comp != null ? "Compute $" + comp.toFixed(1) + "B · networking $" + net.toFixed(1) + "B" : "Hyperscale $48.7B · other customers $40.3B (no compute / networking split)" }));
+    n: comp != null ? "Compute $" + comp.toFixed(1) + "B · networking $" + net.toFixed(1) + "B" : (note || "No compute / networking split") }));
   columnChart({ host: "c-nvda", aria: "Column chart of Nvidia data-centre revenue by quarter, from $22.6 billion in the April 2024 quarter to $107.6 billion in the October 2026 quarter",
     VW: 460, VH: 260, m: { t: 22, r: 8, b: 26, l: 46 }, bars, fmt: v => "$" + v.toFixed(1) + "B", yfmt: v => "$" + v + "B", valLabel: "Data-centre revenue", bw: 22 });
   document.getElementById("t-nvda").innerHTML = table(["Quarter", "Ended", "Data centre", "Compute", "Networking"],

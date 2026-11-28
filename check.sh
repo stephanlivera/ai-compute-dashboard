@@ -64,14 +64,14 @@ PY
   | python3 -c 'import sys, re, html; m = re.search(r"<pre id=\"audit\">(.*?)</pre>", sys.stdin.read(), re.S); print(html.unescape(m.group(1)) if m else "audit did not run")'
 
 echo; echo "== Screenshots =="
-H=${SHOT_H:-30000}   # taller than the page; raise it if the page grows
+H=${SHOT_H:-35000}   # taller than the page; raise it if the page grows
 "$BROWSER" --headless=new --disable-gpu --hide-scrollbars --window-size=1280,$H \
   --screenshot="$PWD/.check/light.png" "$URL" >/dev/null 2>&1
 "$BROWSER" --headless=new --disable-gpu --hide-scrollbars --window-size=1280,$H \
   --force-dark-mode --blink-settings=preferredColorScheme=0 \
   --screenshot="$PWD/.check/dark.png" "$URL" >/dev/null 2>&1
 # Headless Chromium won't lay a page out narrower than 500 px, so that is the "phone" width here.
-"$BROWSER" --headless=new --disable-gpu --hide-scrollbars --window-size=500,${SHOT_H_MOBILE:-48000} \
+"$BROWSER" --headless=new --disable-gpu --hide-scrollbars --window-size=500,${SHOT_H_MOBILE:-62000} \
   --screenshot="$PWD/.check/mobile.png" "$URL" >/dev/null 2>&1
 echo "$PWD/.check/light.png"
 echo "$PWD/.check/dark.png"
